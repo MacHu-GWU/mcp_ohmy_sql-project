@@ -2,6 +2,7 @@
 mcp_ohmy_sql.egg-info/
 docs/source/**/index.md
 tmp/
+*.sqlite
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
