@@ -36,7 +36,7 @@ exclude = [
     "mcp_ohmy_sql/docs/*",
     "mcp_ohmy_sql/tests/*",
 ]
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 # Full list of classifiers: https://pypi.org/classifiers/
 classifier = [
     "Development Status :: 4 - Beta",
