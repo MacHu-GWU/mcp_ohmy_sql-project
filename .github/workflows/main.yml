@@ -32,7 +32,7 @@ jobs:
     env: # Define environment variables that will be available to all steps in this job
       # This comma-separated list defines which Python versions should have coverage reports
       # Will be used later to conditionally upload coverage reports to Codecov
-      USING_COVERAGE: "3.9,3.10,3.11,3.12,3.13"
+      USING_COVERAGE: "3.10,3.11,3.12,3.13"
     # ref: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategymatrix
     strategy:
       # The matrix strategy allows you to run multiple combinations of configurations
@@ -43,7 +43,7 @@ jobs:
 #        os: ["ubuntu-latest", ] # Commented out configurations for quick debugging
 #        os: ["windows-latest", ] # Commented out configurations for quick debugging
         # Define the Python versions to test with
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: [3.10", "3.11", "3.12", "3.13"]
 #        python-version: ["3.11", ] # Commented out configurations for quick debugging
         # Exclude specific combinations from the matrix
         exclude:
