@@ -11,7 +11,7 @@ class MCPEnum(BaseMcpEnum):
         settings={
             "command": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/.venv/bin/python",
             "args": [
-                "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/app.py",
+                "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/mcp_ohmy_sql/app.py",
             ],
             "env": {
                 "MCP_OHMY_SQL_CONFIG": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/sample_mcp_ohmy_sql_config.json",
@@ -28,7 +28,7 @@ class MCPEnum(BaseMcpEnum):
 
 
 wanted_mcps = {
-    MCPEnum.OHMY_SQL,
+    # MCPEnum.OHMY_SQL,
     # MCPEnum.NEON,
 }
 MCPEnum.apply(wanted_mcps, cdc)

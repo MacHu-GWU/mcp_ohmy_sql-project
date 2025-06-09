@@ -15,6 +15,7 @@ x.y.z (Backlog)
 **Miscellaneous**
 
 
-0.1.1 (1970-01-01)
+0.1.1 (2025-06-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - First release
+- Register the package name on PyPI
