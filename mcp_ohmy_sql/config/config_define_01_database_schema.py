@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import typing as T
-import json
 import textwrap
-from pathlib import Path
-from functools import cached_property
 
-from pydantic import BaseModel, Field
 from ..constants import TAB
 from ..sa.api import (
     SchemaInfo,
@@ -35,6 +31,8 @@ class ConfigDatabaseSchemaMixin:
                     engine=database.sa_engine,
                     metadata=database.sa_metadata,
                     schema_name=schema.name,
+                    include=schema.table_filter.include,
+                    exclude=schema.table_filter.exclude,
                 )
                 s = encode_schema_info(schema_info)
                 schema_lines.append(textwrap.indent(s, prefix=TAB))

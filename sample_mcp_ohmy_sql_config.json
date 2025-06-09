@@ -16,7 +16,10 @@
                 {
                     "table_filter": {
                         "include": [],
-                        "exclude": []
+                        "exclude": [
+                            "Playlist",
+                            "PlaylistTrack"
+                        ]
                     }
                 }
             ]
