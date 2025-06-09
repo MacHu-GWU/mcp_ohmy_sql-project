@@ -56,7 +56,11 @@ class Database(BaseModel):
     def sa_metadata(self) -> "sa.MetaData":
         metadata = sa.MetaData()
         for schema in self.schemas:
-            metadata.reflect(self.sa_engine, schema=schema.name, views=True)
+            metadata.reflect(
+                self.sa_engine,
+                schema=schema.name,
+                views=True,
+            )
         return metadata
 
 

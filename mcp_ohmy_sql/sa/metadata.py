@@ -5,6 +5,8 @@ import sqlalchemy as sa
 
 from pydantic import BaseModel, Field
 
+from ..constants import TableTypeEnum
+
 from .types import ColumnType
 
 try:  # pragma: no cover
@@ -110,7 +112,7 @@ class ColumnInfo(BaseModel):
 
 
 class TableInfo(BaseModel):
-    object_type: str = Field(default="table")
+    object_type: str = Field()
     name: str = Field()
     fullname: str = Field()
     primary_key: list[str] = Field(default_factory=list)
@@ -145,6 +147,7 @@ class TableInfo(BaseModel):
     def from_table(
         cls,
         table: sa.Table,
+        object_type: str,
     ):
         foreign_keys = list()
         for fk in table.foreign_keys:
@@ -159,6 +162,7 @@ class TableInfo(BaseModel):
             columns.append(column_info)
 
         return TableInfo(
+            object_type=object_type,
             name=table.name,
             fullname=table.fullname,
             primary_key=[col.name for col in table.primary_key.columns],
@@ -197,11 +201,33 @@ class SchemaInfo(BaseModel):
     @classmethod
     def from_metadata(
         cls,
+        engine: sa.engine.Engine,
         metadata: sa.MetaData,
+        schema_name: T.Optional[str],
     ):
+        """
+        :param engine: SQLAlchemy engine
+        :param metadata: we assume metadata is already reflected
+        """
+        insp = sa.inspect(engine)
+        try:
+            view_names = set(insp.get_view_names(schema=schema_name))
+        except NotImplementedError:  # pragma: no cover
+            view_names = set()
+        try:
+            materialized_view_names = set(insp.get_materialized_view_names())
+        except NotImplementedError:  # pragma: no cover
+            materialized_view_names = set()
+
         tables = list()
         for table_name, table in metadata.tables.items():
-            table_info = TableInfo.from_table(table)
+            if table_name in view_names:  # pragma: no cover
+                object_type = TableTypeEnum.VIEW.value
+            elif table_name in materialized_view_names:  # pragma: no cover
+                object_type = TableTypeEnum.MATERIALIZED_VIEW.value
+            else:
+                object_type = TableTypeEnum.TABLE.value
+            table_info = TableInfo.from_table(table=table, object_type=object_type)
             # rprint(table_info.model_dump()) # for debug only
             tables.append(table_info)
 

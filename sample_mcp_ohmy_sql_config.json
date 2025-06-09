@@ -9,7 +9,7 @@
             "connection": {
                 "type": "sqlalchemy",
                 "create_engine_kwargs": {
-                    "url": "sqlite:////Users/sanhehu/Documents/GitHub/final_sql_mcp-project/chinook.sqlite"
+                    "url": "sqlite:////Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/chinook.sqlite"
                 }
             },
             "schemas": [

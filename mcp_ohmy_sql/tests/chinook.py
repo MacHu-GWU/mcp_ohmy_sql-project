@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
-import sqlalchemy as sa
+
 from ..paths import path_chinook_sqlite
 
 
@@ -20,7 +20,3 @@ def download_chinook_sqlite():
 
 
 download_chinook_sqlite()
-
-engine = sa.create_engine(f"sqlite:///{path_chinook_sqlite}")
-metadata = sa.MetaData()
-metadata.reflect(engine)

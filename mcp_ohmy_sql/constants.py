@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import typing as T
 import os
+
+from enum_mate.api import BetterStrEnum
 from pydantic import BaseModel, Field
 
 TAB = " " * 2
@@ -23,6 +26,17 @@ BLOB = "BLOB"  # Large binary files (images, documents)
 BIN = "BIN"  # Small fixed-length binary data (hashes, UUIDs)
 BOOL = "BOOL"  # True/false boolean values
 NULL = "NULL"  # Null Type, represents no value
+
+
+TABLE_TYPE_TABLE: T.Final = "table"
+TABLE_TYPE_VIEW: T.Final = "view"
+TABLE_TYPE_MATERIALIZED_VIEW: T.Final = "materialized_view"
+
+
+class TableTypeEnum(BetterStrEnum):
+    TABLE = "table"
+    VIEW = "view"
+    MATERIALIZED_VIEW = "materialized_view"
 
 
 class EnvVar(BaseModel):

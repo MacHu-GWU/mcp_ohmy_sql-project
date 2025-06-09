@@ -8,10 +8,14 @@ from rich import print as rprint
 
 class TestSchemaInfo:
     def test_from_metadata(self):
-        schema_info = SchemaInfo.from_metadata(chinook_db.sa_metadata)
+        schema_info = SchemaInfo.from_metadata(
+            engine=chinook_db.sa_engine,
+            metadata=chinook_db.sa_metadata,
+            schema_name=chinook_db.schemas[0].name,
+        )
         # rprint(schema_info)
         table_info = schema_info.tables[0]
-        # rprint(table_info)
+        # # rprint(table_info)
         column_info = table_info.columns[0]
         # rprint(column_info)
 
