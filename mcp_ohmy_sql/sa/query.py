@@ -2,8 +2,8 @@
 
 import typing as T
 import sqlalchemy as sa
+import sqlalchemy.exc as sa_exc
 from tabulate import tabulate
-from pydantic import BaseModel, Field
 
 try:  # pragma: no cover
     from rich import print as rprint
@@ -54,7 +54,7 @@ def ensure_valid_select_query(query: str):
     Ensure the query is a valid SELECT statement.
     """
     if query.upper().strip().startswith("SELECT ") is False:
-        return "Invalid query: must start with 'SELECT '"
+        raise ValueError("Invalid query: must start with 'SELECT '")
 
 
 def execute_count_query(
@@ -66,12 +66,15 @@ def execute_count_query(
     Executes a SQL SELECT query and returns the count of rows.
     """
     ensure_valid_select_query(query)
+    query = query.strip()
 
     # use engine.dialect.name is the most reliable way to detect database type
     if engine.dialect.name == "sqlite":
+        if query.endswith(";"):
+            query = query[:-1].strip()
         count_query = f"SELECT COUNT(*) FROM ({query}) AS subquery"
         count_stmt = sa.text(count_query)
-    else:
+    else:  # pragma: no cover
         raw_stmt = sa.text(query)
         subq = raw_stmt.subquery("anon_subq")  # anonymous subquery
         count_stmt = sa.select(sa.func.count()).select_from(subq)
@@ -96,12 +99,14 @@ def execute_select_query(
     with engine.connect() as connection:
         try:
             result = connection.execute(stmt, params)
-        except Exception as e:
+        except sa_exc.OperationalError as e:  # pragma: no cover
+            return f"Error executing query: {e._message()}"
+        except Exception as e: # pragma: no cover
             return f"Error executing query: {e}"
 
         try:
             text = format_result(result)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             return f"Error formatting result: {e}"
 
         return text
