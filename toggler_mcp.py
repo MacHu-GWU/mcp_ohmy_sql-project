@@ -18,6 +18,20 @@ class MCPEnum(BaseMcpEnum):
             },
         },
     )
+    OHMY_SQL_UVX = Mcp(
+        name="OhMySql",
+        settings={
+            "command": "/Users/sanhehu/.pyenv/shims/uvx",
+            "args": [
+                "--with",
+                "mcp-ohmy-sql[postgres]==0.1.2.dev1",
+                "mcp-ohmy-sql",
+            ],
+            "env": {
+                "MCP_OHMY_SQL_CONFIG": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/sample_mcp_ohmy_sql_config.json",
+            },
+        },
+    )
     NEON = Mcp(
         name="Neon",
         settings={
@@ -26,9 +40,9 @@ class MCPEnum(BaseMcpEnum):
         },
     )
 
-
 wanted_mcps = {
     # MCPEnum.OHMY_SQL,
+    MCPEnum.OHMY_SQL_UVX,
     # MCPEnum.NEON,
 }
 MCPEnum.apply(wanted_mcps, cdc)

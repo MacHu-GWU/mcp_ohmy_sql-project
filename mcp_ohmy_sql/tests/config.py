@@ -11,5 +11,6 @@ os.environ[EnvVarEnum.MCP_OHMY_SQL_CONFIG.name] = str(path_config)
 
 from ..config.config_init import config
 
-chinook_db = config.databases_mapping["chinook"]
-chinook_db.connection.create_engine_kwargs = {"url": f"sqlite:///{path_chinook_sqlite}"}
+chinook_sqlite = config.databases_mapping["chinook in sqlite"]
+chinook_sqlite.connection.create_engine_kwargs = {"url": f"sqlite:///{path_chinook_sqlite}"}
+chinook_psql = config.databases_mapping["chinook in postgres"]
