@@ -12,6 +12,8 @@ try:
 except ImportError:  # pragma: no cover
     pass
 
+from .config_define_01_database_schema import ConfigDatabaseSchemaMixin
+
 
 class Settings(BaseModel):
     pass
@@ -49,6 +51,13 @@ class Database(BaseModel):
     schemas: list[Schema] = Field()
 
     @cached_property
+    def schemas_mapping(self) -> dict[str, Schema]:
+        """
+        Create a mapping of schema names to Schema objects.
+        """
+        return {schema.name: schema for schema in self.schemas}
+
+    @cached_property
     def sa_engine(self) -> "sa.Engine":
         return self.connection.sa_engine
 
@@ -64,7 +73,10 @@ class Database(BaseModel):
         return metadata
 
 
-class Config(BaseModel):
+class Config(
+    BaseModel,
+    ConfigDatabaseSchemaMixin,
+):
     version: str = Field()
     settings: Settings = Field(default_factory=Settings)
     databases: list[Database] = Field()
@@ -75,3 +87,10 @@ class Config(BaseModel):
         Load configuration from a JSON file.
         """
         return cls(**json.loads(path.read_text()))
+
+    @cached_property
+    def databases_mapping(self) -> dict[str, Database]:
+        """
+        Create a mapping of database identifiers to Database objects.
+        """
+        return {db.identifier: db for db in self.databases}

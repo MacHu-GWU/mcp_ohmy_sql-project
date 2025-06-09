@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from ..config import Config
-from ..paths import path_config
+import os
 
-config = Config.load(path_config)
-chinook_db = config.databases[0]
+from ..paths import path_config
+from ..constants import EnvVarEnum
+
+os.environ[EnvVarEnum.MCP_OHMY_SQL_CONFIG.name] = str(path_config)
+
+from ..config.config_init import config
+
+chinook_db = config.databases_mapping["chinook"]

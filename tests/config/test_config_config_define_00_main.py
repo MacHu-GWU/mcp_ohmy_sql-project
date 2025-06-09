@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.config import (
+from mcp_ohmy_sql.config.config_define_00_main import (
     Settings,
     TableFilter,
     Schema,
@@ -17,8 +17,7 @@ class TestConfig:
     def test_seder(self):
         config = Config(
             version="0.1.1",
-            settings=Settings(
-            ),
+            settings=Settings(),
             databases=[
                 Database(
                     identifier="chinook_sqlite",
@@ -64,10 +63,11 @@ class TestConfig:
         config = Config.load(path_config)
         # rprint(config)  # for debug only
 
-        database = config.databases[0]
-        for table_name, table in database.sa_metadata.tables.items():
-            # print(table_name)  # for debug only
-            pass
+        for database_name, database in config.databases_mapping.items():
+            # rprint(f"{database = }")  # for debug only
+            for schema_name, schema in database.schemas_mapping.items():
+                # rprint(f"{schema = }")  # for debug only
+                pass
 
 
 if __name__ == "__main__":
@@ -75,6 +75,6 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.config",
+        "mcp_ohmy_sql.config.config_define_00_main.py",
         preview=False,
     )

@@ -48,5 +48,5 @@ class EnvVar(BaseModel):
         return os.environ.get(self.name, self.default)
 
 
-class EnvVarNameEnum:
+class EnvVarEnum:
     MCP_OHMY_SQL_CONFIG = EnvVar(name="MCP_OHMY_SQL_CONFIG")

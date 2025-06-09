@@ -215,7 +215,7 @@ def encode_schema_info(
         table_str = encode_table_info(table)
         tables.append(textwrap.indent(table_str, prefix=TAB))
     tables_def = "\n".join(tables)
-    if schema_info.name:
+    if schema_info.name:  # pragma: no cover
         schema_name = schema_info.name
     else:
         schema_name = "default"
