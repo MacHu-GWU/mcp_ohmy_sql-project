@@ -14,7 +14,7 @@ class MCPEnum(BaseMcpEnum):
                 "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/app.py",
             ],
             "env": {
-                "MCP_OHMY_SQL_CONFIG": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/config.json",
+                "MCP_OHMY_SQL_CONFIG": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/sample_mcp_ohmy_sql_config.json",
             },
         },
     )
