@@ -33,3 +33,5 @@ path_config = dir_project_root / "sample_mcp_ohmy_sql_config.json"
 # ------------------------------------------------------------------------------
 dir_docs_source = dir_project_root / "docs" / "source"
 dir_docs_build_html = dir_project_root / "docs" / "build" / "html"
+
+dir_docs

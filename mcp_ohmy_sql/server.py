@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import textwrap
 from mcp.server.fastmcp import FastMCP
 
+from .docs import doc_files
 
 mcp = FastMCP(
     name="Final SQL MCP Server",
-    instructions=textwrap.dedent(
-        """
-    """
-    ),
+    instructions=doc_files.mcp_instructions,
 )
