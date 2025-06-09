@@ -43,7 +43,7 @@ def encode_column_info(
     Transforms verbose column metadata into a concise string representation
     optimized for Large Language Model consumption in text-to-SQL tasks.
 
-    Format: ${ColumnName}:${TYPE}${PRIMARY_KEY}${UNIQUE}${NOT_NULL}${INDEX}${FOREIGN_KEY}
+    Format: ${COLUMN_NAME}:${DATA_TYPE}${PRIMARY_KEY}${UNIQUE}${NOT_NULL}${INDEX}${FOREIGN_KEY}
 
     .. note::
 

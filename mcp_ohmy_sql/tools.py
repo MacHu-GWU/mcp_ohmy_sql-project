@@ -4,21 +4,21 @@ import typing as T
 import time
 
 from .server import mcp
-from .config_init import config
 
-from .sa.metadata import get_schema_info, SchemaInfo
+from .config.config_init import config
+
 from .sa.query import execute_count_query, execute_select_query
 
 
 @mcp.tool()
-async def get_database_schema_info() -> SchemaInfo:
+async def get_database_schema() -> str:
     """
     Retrieve comprehensive database schema information for AI query assistance.
 
     This MCP tool performs database metadata inspection to extract complete structural
-    information about all tables, columns, relationships, and constraints in the
-    connected database. The returned data provides LLMs with sufficient context to
-    understand the database schema and write accurate SQL queries.
+    information about all databases, all schemas, filtered tables, columns, relationships,
+    and constraints in the connected database. The returned data provides LLMs
+    with sufficient context to understand the database schema and write accurate SQL queries.
 
     The tool analyzes the database metadata and returns a structured JSON containing:
 
@@ -37,119 +37,49 @@ async def get_database_schema_info() -> SchemaInfo:
     - Identify primary and foreign keys for correct record relationships
     - Write syntactically correct queries that align with the database structure
 
-    :returns: :class:`~final_sql_mcp.sa.metadata.SchemaInfo`
-        A structured Pydantic model containing complete database schema
-        information organized hierarchically (schema -> tables -> columns)
-        with all metadata necessary for intelligent query generation.
+    :returns: A structured text that includes all databases, schema, filtered tables,
+        columns, relationships, and constraints in the following formats
+        optimized for LLM consumption.
+
+    Database Schema Format::
+
+        Database <Database 1 Identifier>(
+          Schema <Schema 1 Name>(
+            Table or View or MaterializedView <Table 1 Name>(
+              ${COLUMN_NAME}:${DATA_TYPE}${PRIMARY_KEY}${UNIQUE}${NOT_NULL}${INDEX}${FOREIGN_KEY},
+              more columns ...
+            )
+            more tables ...
+          )
+          more schemas ...
+        )
+        more databases ...
+
+    There might be multiple Foreign Keys encoded as ``*FK->Table1.Column1*FK->Table2.Column2``.
+
+    Constraints are encoded as:
+
+    - *PK: Primary Key (implies unique and indexed)
+    - *UQ: Unique constraint (implies indexed)
+    - *NN: Not Null constraint
+    - *IDX: Has database index
+    - *FK->Table.Column: Foreign key reference
 
     Example output::
 
-        {
-            "object_type": "schema",
-            "name": "public",
-            "tables": [
-                {
-                    "object_type": "table",
-                    "name": "users",
-                    "fullname": "public.users",
-                    "primary_key": [
-                        "id"
-                    ],
-                    "foreign_keys": [],
-                    "columns": [
-                        {
-                            "object_type": "column",
-                            "name": "id",
-                            "fullname": "users.id",
-                            "type": "INTEGER",
-                            "nullable": false,
-                            "index": true,
-                            "unique": true,
-                            "system": false,
-                            "doc": "",
-                            "comment": "Primary key",
-                            "autoincrement": "auto",
-                            "constraints": [
-                                "PRIMARY KEY"
-                            ],
-                            "foreign_keys": [],
-                            "computed": false,
-                            "identity": false
-                        },
-                        {
-                            "object_type": "column",
-                            "name": "email",
-                            "fullname": "users.email",
-                            "type": "VARCHAR(255)",
-                            "nullable": false,
-                            "index": true,
-                            "unique": true,
-                            "system": false,
-                            "doc": "",
-                            "comment": "",
-                            "autoincrement": "false",
-                            "constraints": [
-                                "UNIQUE",
-                                "NOT NULL"
-                            ],
-                            "foreign_keys": [],
-                            "computed": false,
-                            "identity": false
-                        }
-                    ]
-                },
-                {
-                    "object_type": "table",
-                    "name": "orders",
-                    "fullname": "public.orders",
-                    "primary_key": [
-                        "id"
-                    ],
-                    "foreign_keys": [
-                        {
-                            "object_type": "foreign key",
-                            "name": "user_id",
-                            "comment": "References users table",
-                            "onupdate": "CASCADE",
-                            "ondelete": "SET NULL",
-                            "deferrable": false,
-                            "initially": "IMMEDIATE"
-                        }
-                    ],
-                    "columns": [
-                        {
-                            "object_type": "column",
-                            "name": "user_id",
-                            "fullname": "orders.user_id",
-                            "type": "INTEGER",
-                            "nullable": true,
-                            "index": true,
-                            "unique": false,
-                            "system": false,
-                            "doc": "",
-                            "comment": "",
-                            "autoincrement": "false",
-                            "constraints": [
-                                "FOREIGN KEY"
-                            ],
-                            "foreign_keys": [
-                                {
-                                    "object_type": "foreign key",
-                                    "name": "user_id",
-                                    "comment": "References users table",
-                                    "onupdate": "CASCADE",
-                                    "ondelete": "SET NULL",
-                                    "deferrable": false,
-                                    "initially": "IMMEDIATE"
-                                }
-                            ],
-                            "computed": false,
-                            "identity": false
-                        }
-                    ]
-                }
-            ]
-        }
+        Database chinook(
+          Schema default(
+            Table Album(
+              AlbumId:INT*PK*NN,
+              Title:STR*NN,
+              ArtistId:INT*NN*FK->Artist.ArtistId,
+            )
+            Table Artist(
+              ArtistId:INT*PK*NN,
+              Name:STR,
+            )
+          )
+        )
 
     Note:
 
@@ -157,11 +87,12 @@ async def get_database_schema_info() -> SchemaInfo:
         database connection. The metadata is cached for performance and reflects
         the database state at server startup.
     """
-    return get_schema_info(metadata=config.metadata)
+    return config.get_database_schema()
 
 
 @mcp.tool()
 async def execute_select_statement(
+    database_identifier: str,
     sql: str,
     params: T.Optional[dict[str, T.Any]] = None,
 ) -> str:
@@ -225,8 +156,11 @@ async def execute_select_statement(
         database interactions that respect LLM context limitations.
     """
     start_time = time.time()
+    if database_identifier not in config.databases_mapping:
+        return f"Error: Database '{database_identifier}' not found in configuration."
+    engine = config.databases_mapping[database_identifier].sa_engine
     query_result_text = execute_select_query(
-        engine=config.engine,
+        engine=engine,
         query=sql,
         params=params,
     )

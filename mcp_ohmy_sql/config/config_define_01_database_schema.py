@@ -20,8 +20,33 @@ class ConfigDatabaseSchemaMixin:
         all schemas, all tables associated with the Config object,
         formatted into a structured representation.
 
-        :returns: A formatted string representation of the schema definitions for all
-            databases.
+        :returns: A structured text that includes all databases, schema, filtered tables,
+            columns, relationships, and constraints in the following formats
+            optimized for LLM consumption.
+
+        Format::
+
+            Database <Database 1 Identifier>(
+              Schema <Schema 1 Name>(
+                Table or View or MaterializedView <Table 1 Name>(
+                  ${COLUMN_NAME}:${DATA_TYPE}${PRIMARY_KEY}${UNIQUE}${NOT_NULL}${INDEX}${FOREIGN_KEY},
+                  more columns ...
+                )
+                more tables ...
+              )
+              more schemas ...
+            )
+            more databases ...
+
+        There might be multiple Foreign Keys encoded as ``*FK->Table1.Column1*FK->Table2.Column2``.
+
+        Constraints are encoded as:
+
+        - *PK: Primary Key (implies unique and indexed)
+        - *UQ: Unique constraint (implies indexed)
+        - *NN: Not Null constraint
+        - *IDX: Has database index
+        - *FK->Table.Column: Foreign key reference
         """
         database_lines = []
         for database in self.databases:
