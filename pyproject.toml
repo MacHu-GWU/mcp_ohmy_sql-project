@@ -75,7 +75,7 @@ postgres = [
     "psycopg2-binary>=2.9.1,<3.0.0", # PostgreSQL database adapter for Python
 ]
 mysql = [
-    "mysqlclient>=2.2.1,<3.0.0", # MySQL database adapter for Python
+    "PyMySQL>=1.1.1,<2.0.0", # MySQL database adapter for Python
 ]
 pymssql = [
     "pymssql>2.3.0,<3.0.0", # Microsoft SQL Server database adapter for Python

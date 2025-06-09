@@ -80,7 +80,7 @@ Common database URL formats:
 
 * **SQLite**: ``sqlite:///path/to/database.db`` or ``sqlite:////absolute/path/to/database.db``
 * **PostgreSQL**: ``postgresql+psycopg2://user:password@localhost:5432/dbname``
-* **MySQL**: ``mysql+mysqldb://user:password@localhost:3306/dbname``
+* **MySQL**: ``mysql+pymysql://user:password@localhost:3306/dbname``
 
 
 Schema Configuration
