@@ -12,10 +12,20 @@ class TestSchemaInfo:
             engine=chinook_db.sa_engine,
             metadata=chinook_db.sa_metadata,
             schema_name=chinook_db.schemas[0].name,
+            exclude=[
+                "Playlist",
+                "PlaylistTrack",
+            ],
         )
         # rprint(schema_info)
+        # rprint(schema_info.tables_mapping)
+        assert "Playlist" not in schema_info.tables_mapping
+        assert "PlaylistTrack" not in schema_info.tables_mapping
+
         table_info = schema_info.tables[0]
-        # # rprint(table_info)
+        # rprint(table_info)
+        # rprint(table_info.columns_mapping)
+
         column_info = table_info.columns[0]
         # rprint(column_info)
 

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import typing as T
+from functools import cached_property
+
 import sqlalchemy as sa
 
 from pydantic import BaseModel, Field
 
 from ..constants import TableTypeEnum
+from ..utils import match
 
 from .types import ColumnType
 
@@ -23,15 +26,6 @@ class ForeignKeyInfo(BaseModel):
     ondelete: T.Optional[str] = Field(default=None)
     deferrable: T.Optional[bool] = Field(default=None)
     initially: T.Optional[str] = Field(default=None)
-
-    def to_mcp_result(
-        self,
-        foreign_key_attributes: T.Optional[set[str]] = None,
-    ) -> dict[str, T.Any]:
-        return self.model_dump(
-            include=foreign_key_attributes,
-            exclude_none=True,
-        )
 
     @classmethod
     def from_foreign_key(
@@ -64,22 +58,6 @@ class ColumnInfo(BaseModel):
     foreign_keys: list[ForeignKeyInfo] = Field(default_factory=list)
     computed: bool = Field(default=False)
     identity: bool = Field(default=False)
-
-    def to_mcp_result(
-        self,
-        column_attributes: T.Optional[set[str]] = None,
-        foreign_key_attributes: T.Optional[set[str]] = None,
-    ) -> dict[str, T.Any]:
-        dct = self.model_dump(
-            include=column_attributes,
-            exclude={"foreign_keys"},
-            exclude_none=True,
-        )
-        dct["foreign_keys"] = [
-            fk.to_mcp_result(foreign_key_attributes=foreign_key_attributes)
-            for fk in self.foreign_keys
-        ]
-        return dct
 
     @classmethod
     def from_column(
@@ -119,29 +97,12 @@ class TableInfo(BaseModel):
     foreign_keys: list[ForeignKeyInfo] = Field(default_factory=list)
     columns: list[ColumnInfo] = Field(default_factory=list)
 
-    def to_mcp_result(
-        self,
-        foreign_key_attributes: T.Optional[set[str]] = None,
-        column_attributes: T.Optional[set[str]] = None,
-        table_attributes: T.Optional[set[str]] = None,
-    ) -> dict[str, T.Any]:
-        dct = self.model_dump(
-            include=table_attributes,
-            exclude={"foreign_keys", "columns"},
-            exclude_none=True,
-        )
-        dct["foreign_keys"] = [
-            fk.to_mcp_result(foreign_key_attributes=foreign_key_attributes)
-            for fk in self.foreign_keys
-        ]
-        dct["columns"] = [
-            col.to_mcp_result(
-                foreign_key_attributes=foreign_key_attributes,
-                column_attributes=column_attributes,
-            )
-            for col in self.columns
-        ]
-        return dct
+    @cached_property
+    def columns_mapping(self) -> dict[str, ColumnInfo]:
+        """
+        Returns a mapping of column names to ColumnInfo objects for easy access.
+        """
+        return {column.name: column for column in self.columns}
 
     @classmethod
     def from_table(
@@ -176,27 +137,12 @@ class SchemaInfo(BaseModel):
     name: str = Field(default="")
     tables: list[TableInfo] = Field(default_factory=list)
 
-    def to_mcp_result(
-        self,
-        foreign_key_attributes: T.Optional[set[str]] = None,
-        column_attributes: T.Optional[set[str]] = None,
-        table_attributes: T.Optional[set[str]] = None,
-        schema_attributes: T.Optional[set[str]] = None,
-    ) -> dict[str, T.Any]:
-        dct = self.model_dump(
-            include=schema_attributes,
-            exclude={"tables"},
-            exclude_none=True,
-        )
-        dct["tables"] = [
-            table.to_mcp_result(
-                foreign_key_attributes=foreign_key_attributes,
-                column_attributes=column_attributes,
-                table_attributes=table_attributes,
-            )
-            for table in self.tables
-        ]
-        return dct
+    @cached_property
+    def tables_mapping(self) -> dict[str, TableInfo]:
+        """
+        Returns a mapping of table names to TableInfo objects for easy access.
+        """
+        return {table.name: table for table in self.tables}
 
     @classmethod
     def from_metadata(
@@ -204,6 +150,8 @@ class SchemaInfo(BaseModel):
         engine: sa.engine.Engine,
         metadata: sa.MetaData,
         schema_name: T.Optional[str],
+        include: T.Optional[list[str]] = None,
+        exclude: T.Optional[list[str]] = None,
     ):
         """
         :param engine: SQLAlchemy engine
@@ -219,8 +167,20 @@ class SchemaInfo(BaseModel):
         except NotImplementedError:  # pragma: no cover
             materialized_view_names = set()
 
+        if include is None:  # pragma: no cover
+            include = []
+        if exclude is None:
+            exclude = []
+
         tables = list()
         for table_name, table in metadata.tables.items():
+            # don't include tables from other schemas
+            if table.schema != schema_name:
+                continue
+            # don't include tables that don't match the criteria
+            if match(table_name, include, exclude) is False:
+                continue
+
             if table_name in view_names:  # pragma: no cover
                 object_type = TableTypeEnum.VIEW.value
             elif table_name in materialized_view_names:  # pragma: no cover
