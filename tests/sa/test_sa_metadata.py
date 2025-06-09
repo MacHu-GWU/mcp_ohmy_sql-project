@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.sa.metadata import get_schema_info
-from mcp_ohmy_sql.tests.chinook import metadata
+from mcp_ohmy_sql.sa.metadata import SchemaInfo
+from mcp_ohmy_sql.tests.config import config, chinook_db
 
 from rich import print as rprint
 
 
-def test_get_schema_info():
-    schema_info = get_schema_info(metadata)
-    # rprint(schema_info.model_dump())  # for debug only
+class TestSchemaInfo:
+    def test_from_metadata(self):
+        schema_info = SchemaInfo.from_metadata(chinook_db.sa_metadata)
+        # rprint(schema_info)
+        table_info = schema_info.tables[0]
+        # rprint(table_info)
+        column_info = table_info.columns[0]
+        # rprint(column_info)
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ import sqlalchemy as sa
 
 from pydantic import BaseModel, Field
 
+from .types import ColumnType
+
 try:  # pragma: no cover
     from rich import print as rprint
 except ImportError:  # pragma: no cover
@@ -14,67 +16,97 @@ except ImportError:  # pragma: no cover
 class ForeignKeyInfo(BaseModel):
     object_type: str = Field(default="foreign key")
     name: str = Field()
-    comment: str = Field(default="")
+    comment: T.Optional[str] = Field(default=None)
     onupdate: T.Optional[str] = Field(default=None)
     ondelete: T.Optional[str] = Field(default=None)
     deferrable: T.Optional[bool] = Field(default=None)
     initially: T.Optional[str] = Field(default=None)
 
+    def to_mcp_result(
+        self,
+        foreign_key_attributes: T.Optional[set[str]] = None,
+    ) -> dict[str, T.Any]:
+        return self.model_dump(
+            include=foreign_key_attributes,
+            exclude_none=True,
+        )
 
-def get_foreign_keys_info(
-    fk: sa.ForeignKey,
-) -> ForeignKeyInfo:
-    return ForeignKeyInfo(
-        name=fk.column.name,
-        comment=fk.comment or "",
-        onupdate=fk.onupdate or "",
-        ondelete=fk.ondelete or "",
-        deferrable=fk.deferrable,
-        initially=fk.initially or "",
-    )
+    @classmethod
+    def from_foreign_key(
+        cls,
+        fk: sa.ForeignKey,
+    ):
+        return cls(
+            name=str(fk.column),
+            comment=fk.comment,
+            onupdate=fk.onupdate,
+            ondelete=fk.ondelete,
+            deferrable=fk.deferrable,
+            initially=fk.initially,
+        )
 
 
 class ColumnInfo(BaseModel):
     object_type: str = Field(default="column")
     name: str = Field()
     fullname: str = Field()
-    type: str = Field()
+    type: "ColumnType" = Field()
     nullable: bool = Field(default=False)
-    index: T.Optional[bool] = Field(default=False)
-    unique: T.Optional[bool] = Field(default=False)
+    index: T.Optional[bool] = Field(default=None)
+    unique: T.Optional[bool] = Field(default=None)
     system: bool = Field(default=False)
-    doc: str = Field(default="")
-    comment: str = Field(default="")
-    autoincrement: str = Field(default=False)
+    doc: T.Optional[str] = Field(default=None)
+    comment: T.Optional[str] = Field(default=None)
+    autoincrement: str = Field(default="")
     constraints: list[str] = Field(default_factory=list)
     foreign_keys: list[ForeignKeyInfo] = Field(default_factory=list)
     computed: bool = Field(default=False)
     identity: bool = Field(default=False)
 
+    def to_mcp_result(
+        self,
+        column_attributes: T.Optional[set[str]] = None,
+        foreign_key_attributes: T.Optional[set[str]] = None,
+    ) -> dict[str, T.Any]:
+        dct = self.model_dump(
+            include=column_attributes,
+            exclude={"foreign_keys"},
+            exclude_none=True,
+        )
+        dct["foreign_keys"] = [
+            fk.to_mcp_result(foreign_key_attributes=foreign_key_attributes)
+            for fk in self.foreign_keys
+        ]
+        return dct
 
-def get_column_info(table: sa.Table, column: sa.Column):
-    foreign_keys = list()
-    for fk in table.foreign_keys:
-        fk_info = get_foreign_keys_info(fk)
-        # rprint(fk_info.model_dump())  # for debug only
-        foreign_keys.append(fk_info)
+    @classmethod
+    def from_column(
+        cls,
+        table: sa.Table,
+        column: sa.Column,
+    ):
+        foreign_keys = list()
+        for fk in column.foreign_keys:
+            fk_info = ForeignKeyInfo.from_foreign_key(fk)
+            # rprint(fk_info.model_dump())  # for debug only
+            foreign_keys.append(fk_info)
 
-    return ColumnInfo(
-        name=column.name,
-        fullname=f"{table.name}.{column.name}",
-        type=str(column.type),
-        nullable=column.nullable,
-        index=column.index,
-        unique=column.unique,
-        system=column.system,
-        doc=column.doc or "",
-        comment=column.comment or "",
-        autoincrement=str(column.autoincrement),
-        constraints=[str(c) for c in column.constraints],
-        foreign_keys=foreign_keys,
-        computed=bool(column.computed),
-        identity=bool(column.identity),
-    )
+        return ColumnInfo(
+            name=column.name,
+            fullname=f"{table.name}.{column.name}",
+            type=ColumnType.from_type(column.type),
+            nullable=column.nullable,
+            index=column.index,
+            unique=column.unique,
+            system=column.system,
+            doc=column.doc,
+            comment=column.comment,
+            autoincrement=str(column.autoincrement),
+            constraints=[str(c) for c in column.constraints],
+            foreign_keys=foreign_keys,
+            computed=bool(column.computed),
+            identity=bool(column.identity),
+        )
 
 
 class TableInfo(BaseModel):
@@ -85,27 +117,54 @@ class TableInfo(BaseModel):
     foreign_keys: list[ForeignKeyInfo] = Field(default_factory=list)
     columns: list[ColumnInfo] = Field(default_factory=list)
 
+    def to_mcp_result(
+        self,
+        foreign_key_attributes: T.Optional[set[str]] = None,
+        column_attributes: T.Optional[set[str]] = None,
+        table_attributes: T.Optional[set[str]] = None,
+    ) -> dict[str, T.Any]:
+        dct = self.model_dump(
+            include=table_attributes,
+            exclude={"foreign_keys", "columns"},
+            exclude_none=True,
+        )
+        dct["foreign_keys"] = [
+            fk.to_mcp_result(foreign_key_attributes=foreign_key_attributes)
+            for fk in self.foreign_keys
+        ]
+        dct["columns"] = [
+            col.to_mcp_result(
+                foreign_key_attributes=foreign_key_attributes,
+                column_attributes=column_attributes,
+            )
+            for col in self.columns
+        ]
+        return dct
 
-def get_table_info(table: sa.Table):
-    foreign_keys = list()
-    for fk in table.foreign_keys:
-        fk_info = get_foreign_keys_info(fk)
-        # rprint(fk_info.model_dump())  # for debug only
-        foreign_keys.append(fk_info)
+    @classmethod
+    def from_table(
+        cls,
+        table: sa.Table,
+    ):
+        foreign_keys = list()
+        for fk in table.foreign_keys:
+            fk_info = ForeignKeyInfo.from_foreign_key(fk)
+            # rprint(fk_info.model_dump())  # for debug only
+            foreign_keys.append(fk_info)
 
-    columns = list()
-    for _, column in table.columns.items():
-        column_info = get_column_info(table, column)
-        # rprint(column_info.model_dump())  # for debug only
-        columns.append(column_info)
+        columns = list()
+        for _, column in table.columns.items():
+            column_info = ColumnInfo.from_column(table, column)
+            # rprint(column_info.model_dump())  # for debug only
+            columns.append(column_info)
 
-    return TableInfo(
-        name=table.name,
-        fullname=table.fullname,
-        primary_key=[str(pk) for pk in table.primary_key.columns],
-        foreign_keys=foreign_keys,
-        columns=columns,
-    )
+        return TableInfo(
+            name=table.name,
+            fullname=table.fullname,
+            primary_key=[col.name for col in table.primary_key.columns],
+            foreign_keys=foreign_keys,
+            columns=columns,
+        )
 
 
 class SchemaInfo(BaseModel):
@@ -113,15 +172,40 @@ class SchemaInfo(BaseModel):
     name: str = Field(default="")
     tables: list[TableInfo] = Field(default_factory=list)
 
+    def to_mcp_result(
+        self,
+        foreign_key_attributes: T.Optional[set[str]] = None,
+        column_attributes: T.Optional[set[str]] = None,
+        table_attributes: T.Optional[set[str]] = None,
+        schema_attributes: T.Optional[set[str]] = None,
+    ) -> dict[str, T.Any]:
+        dct = self.model_dump(
+            include=schema_attributes,
+            exclude={"tables"},
+            exclude_none=True,
+        )
+        dct["tables"] = [
+            table.to_mcp_result(
+                foreign_key_attributes=foreign_key_attributes,
+                column_attributes=column_attributes,
+                table_attributes=table_attributes,
+            )
+            for table in self.tables
+        ]
+        return dct
 
-def get_schema_info(metadata: sa.MetaData) -> SchemaInfo:
-    tables = list()
-    for table_name, table in metadata.tables.items():
-        table_info = get_table_info(table)
-        # rprint(table_info.model_dump()) # for debug only
-        tables.append(table_info)
+    @classmethod
+    def from_metadata(
+        cls,
+        metadata: sa.MetaData,
+    ):
+        tables = list()
+        for table_name, table in metadata.tables.items():
+            table_info = TableInfo.from_table(table)
+            # rprint(table_info.model_dump()) # for debug only
+            tables.append(table_info)
 
-    return SchemaInfo(
-        name=metadata.schema or "",
-        tables=tables,
-    )
+        return SchemaInfo(
+            name=metadata.schema or "",
+            tables=tables,
+        )
