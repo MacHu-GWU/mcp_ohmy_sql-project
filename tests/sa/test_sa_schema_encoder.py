@@ -20,6 +20,10 @@ def test_encode_column_info():
         engine=chinook_db.sa_engine,
         metadata=chinook_db.sa_metadata,
         schema_name=chinook_db.schemas[0].name,
+        exclude=[
+            "Playlist",
+            "PlaylistTrack",
+        ],
     )
     # rprint(schema_info) # for debug only
     table_info = schema_info.tables[0]
@@ -46,10 +50,10 @@ def test_encode_column_info():
     assert s == expected
 
     s = encode_schema_info(schema_info)
-    print(s)  # for debug only
+    # print(s)  # for debug only
     expected = textwrap.dedent(
         """
-    Schema default{
+    Schema default(
       Table Album(
         AlbumId:INT*PK*NN,
         Title:STR*NN,
