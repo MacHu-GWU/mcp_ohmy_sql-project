@@ -161,11 +161,11 @@ def encode_schema_info(
 
     Format::
 
-        Schema SchemaName{
+        Schema SchemaName(
             encoded_table_info_1,
             encoded_table_info_2,
             ...,
-        }
+        )
 
     Key benefits for LLM consumption:
 
@@ -186,7 +186,7 @@ def encode_schema_info(
 
     Example::
 
-        Schema ecommerce{
+        Schema ecommerce(
             Table Customer(
                 CustomerId:INT*PK,
                 Email:STR*UQ*NN,
@@ -208,7 +208,7 @@ def encode_schema_info(
                 Quantity:INT*NN,
                 UnitPrice:DEC*NN
             )
-        }
+        )
     """
     tables = list()
     for table in schema_info.tables:
@@ -219,5 +219,5 @@ def encode_schema_info(
         schema_name = schema_info.name
     else:
         schema_name = "default"
-    text = f"Schema {schema_name}{{\n{tables_def}\n}}"
+    text = f"Schema {schema_name}(\n{tables_def}\n)"
     return text
