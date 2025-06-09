@@ -14,9 +14,7 @@ except ImportError:  # pragma: no cover
 
 
 class Settings(BaseModel):
-    foreign_key_attributes: list[str] = Field(default_factory=list)
-    column_attributes: list[str] = Field(default_factory=list)
-    table_attributes: list[str] = Field(default_factory=list)
+    pass
 
 
 class TableFilter(BaseModel):
@@ -58,7 +56,7 @@ class Database(BaseModel):
     def sa_metadata(self) -> "sa.MetaData":
         metadata = sa.MetaData()
         for schema in self.schemas:
-            metadata.reflect(self.sa_engine, schema=schema.name)
+            metadata.reflect(self.sa_engine, schema=schema.name, views=True)
         return metadata
 
 

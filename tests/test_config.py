@@ -18,9 +18,6 @@ class TestConfig:
         config = Config(
             version="0.1.1",
             settings=Settings(
-                foreign_key_attributes=[],
-                column_attributes=[],
-                table_attributes=[],
             ),
             databases=[
                 Database(

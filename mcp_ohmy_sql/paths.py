@@ -26,7 +26,7 @@ dir_unit_test = dir_project_root / "tests"
 dir_int_test = dir_project_root / "tests_int"
 dir_load_test = dir_project_root / "tests_load"
 path_chinook_sqlite = dir_project_root / "chinook.sqlite"
-path_config = dir_project_root / "config.json"
+path_config = dir_project_root / "sample_mcp_ohmy_sql_config.json"
 
 # ------------------------------------------------------------------------------
 # Doc Related

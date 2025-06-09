@@ -1,9 +1,6 @@
 {
     "version": "0.1.1",
     "settings": {
-        "foreign_key_attributes": [],
-        "column_attributes": [],
-        "table_attributes": []
     },
     "databases": [
         {
