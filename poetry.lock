@@ -3358,6 +3358,23 @@ files = [
 test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
 
 [[package]]
+name = "which-runtime"
+version = "0.1.1"
+description = "A Python library to detect and manage different computational runtime environments with ease."
+optional = false
+python-versions = "<4.0,>=3.9"
+groups = ["main"]
+files = [
+    {file = "which_runtime-0.1.1-py3-none-any.whl", hash = "sha256:f388ce3fed502831536f8fb2e13485bc652bfc6b0c44b9b69080480904a4bffa"},
+    {file = "which_runtime-0.1.1.tar.gz", hash = "sha256:c2aae9687d7eca2fe309c00afdd4706fdd087460d1c76d267ff7f4ffa14c1337"},
+]
+
+[package.extras]
+dev = ["build (>=1.2.1,<2.0.0)", "rich (>=13.8.1,<14.0.0)", "twine (>=6.0.0,<7.0.0)", "wheel (>=0.45.0,<1.0.0)"]
+doc = ["Sphinx (>=7.4.7,<8.0.0)", "docfly (==3.0.0)", "furo (==2024.8.6)", "ipython (>=8.18.1,<8.19.0)", "nbsphinx (>=0.8.12,<1.0.0)", "pygments (>=2.18.0,<3.0.0)", "rstobj (==1.2.1)", "sphinx-copybutton (>=0.5.2,<1.0.0)", "sphinx-design (>=0.6.1,<1.0.0)", "sphinx-jinja (>=2.0.2,<3.0.0)"]
+test = ["pytest (>=8.2.2,<9.0.0)", "pytest-cov (>=6.0.0,<7.0.0)"]
+
+[[package]]
 name = "zipp"
 version = "3.21.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
@@ -3392,4 +3409,4 @@ test = ["pytest", "pytest-cov", "requests"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "3518121f9b6412e71995e9fb7538a0a82f1e753c45fdbc8d92da41a349fe60e1"
+content-hash = "2b200d5e7b75bb5bfe778f87b6b322247123c27dae654b8db0f91d042153ce84"

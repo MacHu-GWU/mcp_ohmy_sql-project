@@ -59,6 +59,7 @@ dependencies = [
     "sqlalchemy>=2.0.33,<3.0.0", # SQL toolkit and Object Relational Mapper
     "tabulate>=0.9.0,<1.0.0", # Pretty-print tabular data
     "enum_mate>=0.1.1,<1.0.0", # Enum utilities
+    "which_runtime>=0.1.1,<1.0.0", # Determine the runtime environment
 ]
 
 # ------------------------------------------------------------------------------
