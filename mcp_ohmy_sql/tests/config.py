@@ -2,6 +2,8 @@
 
 import os
 
+from .chinook import path_chinook_sqlite
+
 from ..paths import path_config
 from ..constants import EnvVarEnum
 
