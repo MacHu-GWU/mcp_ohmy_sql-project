@@ -2,13 +2,13 @@
 
 import textwrap
 
+from mcp_ohmy_sql.tests.config import config, chinook_db
 from mcp_ohmy_sql.sa.metadata import SchemaInfo
 from mcp_ohmy_sql.sa.schema_encoder import (
     encode_column_info,
     encode_table_info,
     encode_schema_info,
 )
-from mcp_ohmy_sql.tests.config import config, chinook_db
 
 from rich import print as rprint
 

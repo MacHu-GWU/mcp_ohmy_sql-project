@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import pytest
 
 from mcp_ohmy_sql.tests.config import config, chinook_db

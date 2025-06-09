@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.sa.metadata import SchemaInfo
 from mcp_ohmy_sql.tests.config import config, chinook_db
+from mcp_ohmy_sql.sa.metadata import SchemaInfo
 
 from rich import print as rprint
 

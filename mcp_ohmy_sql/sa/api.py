@@ -10,3 +10,5 @@ from .schema_encoder import encode_column_info
 from .schema_encoder import TABLE_TYPE_NAME_MAPPING
 from .schema_encoder import encode_table_info
 from .schema_encoder import encode_schema_info
+from .query import execute_count_query
+from .query import execute_select_query
