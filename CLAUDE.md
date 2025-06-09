@@ -12,21 +12,31 @@ mcp_ohmy_sql is a Model Context Protocol (MCP) server that provides SQL database
 mcp_ohmy_sql/
 ├── __init__.py              # Package initialization
 ├── _version.py              # Version information
-├── api.py                   # API definitions (future use)
-├── config.py                # Configuration management
-├── config_init.py           # Configuration initialization
-├── constants.py             # Project constants
-├── create_app.py            # FastAPI server factory
+├── api.py                   # Public API exports
+├── config/                  # Modular configuration system
+│   ├── __init__.py
+│   ├── config_define_00_main.py      # Main configuration definitions
+│   ├── config_define_01_database_schema.py  # Database schema configuration
+│   └── config_init.py       # Configuration initialization logic
+├── constants.py             # Project constants and enums
+├── create_app.py            # MCP server factory
+├── docs/                    # Internal documentation
+│   ├── __init__.py
+│   └── mcp_instructions.md  # MCP server instructions
 ├── paths.py                 # Path utilities
 ├── server.py                # MCP server definition
 ├── tools.py                 # MCP tool implementations (wrapper layer)
 ├── sa/                      # SQLAlchemy core implementation
 │   ├── __init__.py
-│   └── metadata.py          # Database schema introspection
-├── tests/                   # Internal tests
+│   ├── api.py               # SA module public API
+│   ├── metadata.py          # Database schema introspection
+│   ├── query.py             # Query execution functionality
+│   ├── schema_encoder.py    # LLM-friendly schema encoding
+│   └── types.py             # Type definitions and mappings
+├── tests/                   # Internal test helpers
+├── utils.py                 # Utility functions
 └── vendor/                  # Third-party dependencies
 ```
-
 ## Architecture Flow
 
 ### 1. Entry Point (`app.py`)
@@ -40,37 +50,80 @@ mcp_ohmy_sql/
 - Returns the configured FastMCP server instance
 
 ### 3. MCP Server (`server.py`)
-- Defines the FastMCP server instance using `@mcp.server()`
-- Currently basic setup with server name and empty instructions
+- Defines the FastMCP server instance using `FastMCP()`
+- Loads instructions from `docs/mcp_instructions.md`
 - Entry point for all MCP tool registrations
 
-### 4. Configuration System (`config.py`, `config_init.py`)
-- Environment-driven configuration via `MCP_OHMY_SQL_CONFIG`
-- JSON-based configuration file format
-- Provides cached SQLAlchemy engine and metadata objects
-- Configuration schema:
+### 4. Configuration System (`config/` module)
+- **Modular Design**: Configuration split into numbered modules for organization
+  - `config_define_00_main.py`: Core configuration classes and database definitions
+  - `config_define_01_database_schema.py`: Schema-related configuration methods
+  - `config_init.py`: Configuration initialization and loading logic
+- **Multi-Database Support**: Configuration supports multiple databases with multiple schemas each
+- **Environment-driven**: Loads from `MCP_OHMY_SQL_CONFIG` environment variable
+- **Configuration schema**:
   ```json
   {
-    "version": "0.1.1",
-    "db_url": "sqlite:////path/to/database.sqlite", 
-    "db_schema": "optional_schema_name"
+      "version": "0.1.1",
+      "settings": {},
+      "databases": [
+          {
+              "identifier": "unique_db_id",
+              "description": "Database description",
+              "connection": {
+                  "type": "sqlalchemy",
+                  "create_engine_kwargs": {
+                      "url": "sqlite:////path/to/database.sqlite"
+                  }
+              },
+              "schemas": [
+                  {
+                      "name": "default",
+                      // Optional, defaults to database default schema
+                      "table_filter": {
+                          "include": [
+                              "table1",
+                              "table2"
+                          ],
+                          // Optional whitelist
+                          "exclude": [
+                              "temp_*"
+                          ]
+                          // Optional blacklist
+                      }
+                  }
+              ]
+          }
+      ]
   }
   ```
 
 ### 5. MCP Tools Layer (`tools.py`)
 - **Purpose**: Wrapper layer that converts SQLAlchemy operations into MCP tools
 - **Current Tools**: 
-  - `get_database_schema_info()`: Database schema introspection
+  - `get_database_schema()`: Get LLM-friendly schema representation
+  - Additional tools to be implemented for query execution, data export, etc.
 - **Design Pattern**: Each function decorated with `@mcp.tool()` becomes an available MCP tool
-- **Data Flow**: tools.py → sa/ module → SQLAlchemy → Database
+- **Data Flow**: tools.py → config/ → sa/ module → SQLAlchemy → Database
 
 ### 6. SQLAlchemy Core (`sa/` module)
-- **Purpose**: Raw SQLAlchemy implementation providing core SQL capabilities
-- **`sa/__init__.py`**: Module initialization and imports
-- **`sa/metadata.py`**: Database schema introspection implementation
-  - Pydantic models for structured data (`ForeignKeyInfo`, `ColumnInfo`, `TableInfo`, `SchemaInfo`)
-  - `get_database_schema_info()`: Core function that reflects database metadata
-  - Comprehensive schema analysis including tables, columns, keys, and relationships
+- **Purpose**: Core SQL implementation providing database capabilities
+- **Module Structure**:
+  - `sa/api.py`: Public API exports for the SA module
+  - `sa/metadata.py`: Database schema introspection
+    - Pydantic models: `ForeignKeyInfo`, `ColumnInfo`, `TableInfo`, `SchemaInfo`
+    - Support for tables, views, and materialized views
+  - `sa/query.py`: Query execution and result handling
+  - `sa/schema_encoder.py`: LLM-optimized schema encoding
+    - Converts verbose metadata to compact format
+    - ~70% token reduction for LLM consumption
+  - `sa/types.py`: SQLAlchemy to LLM type mappings
+    - Maps database types to simplified categories (STR, INT, DEC, etc.)
+
+### 7. Documentation System (`docs/` module)
+- **Internal Documentation**: Separate from Sphinx docs
+- **MCP Instructions**: Loaded dynamically into the server
+- **Centralized Management**: All MCP-specific documentation in one place
 
 ## Key Design Patterns
 
