@@ -88,21 +88,21 @@ class Config(
         """
         try:
             s = path.read_text()
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             raise Exception(
                 f"Failed to read configuration content from {path}! Error: {e!r}"
             )
 
         try:
             dct = json.loads(s)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             raise Exception(
                 f"Failed to load configuration from {path}! Check your JSON content! Error: {e!r}"
             )
 
         try:
             config = cls(**dct)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             raise Exception(
                 f"Configuration Validation failed! Check your JSON content! Error: {e!r}"
             )

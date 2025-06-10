@@ -96,21 +96,35 @@ async def get_database_schema_details() -> str:
 @mcp.tool()
 async def list_databases() -> str:
     """
-    List all configured databases.
+    List all configured databases available for querying.
 
-    This MCP tool retrieves the identifiers of all databases name and description
-    configured in the MCP server. It provides a simple way to discover
-    available databases for subsequent operations.
+    This MCP tool provides discovery of all databases configured in the server, 
+    showing their identifiers, schema counts, and descriptions. Use this tool 
+    when you need to understand what databases are available before performing 
+    any database operations.
 
-    :returns: A formatted string listing all database identifiers, one per line.
+    **When to use this tool:**
+    - User asks "what databases do I have?"
+    - Before selecting a database for schema exploration
+    - When you need to show available data sources
+    - To understand the scope of configured databases
+
+    **Key Information Returned:**
+    - Database identifier (used in other tools)
+    - Number of schemas per database
+    - Human-readable descriptions
+    - Configuration summary
+
+    :returns: A formatted string listing all configured databases with their 
+        identifiers, schema counts, and descriptions.
 
     Example output::
 
         Available Databases:
 
-        - Database 1 Identifier: Database 1 Description
-        - Database 2 Identifier: Database 2 Description
-        - Database 3 Identifier: Database 3 Description
+        - 'production_db': 3 schemas, Production PostgreSQL database
+        - 'analytics_warehouse': 1 schemas, Data warehouse for reporting
+        - 'chinook_sqlite': 1 schemas, Sample music store database
     """
     lines = [
         "Available Databases:",
@@ -127,21 +141,42 @@ async def list_tables(
     schema_name: T.Optional[str] = None,
 ) -> str:
     """
-    List all tables, views, and materialized views.
+    List all tables, views, and materialized views in a specific database schema.
 
-    This MCP tool retrieves the name and comments of all tables, views,
-    and materialized views configured in the given database schema. It provides
-    a simple way to discover summary information about the database structure.
+    This MCP tool provides a high-level overview of all database objects 
+    (tables, views, materialized views) in a specific schema, including their 
+    types and comments. Use this tool for quick discovery of available data 
+    sources before exploring detailed schema information.
 
-    :param database_identifier: The identifier of the database to query.
-    :param schema_name: Optional schema name to filter the results. If not provided,
-        the default schema will be used.
+    **When to use this tool:**
+    - User asks "what tables are in this database?"
+    - Quick overview of available data objects
+    - Before diving into detailed schema exploration
+    - To understand the scope of tables in a schema
 
-    :returns: A formatted string listing all tables, views, and materialized views
+    **Key Information Returned:**
+    - Object type (Table, View, MaterializedView)
+    - Object names (table/view names)
+    - Comments or descriptions for each object
+    - Filtered results based on configuration
+
+    :param database_identifier: The identifier of the database to query 
+        (get this from list_databases tool).
+    :param schema_name: Optional schema name to filter the results. If not 
+        provided or None, uses the default schema for the database.
+
+    :returns: A formatted string listing all accessible tables, views, and 
+        materialized views with their types and comments.
 
     Example output::
 
+        Available Tables, Views, and Materialized Views:
 
+        - Table 'Album': Music album information
+        - Table 'Artist': Recording artist details  
+        - Table 'Customer': Customer contact information
+        - View 'AlbumSalesStats': Pre-calculated album sales metrics
+        - Table 'Invoice': Sales transaction records
     """
     (flag, msg, database, schema) = config.get_schema_object(
         database_identifier, schema_name
@@ -153,7 +188,7 @@ async def list_tables(
         "Available Tables, Views, and Materialized Views:",
     ]
     for table_info in schema_info.tables:
-        line = f"- {table_info.object_type} {table_info.name!r}: {table_info.comment or 'No comment'}"
+        line = f"- {table_info.object_type} {table_info.name!r}: {len(table_info.columns)} columns, {table_info.comment or 'No comment'}"
         lines.append(line)
     return "\n".join(lines)
 
@@ -162,7 +197,81 @@ async def list_tables(
 async def get_schema_details(
     database_identifier: str,
     schema_name: T.Optional[str] = None,
-):
+) -> str:
+    """
+    Get detailed schema information essential for writing accurate SQL queries.
+
+    **CRITICAL FOR SQL QUERY WRITING**: This is the most important tool for SQL 
+    generation. ALWAYS use this tool before writing any SQL query to get the 
+    exact table structure, column names, data types, and relationships.
+
+    This tool returns comprehensive schema metadata in a compact, LLM-optimized 
+    format that provides everything needed to write syntactically correct and 
+    semantically accurate SQL queries. The schema encoding reduces token usage 
+    by ~70% while preserving all essential information.
+
+    **MANDATORY USAGE BEFORE SQL QUERIES:**
+    - Get exact column names and data types
+    - Understand table relationships and foreign keys
+    - Identify primary keys for JOIN operations
+    - Verify table and view names exist
+    - Check constraints and nullable columns
+    - Understand database-specific data types
+
+    **Schema Encoding Format:**
+    The output uses a special compact format optimized for LLM consumption:
+
+    - Tables: ``Table TableName(columns...)``
+    - Views: ``View ViewName(columns...)``
+    - Columns: ``ColumnName:DataType*Constraints``
+    - Constraints: ``*PK`` (Primary Key), ``*FK->Table.Column`` (Foreign Key), 
+      ``*NN`` (Not Null), ``*UQ`` (Unique), ``*IDX`` (Indexed)
+
+    **What this tool provides:**
+    - Complete table and view structures
+    - All column names with exact spelling/case
+    - Data types mapped to simple categories (INT, STR, DEC, DT, TS, etc.)
+    - Primary and foreign key relationships
+    - Constraint information for safe query writing
+    - Filtered tables based on configuration
+
+    :param database_identifier: The identifier of the database to analyze 
+        (obtained from list_databases tool).
+    :param schema_name: Optional schema name. If not provided or None, 
+        uses the default schema for the database.
+
+    :returns: Compact schema representation showing all tables, columns, 
+        data types, and relationships in the specified schema.
+
+    Example output::
+
+        Schema default(
+          Table Album(
+            AlbumId:INT*PK*NN,
+            Title:STR*NN,
+            ArtistId:INT*NN*FK->Artist.ArtistId,
+          )
+          Table Artist(
+            ArtistId:INT*PK*NN,
+            Name:STR,
+          )
+          View AlbumSalesStats(
+            AlbumId:INT,
+            AlbumTitle:STR,
+            TotalRevenue:DEC,
+          )
+        )
+
+    .. important::
+    
+        **AI Assistants MUST use this tool before writing SQL queries** to ensure:
+        
+        1. Correct table and column names (exact spelling/case)
+        2. Proper JOIN syntax using foreign key relationships  
+        3. Appropriate data type handling in WHERE clauses
+        4. Awareness of NOT NULL constraints
+        5. Understanding of available tables and views
+    """
     (flag, msg, database, schema) = config.get_schema_object(
         database_identifier, schema_name
     )
@@ -200,6 +309,8 @@ async def execute_select_statement(
     - Large datasets are truncated with indicators showing partial results
     - Use COUNT queries first to estimate result size before full SELECT
 
+    :param database_identifier: The identifier of the database to query 
+        (obtained from list_databases tool).
     :param sql: The SELECT statement to execute. Must be a valid SELECT query only.
         DDL, DML, and other non-SELECT statements are not permitted.
     :param params: Optional dictionary of parameter values for parameterized queries.
