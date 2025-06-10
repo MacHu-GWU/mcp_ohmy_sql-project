@@ -2,224 +2,190 @@ Quick Start Guide
 ==============================================================================
 Welcome to ``mcp_ohmy_sql``! This guide will get you up and running with the SQL Model Context Protocol (MCP) server in just a few minutes.
 
+With ``mcp_ohmy_sql``, you can connect AI assistants and ...:
 
-What is mcp_ohmy_sql?
+- Get more familiar with the tables and data
+- Explore data and relationships
+- Ask business questions in natural language and get answer
+- Visualize dataset and entity relationships
+- Generate business reports
+- Export query results to files
+
+
+Installation and Setup
 ------------------------------------------------------------------------------
-``mcp_ohmy_sql`` is an MCP server that provides AI assistants with secure access to SQL databases. It acts as a bridge between Claude (or other AI models) and your databases, allowing you to:
-
-* Query databases using natural language
-* Inspect database schemas and structure
-* Export query results to files
-* Safely interact with production databases through built-in safeguards
-
-The server uses SQLAlchemy under the hood, supporting virtually any SQL database including PostgreSQL, MySQL, SQLite, Oracle, SQL Server, and more.
+In this tutorial, we will use `Claude Desktop <https://claude.ai/download>`_ as our AI client.
 
 
-Installation
+Step 1. Add the MCP server
 ------------------------------------------------------------------------------
+Following the official `Claude Desktop Manual <https://modelcontextprotocol.io/quickstart/user>`_, we locate the ``claude_desktop_config.json`` file.
 
-Install via pip
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: bash
+- macOS: ``~/Library/Application Support/Claude/claude_desktop_config.json``
+- Windows: ``%APPDATA%\Claude\claude_desktop_config.json``
 
-    pip install mcp-ohmy-sql
+Open it and add the following configuration to the ``mcpServers`` section:
 
-Or install from source for development:
+.. code-block:: javascript
 
-.. code-block:: bash
+    {
+        "mcpServers": {
+            "OhMySql": {
+                "command": "uvx",
+                "args": [
+                    "--with",
+                    "mcp-ohmy-sql[sqlite,postgres]",
+                    "mcp-ohmy-sql"
+                ],
+                "env": {
+                    "MCP_OHMY_SQL_CONFIG": "/path/to/mcp_ohmy_sql.json"
+                }
+            }
+        }
+    }
 
-    git clone https://github.com/MacHu-GWU/mcp_ohmy_sql-project.git
-    cd mcp_ohmy_sql-project
-    pip install -e .
+Explains:
+
+- We need additional dependencies depends on the database system you are using, the ``mcp-ohmy-sql[sqlite,postgres]`` defines the extra dependencies for SQLite and PostgreSQL. Currently it supports ``sqlite``, ``postgres``, ``mysql``, ``mssql``, ``oracle``.
+- The ``MCP_OHMY_SQL_CONFIG`` environment variable points to your configuration file, which defines the databases and their connection settings. You can create it anywhere you like. Please read the :ref:`configuration-guide` for details on how to create this file.
 
 
-Set Up Configuration
+Step 2. Create the Configuration File
 ------------------------------------------------------------------------------
+In this section, we will use a test sqlite database to get you started quickly.
 
-Step 1: Create Configuration File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Create a JSON configuration file to define your database connections. Here's a simple example for a SQLite database:
+First you can download the `Chinook_sqlite.sqlite <https://github.com/lerocha/chinook-database/releases/download/v1.4.5/Chinook_Sqlite.sqlite>`_ file, which is a sample database that contains data about a music store. You can put the ``Chinook_Sqlite.sqlite`` file anywhere you like.
 
-.. code-block:: json
+Then create a configuration file named ``mcp_ohmy_sql.json`` using the following content:
+
+.. code-block:: javascript
 
     {
         "version": "0.1.1",
         "settings": {},
         "databases": [
             {
-                "identifier": "my_database",
-                "description": "My SQLite database",
+                "identifier": "chinook sqlite",
+                "description": "Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
                 "connection": {
                     "type": "sqlalchemy",
                     "create_engine_kwargs": {
-                        "url": "sqlite:///path/to/your/database.db"
+                        "url": "sqlite:////path/to/Chinook_Sqlite.sqlite"
                     }
                 },
                 "schemas": [
                     {
-                        "name": null
+                        "name": null,
+                        "table_filter": {
+                            "include": [],
+                            "exclude": [
+                                "Playlist",
+                                "PlaylistTrack"
+                            ]
+                        }
                     }
                 ]
             }
         ]
     }
 
-For more complex setups with multiple databases, PostgreSQL, MySQL, or advanced filtering, see the :doc:`../02-Configuration/index` guide.
+Explains:
 
-Step 2: Set Environment Variable
+- You can put it anywhere you like, but make sure to update the ``MCP_OHMY_SQL_CONFIG`` field in ``claude_desktop_config.json`` to point to the location of your ``mcp_ohmy_sql.json`` file.
+- The ``databases.[0].connection.create_engine_kwargs.url`` field should point to the location of your ``Chinook_Sqlite.sqlite`` file. Make sure to use ``sqlite:///{absolute_path_to_your_sqlite_file}`` format.
+
+
+Step 3. Start the MCP Server
+------------------------------------------------------------------------------
+Now you can launch your Claude Desktop application, and it will automatically start the MCP server with the configuration you provided.
+
+.. image:: ./01-launch-claude-desktop.png
+
+
+
+Trouble Shooting
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Set the environment variable to point to your configuration file:
+.. image:: ./02-trouble-shooting.png
 
-.. code-block:: bash
+Problem: uvx command not found
 
-    export MCP_OHMY_SQL_CONFIG=/path/to/your/config.json
+    Solution: Make sure you have installed ``uvx``. Follow the `official guide <https://docs.astral.sh/uv/getting-started/installation/>`_ to install it, and test it with the ``uvx --version`` command. If you didn't install it globally, you can use the absolute path to the ``uvx`` command in the ``claude_desktop_config.json`` file, for xample: ``"command": "/path/to/uvx"``.
 
-Add this to your ``.bashrc``, ``.zshrc``, or equivalent shell configuration file to make it persistent.
+    .. code-block:: bash
+
+        pip install uvx
 
 
-Running the MCP Server
+Problem: Claude Desktop cannot connect to the MCP server
+
+    Solution:
+
+    1. make sure the ``mcp_ohmy_sql.json`` format is correct.
+    2. make sure the Database connection information in ``mcp_ohmy_sql.json`` is correct, you can test it with the SQLAlchemy directly.
+
+    .. code-block:: python
+
+        import sqlalchemy as sa
+
+        engine = sa.create_engine("db_url_here")
+        sql = "SELECT 1"
+        with engine.connect() as conn:
+            result = conn.execute(sql)
+            print(result.fetchone())
+
+
+Tools
+------------------------------------------------------------------------------
+For full list of available tools, see the :ref:`tools-guide`.
+
+
+
+Usage Example
 ------------------------------------------------------------------------------
 
-Start the Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Run the MCP server from the command line:
-
-.. code-block:: bash
-
-    python -m mcp_ohmy_sql.app
-
-The server will start and listen for MCP protocol messages via stdio. You should see output indicating successful startup and database connections.
-
-Connecting to Claude Desktop
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To use the MCP server with Claude Desktop, add the following to your Claude Desktop MCP configuration file:
-
-**On macOS**: ``~/Library/Application Support/Claude/claude_desktop_config.json``
-
-**On Windows**: ``%APPDATA%\Claude\claude_desktop_config.json``
-
-.. code-block:: json
-
-    {
-        "mcpServers": {
-            "mcp_ohmy_sql": {
-                "command": "python",
-                "args": ["-m", "mcp_ohmy_sql.app"],
-                "env": {
-                    "MCP_OHMY_SQL_CONFIG": "/path/to/your/config.json"
-                }
-            }
-        }
-    }
-
-Restart Claude Desktop to load the new configuration.
 
 
-How It Works
+- Get more familiar with the tables and data
+- Explore data and relationships
+- Ask business questions in natural language and get answer
+- Visualize dataset and entity relationships
+- Generate business reports
+- Export query results to files
+
+1. Get Basic Database Information
 ------------------------------------------------------------------------------
+In this example, we will ask AI to tell us what databases are available to explore.
 
-Architecture Overview
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The ``mcp_ohmy_sql`` server follows a layered architecture:
-
-.. code-block:: text
-
-    Claude Desktop ↔ MCP Protocol ↔ mcp_ohmy_sql Server ↔ SQLAlchemy ↔ Your Databases
-
-1. **MCP Layer** (``tools.py``): Exposes database operations as MCP tools
-2. **Configuration Layer** (``config/``): Manages database connections and settings
-3. **SQLAlchemy Core** (``sa/``): Handles database operations and schema introspection
-4. **Database Layer**: Your actual SQL databases
-
-Available Tools
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Once connected, Claude will have access to these tools:
-
-* **get_database_schema**: Inspect database structure, tables, columns, and relationships
-* **execute_query** (coming soon): Run SQL queries with built-in result pagination
-* **export_data** (coming soon): Export query results to local files
-
-Configuration System
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The configuration system supports:
-
-* **Multiple Databases**: Connect to several databases simultaneously
-* **Schema Filtering**: Include/exclude specific tables using patterns
-* **Connection Pooling**: Optimize performance with SQLAlchemy engine settings
-* **Environment-Specific Configs**: Different settings for dev/staging/production
-
-For detailed configuration options, see :doc:`../02-Configuration/index`.
+.. image:: ./11-List-Databases.png
 
 
-First Steps with Claude
+
+2. Explore data and relationships
 ------------------------------------------------------------------------------
+We want to get more familiar with the table structure and explore important entities, and key relationships in the database.
 
-Test Database Connection
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Start a conversation with Claude and ask:
-
-.. code-block:: text
-
-    Can you show me the schema of my database?
-
-Claude will use the ``get_database_schema`` tool to retrieve and display your database structure.
-
-Explore Your Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Try these example queries:
-
-.. code-block:: text
-
-    What tables are available in my database?
-    
-    Show me the structure of the users table.
-    
-    What are the relationships between my tables?
-
-Natural Language Queries (Coming Soon)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Once query execution is implemented, you'll be able to ask:
-
-.. code-block:: text
-
-    Show me the top 10 customers by order value.
-    
-    What's the average order amount for each product category?
-    
-    Export the sales data from last month to a CSV file.
+.. image:: ./12-Get-Database-Schema-Details.png
 
 
-Troubleshooting
+3. Ask Business Questions in Natural Language
 ------------------------------------------------------------------------------
+We would like to ask AI to answer business questions in natural language. AI then can leverage the database schema information to understand the question, write the SQL, and provide answers.
 
-Common Issues
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. image:: ./13-Ask-Business-Question.png
 
-**Configuration File Not Found**
-    * Verify ``MCP_OHMY_SQL_CONFIG`` environment variable is set correctly
-    * Check that the file path exists and is readable
-    * Ensure the JSON syntax is valid
 
-**Database Connection Failed**
-    * Verify your database connection URL is correct
-    * Check that required database drivers are installed (e.g., ``psycopg2`` for PostgreSQL)
-    * Test the connection outside of the MCP server using SQLAlchemy directly
+4. Generate Business Reports
+------------------------------------------------------------------------------
+Image are easier to consume for human, sometime we would like visualized data report to present, we can ask AI to generate a report for us.
 
-**MCP Server Not Starting**
-    * Check the console output for specific error messages
-    * Ensure all dependencies are installed correctly
-    * Verify Python version compatibility
+.. image:: ./14-Visualize-Data.png
 
-**Claude Desktop Not Connecting**
-    * Restart Claude Desktop after modifying the configuration
-    * Check the Claude Desktop logs for connection errors
-    * Verify the MCP server configuration matches your setup exactly
 
-Getting Help
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-* Check the error messages in the console output
-* Review the :doc:`../02-Configuration/index` guide for configuration details
-* Submit issues on `GitHub <https://github.com/MacHu-GWU/mcp_ohmy_sql-project/issues>`_
+5. Visualize Dataset and Entity Relationships
+------------------------------------------------------------------------------
+ER Diagrams are a great way to visualize the relationships between entities in a database. We can ask AI to generate an ER diagram for us, without using any third-party tools.
+
+.. image:: ./15-Visualize-Relationship.png
 
 
 Next Steps

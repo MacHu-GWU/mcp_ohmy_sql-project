@@ -31,9 +31,9 @@ The configuration file is a JSON document with the following top-level structure
 
 Root Fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-* ``version`` (string, required): The configuration schema version. Currently must be ``"0.1.1"``.
-* ``settings`` (object, optional): Global settings for the MCP server. Currently empty but reserved for future use.
-* ``databases`` (array, required): List of database configurations. Can be empty, but the field must exist.
+- ``version`` (string, required): The configuration schema version. Currently must be ``"0.1.1"``.
+- ``settings`` (object, optional): Global settings for the MCP server. Currently empty but reserved for future use.
+- ``databases`` (array, required): List of database configurations. Can be empty, but the field must exist.
 
 
 Database Configuration
@@ -54,10 +54,10 @@ Each database in the ``databases`` array has the following structure:
 
 **Database Fields**
 
-* ``identifier`` (string, required): A unique identifier for this database. Used in MCP tools to reference specific databases.
-* ``description`` (string, optional): A human-readable description of the database purpose or contents.
-* ``connection`` (object, required): Database connection configuration.
-* ``schemas`` (array, required): List of schema configurations for this database.
+- ``identifier`` (string, required): A unique identifier for this database. Used in MCP tools to reference specific databases.
+- ``description`` (string, optional): A human-readable description of the database purpose or contents.
+- ``connection`` (object, required): Database connection configuration.
+- ``schemas`` (array, required): List of schema configurations for this database.
 
 
 Connection Configuration
@@ -73,16 +73,18 @@ Currently, only SQLAlchemy connections are supported:
         }
     }
 
-* ``type`` (string, required): Must be ``"sqlalchemy"`` for SQLAlchemy connections.
-* ``create_engine_kwargs`` (object, required): Parameters passed directly to SQLAlchemy's ``create_engine()`` function.
+- ``type`` (string, required): Must be ``"sqlalchemy"`` for SQLAlchemy connections.
+- ``create_engine_kwargs`` (object, required): Parameters passed directly to SQLAlchemy's ``create_engine()`` function.
 
 The ``create_engine_kwargs`` object supports all parameters accepted by SQLAlchemy's ``create_engine()`` function. The most common parameter is ``url``, which specifies the database connection string. For detailed information about connection URLs and other engine parameters, see the `SQLAlchemy Engine Configuration documentation <https://docs.sqlalchemy.org/en/20/core/engines.html>`_.
 
 Common database URL formats:
 
-* **SQLite**: ``sqlite:///path/to/database.db`` or ``sqlite:////absolute/path/to/database.db``
-* **PostgreSQL**: ``postgresql+psycopg2://user:password@localhost:5432/dbname``
-* **MySQL**: ``mysql+pymysql://user:password@localhost:3306/dbname``
+- **SQLite**: ``sqlite:///path/to/database.db`` or ``sqlite:////absolute/path/to/database.db``
+- **PostgreSQL**: ``postgresql+psycopg2://user:password@localhost:5432/dbname``
+- **MySQL**: ``mysql+pymysql://user:password@localhost:3306/dbname``
+- **Microsoft SQL Server**: ``mssql+pymssql://user:password@localhost:1433/dbname``
+- **Oracle**: ``oracle+oracledb://user:password@127.0.0.1:1521/dbname``
 
 
 Schema Configuration
@@ -101,13 +103,13 @@ Each schema in the ``schemas`` array has the following structure:
 
 **Schema Fields**
 
-* ``name`` (string, optional): The schema name. If ``null`` or omitted, uses the database's default schema.
-* ``table_filter`` (object, optional): Filters to include or exclude specific tables.
+- ``name`` (string, optional): The schema name. If ``null`` or omitted, uses the database's default schema.
+- ``table_filter`` (object, optional): Filters to include or exclude specific tables.
 
 **Table Filter Configuration**
 
-* ``include`` (array of strings, optional): Whitelist of table names to include. If empty, includes all tables not in exclude list.
-* ``exclude`` (array of strings, optional): Blacklist of table names to exclude. Supports wildcards with ``*``.
+- ``include`` (array of strings, optional): Whitelist of table names to include. If empty, includes all tables not in exclude list.
+- ``exclude`` (array of strings, optional): Blacklist of table names to exclude. Supports wildcards with ``*``.
 
 .. note::
 
@@ -245,32 +247,32 @@ Common Issues
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 1. **Configuration file not found**:
    
-   * Ensure ``MCP_OHMY_SQL_CONFIG`` environment variable is set
-   * Check the file path is absolute and accessible
-   * Verify file permissions
+   - Ensure ``MCP_OHMY_SQL_CONFIG`` environment variable is set
+   - Check the file path is absolute and accessible
+   - Verify file permissions
 
 2. **Database connection failures**:
    
-   * Verify the connection URL is correct
-   * Ensure database drivers are installed (e.g., ``psycopg2`` for PostgreSQL)
-   * Check network connectivity and firewall rules
-   * Test the connection string using SQLAlchemy directly
+   - Verify the connection URL is correct
+   - Ensure database drivers are installed (e.g., ``psycopg2`` for PostgreSQL)
+   - Check network connectivity and firewall rules
+   - Test the connection string using SQLAlchemy directly
 
 3. **Schema not found**:
    
-   * Some databases are case-sensitive for schema names
-   * Verify the schema exists in the database
-   * Check user permissions for the schema
+   - Some databases are case-sensitive for schema names
+   - Verify the schema exists in the database
+   - Check user permissions for the schema
 
 
 Validation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The configuration is validated when loaded. Common validation errors:
 
-* Missing required fields (``version``, ``databases``)
-* Invalid version number
-* Duplicate database identifiers
-* Invalid connection type (must be ``"sqlalchemy"``)
+- Missing required fields (``version``, ``databases``)
+- Invalid version number
+- Duplicate database identifiers
+- Invalid connection type (must be ``"sqlalchemy"``)
 
 
 Environment-Specific Configurations
@@ -290,10 +292,10 @@ For different environments, maintain separate configuration files:
 
 This approach allows you to:
 
-* Use different databases for different environments
-* Apply stricter filters in production
-* Adjust connection pool settings based on load
-* Control access to sensitive data
+- Use different databases for different environments
+- Apply stricter filters in production
+- Adjust connection pool settings based on load
+- Control access to sensitive data
 
 
 Next Steps

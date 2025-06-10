@@ -77,7 +77,7 @@ postgres = [
 mysql = [
     "PyMySQL>=1.1.1,<2.0.0", # MySQL database adapter for Python
 ]
-pymssql = [
+mssql = [
     "pymssql>2.3.0,<3.0.0", # Microsoft SQL Server database adapter for Python
 ]
 oracle = [

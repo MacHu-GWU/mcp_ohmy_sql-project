@@ -86,7 +86,28 @@ class Config(
         """
         Load configuration from a JSON file.
         """
-        return cls(**json.loads(path.read_text()))
+        try:
+            s = path.read_text()
+        except Exception as e:
+            raise Exception(
+                f"Failed to read configuration content from {path}! Error: {e!r}"
+            )
+
+        try:
+            dct = json.loads(s)
+        except Exception as e:
+            raise Exception(
+                f"Failed to load configuration from {path}! Check your JSON content! Error: {e!r}"
+            )
+
+        try:
+            config = cls(**dct)
+        except Exception as e:
+            raise Exception(
+                f"Configuration Validation failed! Check your JSON content! Error: {e!r}"
+            )
+
+        return config
 
     @cached_property
     def databases_mapping(self) -> dict[str, Database]:
