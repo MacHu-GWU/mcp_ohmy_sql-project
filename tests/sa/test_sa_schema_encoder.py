@@ -2,7 +2,7 @@
 
 import textwrap
 
-from mcp_ohmy_sql.tests.config import config, chinook_db
+from mcp_ohmy_sql.tests.config import config, chinook_sqlite
 from mcp_ohmy_sql.sa.metadata import SchemaInfo
 from mcp_ohmy_sql.sa.schema_encoder import (
     encode_column_info,
@@ -17,9 +17,9 @@ def test_encode_column_info():
     print("")
 
     schema_info = SchemaInfo.from_metadata(
-        engine=chinook_db.sa_engine,
-        metadata=chinook_db.sa_metadata,
-        schema_name=chinook_db.schemas[0].name,
+        engine=chinook_sqlite.sa_engine,
+        metadata=chinook_sqlite.sa_metadata,
+        schema_name=chinook_sqlite.schemas[0].name,
         exclude=[
             "Playlist",
             "PlaylistTrack",

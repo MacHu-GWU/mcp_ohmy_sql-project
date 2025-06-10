@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_ohmy_sql.tests.config import config, chinook_db
+from mcp_ohmy_sql.tests.config import config, chinook_sqlite
 from mcp_ohmy_sql.sa.query import (
     ensure_valid_select_query,
     execute_count_query,
@@ -17,13 +17,13 @@ def test_ensure_valid_select_query():
 
 def test_execute_count_query():
     count = execute_count_query(
-        engine=chinook_db.sa_engine,
+        engine=chinook_sqlite.sa_engine,
         query="SELECT * FROM Album LIMIT 3",
     )
     assert count == 3
 
     count = execute_count_query(
-        engine=chinook_db.sa_engine,
+        engine=chinook_sqlite.sa_engine,
         query="SELECT * FROM Album LIMIT 3;",
     )
     assert count == 3
@@ -33,26 +33,26 @@ def test_execute_select_query():
     print("")
 
     result = execute_select_query(
-        engine=chinook_db.sa_engine,
+        engine=chinook_sqlite.sa_engine,
         query="SELECT * FROM Album LIMIT 3",
     )
     # print(result)  # for debug only
 
     result = execute_select_query(
-        engine=chinook_db.sa_engine,
+        engine=chinook_sqlite.sa_engine,
         query="SELECT * FROM Album LIMIT 3;",
     )
     # print(result)  # for debug only
 
     result = execute_select_query(
-        engine=chinook_db.sa_engine,
+        engine=chinook_sqlite.sa_engine,
         query="SELECT INVALID SQL QUERY HERE",
     )
     # print(result)
     assert "OperationalError" in result
 
     result = execute_select_query(
-        engine=chinook_db.sa_engine,
+        engine=chinook_sqlite.sa_engine,
         query="SELECT * FROM Album WHERE AlbumId >= 999999",
     )
     # print(result)  # for debug only
