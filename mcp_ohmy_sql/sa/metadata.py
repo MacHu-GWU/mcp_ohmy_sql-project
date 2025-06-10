@@ -93,6 +93,7 @@ class TableInfo(BaseModel):
     object_type: str = Field()
     name: str = Field()
     fullname: str = Field()
+    comment: T.Optional[str] = Field(default=None)
     primary_key: list[str] = Field(default_factory=list)
     foreign_keys: list[ForeignKeyInfo] = Field(default_factory=list)
     columns: list[ColumnInfo] = Field(default_factory=list)
@@ -125,6 +126,7 @@ class TableInfo(BaseModel):
         return TableInfo(
             object_type=object_type,
             name=table.name,
+            comment=table.comment,
             fullname=table.fullname,
             primary_key=[col.name for col in table.primary_key.columns],
             foreign_keys=foreign_keys,
@@ -135,6 +137,7 @@ class TableInfo(BaseModel):
 class SchemaInfo(BaseModel):
     object_type: str = Field(default="schema")
     name: str = Field(default="")
+    comment: T.Optional[str] = Field(default=None)
     tables: list[TableInfo] = Field(default_factory=list)
 
     @cached_property

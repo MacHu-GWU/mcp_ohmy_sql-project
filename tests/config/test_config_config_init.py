@@ -6,7 +6,7 @@ from rich import print as rprint
 
 
 def test_config_init():
-    rprint(config)  # for debug only
+    # rprint(config)  # for debug only
     pass
 
 

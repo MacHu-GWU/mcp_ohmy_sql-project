@@ -28,7 +28,8 @@ dir_unit_test = dir_project_root / "tests"
 dir_int_test = dir_project_root / "tests_int"
 dir_load_test = dir_project_root / "tests_load"
 
-path_config = dir_project_root / "sample_mcp_ohmy_sql_config.json"
+# the sample configuration file for testing
+path_sample_config = dir_project_root / "sample_mcp_ohmy_sql_config.json"
 
 # ------------------------------------------------------------------------------
 # Doc Related

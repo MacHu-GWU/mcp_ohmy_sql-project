@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.tests.config import config, chinook_sqlite
+from mcp_ohmy_sql.tests.config import config, DatabaseEnum
 from mcp_ohmy_sql.sa.metadata import SchemaInfo
 
 from rich import print as rprint
@@ -8,10 +8,11 @@ from rich import print as rprint
 
 class TestSchemaInfo:
     def test_from_metadata(self):
+        database = DatabaseEnum.chinook_sqlite
         schema_info = SchemaInfo.from_metadata(
-            engine=chinook_sqlite.sa_engine,
-            metadata=chinook_sqlite.sa_metadata,
-            schema_name=chinook_sqlite.schemas[0].name,
+            engine=database.sa_engine,
+            metadata=database.sa_metadata,
+            schema_name=database.schemas[0].name,
             exclude=[
                 "Playlist",
                 "PlaylistTrack",

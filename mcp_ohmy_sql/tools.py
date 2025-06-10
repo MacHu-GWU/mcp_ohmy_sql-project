@@ -5,13 +5,19 @@ import time
 
 from .server import mcp
 
+from .config.config_define_00_main import Database, Schema
 from .config.config_init import config
 
-from .sa.query import execute_count_query, execute_select_query
+from .sa.api import (
+    SchemaInfo,
+    encode_schema_info,
+    execute_count_query,
+    execute_select_query,
+)
 
 
 @mcp.tool()
-async def get_database_schema() -> str:
+async def get_database_schema_details() -> str:
     """
     Retrieve comprehensive database schema information for AI query assistance.
 
@@ -88,6 +94,86 @@ async def get_database_schema() -> str:
         the database state at server startup.
     """
     return config.get_database_schema()
+
+
+@mcp.tool()
+async def list_databases() -> str:
+    """
+    List all configured databases.
+
+    This MCP tool retrieves the identifiers of all databases name and description
+    configured in the MCP server. It provides a simple way to discover
+    available databases for subsequent operations.
+
+    :returns: A formatted string listing all database identifiers, one per line.
+
+    Example output::
+
+        Available Databases:
+
+        - Database 1 Identifier: Database 1 Description
+        - Database 2 Identifier: Database 2 Description
+        - Database 3 Identifier: Database 3 Description
+    """
+    lines = [
+        "Available Databases:",
+    ]
+    for database in config.databases:
+        line = f"- {database.identifier!r}: {len(database.schemas)} schemas, {database.description or 'No description'})"
+        lines.append(line)
+    return "\n".join(lines)
+
+
+@mcp.tool()
+async def list_tables(
+    database_identifier: str,
+    schema_name: T.Optional[str] = None,
+) -> str:
+    """
+    List all tables, views, and materialized views.
+
+    This MCP tool retrieves the name and comments of all tables, views,
+    and materialized views configured in the given database schema. It provides
+    a simple way to discover summary information about the database structure.
+
+    :param database_identifier: The identifier of the database to query.
+    :param schema_name: Optional schema name to filter the results. If not provided,
+        the default schema will be used.
+
+    :returns: A formatted string listing all tables, views, and materialized views
+
+    Example output::
+
+
+    """
+    (flag, msg, database, schema) = config.get_schema_object(
+        database_identifier, schema_name
+    )
+    if flag is False:
+        return msg
+    schema_info = config.get_schema_info(database, schema)
+    lines = [
+        "Available Tables, Views, and Materialized Views:",
+    ]
+    for table_info in schema_info.tables:
+        line = f"- {table_info.object_type} {table_info.name!r}: {table_info.comment or 'No comment'}"
+        lines.append(line)
+    return "\n".join(lines)
+
+
+@mcp.tool()
+async def get_schema_details(
+    database_identifier: str,
+    schema_name: T.Optional[str] = None,
+):
+    (flag, msg, database, schema) = config.get_schema_object(
+        database_identifier, schema_name
+    )
+    if flag is False:
+        return msg
+    schema_info = config.get_schema_info(database, schema)
+    s = encode_schema_info(schema_info)
+    return s
 
 
 @mcp.tool()

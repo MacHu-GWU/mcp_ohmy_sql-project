@@ -102,6 +102,7 @@ dev = [
 test = [
     "pytest>=8.2.2,<9.0.0", # Testing framework
     "pytest-cov>=6.0.0,<7.0.0", # Coverage reporting
+    "pytest-asyncio>=1.0.0,<2.0.0", # Asyncio support for pytest
     "requests>=2.32.3,<3.0.0", # HTTP library
 ]
 

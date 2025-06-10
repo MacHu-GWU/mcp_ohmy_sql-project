@@ -8,7 +8,7 @@ from mcp_ohmy_sql.config.config_define_00_main import (
     Database,
     Config,
 )
-from mcp_ohmy_sql.paths import path_config
+from mcp_ohmy_sql.paths import path_sample_config
 
 from rich import print as rprint
 
@@ -60,7 +60,7 @@ class TestConfig:
         # rprint(config)  # for debug only
 
     def test_load(self):
-        config = Config.load(path_config)
+        config = Config.load(path_sample_config)
         # rprint(config)  # for debug only
 
         for database_name, database in config.databases_mapping.items():

@@ -9,6 +9,8 @@ omit =
     mcp_ohmy_sql/_version.py
     mcp_ohmy_sql/cli.py
     mcp_ohmy_sql/paths.py
+    mcp_ohmy_sql/create_app.py
+    mcp_ohmy_sql/app.py
 
 [report]
 # Regexes for lines to exclude from consideration

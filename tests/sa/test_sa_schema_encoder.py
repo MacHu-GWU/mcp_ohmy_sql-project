@@ -2,7 +2,7 @@
 
 import textwrap
 
-from mcp_ohmy_sql.tests.config import config, chinook_sqlite
+from mcp_ohmy_sql.tests.config import config, DatabaseEnum
 from mcp_ohmy_sql.sa.metadata import SchemaInfo
 from mcp_ohmy_sql.sa.schema_encoder import (
     encode_column_info,
@@ -13,13 +13,17 @@ from mcp_ohmy_sql.sa.schema_encoder import (
 from rich import print as rprint
 
 
-def test_encode_column_info():
+def setup_module(module):
     print("")
 
+
+def test_encode_column_info():
+    database = DatabaseEnum.chinook_sqlite
+
     schema_info = SchemaInfo.from_metadata(
-        engine=chinook_sqlite.sa_engine,
-        metadata=chinook_sqlite.sa_metadata,
-        schema_name=chinook_sqlite.schemas[0].name,
+        engine=database.sa_engine,
+        metadata=database.sa_metadata,
+        schema_name=database.schemas[0].name,
         exclude=[
             "Playlist",
             "PlaylistTrack",

@@ -24,8 +24,12 @@ def download_file(file: str, tag: str = TAG):
     url = get_url(file, tag)
     path = dir_tmp / file
     print(f"Downloading chinook file from {url} to {path} ...")
-    res = requests.get(url)
-    path.write_bytes(res.content)
+    if path.exists():
+        print(f"Already exists, skipping download.")
+    else:
+        res = requests.get(url)
+        path.write_bytes(res.content)
+        print("Done.")
 
 
 path_ChinookData_json = dir_tmp / "ChinookData.json"

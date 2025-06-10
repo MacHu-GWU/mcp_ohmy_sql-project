@@ -17,13 +17,13 @@ Key Features:
 - Idempotent operations (safe to run multiple times)
 
 Typical Usage:
-    >>> from mcp_ohmy_sql.tests.test_database_setup import setup_test_database, DatabaseEnum
+    >>> from mcp_ohmy_sql.tests.test_database_setup import setup_test_database, EngineEnum
     >>> 
     >>> # Setup SQLite test database
-    >>> setup_test_database(DatabaseEnum.sqlite)
+    >>> setup_test_database(EngineEnum.sqlite)
     >>> 
     >>> # Setup PostgreSQL test database
-    >>> setup_test_database(DatabaseEnum.postgres)
+    >>> setup_test_database(EngineEnum.postgres)
 """
 
 import typing as T
@@ -35,7 +35,9 @@ from functools import cached_property
 
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
-from .chinook import path_ChinookData_json, path_Chinook_Sqlite_sqlite
+
+from .chinook import path_ChinookData_json
+from .config import DatabaseEnum
 
 
 class Base(orm.DeclarativeBase):
@@ -208,23 +210,19 @@ album_sales_stats_view_select_stmt = (
 )
 
 
-class DBUrlEnum:
-    sqlite = f"sqlite:///{path_Chinook_Sqlite_sqlite}"
-    postgres = "postgresql+psycopg2://postgres:password@localhost:40311/postgres"
-
-
-class _DatabaseEnum:
+class _EngineEnum:
     @cached_property
     def sqlite(self) -> sa.engine.Engine:
-        path_Chinook_Sqlite_sqlite.unlink(missing_ok=True)
-        return sa.create_engine(DBUrlEnum.sqlite)
+        kwargs = DatabaseEnum.chinook_sqlite.connection.create_engine_kwargs
+        return sa.create_engine(**kwargs)
 
     @cached_property
     def postgres(self) -> sa.engine.Engine:
-        return sa.create_engine(DBUrlEnum.postgres)
+        kwargs = DatabaseEnum.chinook_postgres.connection.create_engine_kwargs
+        return sa.create_engine(**kwargs)
 
 
-DatabaseEnum = _DatabaseEnum()
+EngineEnum = _EngineEnum()
 
 
 def drop_view(engine: sa.engine.Engine, view_name: str):
@@ -256,13 +254,13 @@ def setup_test_database(engine: sa.engine.Engine) -> None:
 
     Example:
 
-        >>> from mcp_ohmy_sql.tests.test_database_setup import setup_test_database, DatabaseEnum
+        >>> from mcp_ohmy_sql.tests.test_database_setup import setup_test_database, EngineEnum
         >>>
         >>> # Setup SQLite test database
-        >>> setup_test_database(DatabaseEnum.sqlite)
+        >>> setup_test_database(EngineEnum.sqlite)
         >>>
         >>> # Setup PostgreSQL test database (requires running postgres container)
-        >>> setup_test_database(DatabaseEnum.postgres)
+        >>> setup_test_database(EngineEnum.postgres)
 
     .. note::
 
