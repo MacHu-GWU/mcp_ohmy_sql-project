@@ -2,7 +2,7 @@
 
 
 import json
-from mcp_ohmy_sql.tests.config import path_sample_config, config
+from mcp_ohmy_sql.tests.test_config import path_sample_config, config
 
 
 path_sample_config.write_text(

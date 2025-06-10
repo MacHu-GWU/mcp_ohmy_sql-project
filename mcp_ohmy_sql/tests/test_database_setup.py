@@ -37,7 +37,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as orm
 
 from .chinook import path_ChinookData_json
-from .config import DatabaseEnum
+from .test_config import DatabaseEnum
 
 
 class Base(orm.DeclarativeBase):
