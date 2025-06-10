@@ -27,6 +27,7 @@ Typical Usage:
 """
 
 import typing as T
+import enum
 import json
 from decimal import Decimal
 from datetime import datetime
@@ -163,24 +164,47 @@ class InvoiceLine(Base):
     Quantity: orm.Mapped[int] = sa.Column(sa.Integer, nullable=False)
 # fmt: on
 
+
+class ViewNameEnum(str, enum.Enum):
+    AlbumSalesStats = "AlbumSalesStats"
+
+
 album_sales_stats_view_select_stmt = (
     sa.select(
         Album.AlbumId,
         Album.Title.label("AlbumTitle"),
         Artist.Name.label("ArtistName"),
-        sa.func.count(sa.func.distinct(InvoiceLine.InvoiceLineId)).label("TotalSales"),
-        sa.func.sum(InvoiceLine.Quantity).label("TotalQuantity"),
-        sa.func.sum(InvoiceLine.UnitPrice * InvoiceLine.Quantity).label("TotalRevenue"),
-        sa.func.round(sa.func.avg(InvoiceLine.UnitPrice), 2).label("AvgTrackPrice"),
-        sa.func.count(sa.func.distinct(Track.TrackId)).label("TracksInAlbum"),
+        sa.cast(
+            sa.func.count(sa.func.distinct(InvoiceLine.InvoiceLineId)), sa.Integer
+        ).label("TotalSales"),
+        sa.cast(
+            sa.func.coalesce(sa.func.sum(InvoiceLine.Quantity), 0), sa.Integer
+        ).label("TotalQuantity"),
+        sa.cast(
+            sa.func.coalesce(
+                sa.func.sum(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 0
+            ),
+            sa.DECIMAL(10, 2),
+        ).label("TotalRevenue"),
+        sa.cast(
+            sa.func.coalesce(sa.func.round(sa.func.avg(InvoiceLine.UnitPrice), 2), 0),
+            sa.DECIMAL(10, 2),
+        ).label("AvgTrackPrice"),
+        sa.cast(sa.func.count(sa.func.distinct(Track.TrackId)), sa.Integer).label(
+            "TracksInAlbum"
+        ),
     )
     .select_from(
         Album.__table__.join(Artist.__table__, Album.ArtistId == Artist.ArtistId)
         .join(Track.__table__, Album.AlbumId == Track.AlbumId)
-        .join(InvoiceLine.__table__, Track.TrackId == InvoiceLine.TrackId)
+        .outerjoin(InvoiceLine.__table__, Track.TrackId == InvoiceLine.TrackId)
     )
     .group_by(Album.AlbumId, Album.Title, Artist.Name)
-    .order_by(sa.func.sum(InvoiceLine.UnitPrice * InvoiceLine.Quantity).desc())
+    .order_by(
+        sa.func.coalesce(
+            sa.func.sum(InvoiceLine.UnitPrice * InvoiceLine.Quantity), 0
+        ).desc()
+    )
 )
 
 
@@ -201,6 +225,18 @@ class _DatabaseEnum:
 
 
 DatabaseEnum = _DatabaseEnum()
+
+
+def drop_view(engine: sa.engine.Engine, view_name: str):
+    with engine.connect() as conn:
+        drop_view_sql = f'DROP VIEW IF EXISTS "{view_name}"'
+        conn.execute(sa.text(drop_view_sql))
+        conn.commit()
+
+
+def drop_all_views(engine: sa.engine.Engine):
+    for view_name in ViewNameEnum:
+        drop_view(engine, view_name.value)
 
 
 def setup_test_database(engine: sa.engine.Engine) -> None:
@@ -234,6 +270,8 @@ def setup_test_database(engine: sa.engine.Engine) -> None:
         - The function automatically handles database-specific SQL differences
         - All foreign key relationships are properly maintained during data insertion
     """
+    drop_all_views(engine)
+
     with engine.connect() as conn:
         Base.metadata.drop_all(engine, checkfirst=True)
         Base.metadata.create_all(engine, checkfirst=True)
@@ -261,6 +299,6 @@ def setup_test_database(engine: sa.engine.Engine) -> None:
             compile_kwargs={"literal_binds": True},
         )
         create_view_sql = f'CREATE VIEW "AlbumSalesStats" AS {select_sql}'
-        print(create_view_sql)
+        # print(create_view_sql)
         conn.execute(sa.text(create_view_sql))
         conn.commit()
