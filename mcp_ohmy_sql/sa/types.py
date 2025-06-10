@@ -120,7 +120,7 @@ class ColumnType(BaseModel):
     llm_name: str = Field()
 
     @classmethod
-    def from_type(cls, type_: "TypeEngine") -> "ColumnType":
+    def from_type(cls, type_: "TypeEngine"):
         """
         Create a ColumnType instance from a SQLAlchemy TypeEngine object.
 
@@ -128,11 +128,9 @@ class ColumnType(BaseModel):
         to our simplified type system. It uses the type's visit_name attribute for mapping
         when available, falling back to the string representation for unknown types.
 
-        Args:
-            type_: A SQLAlchemy TypeEngine instance representing a column type
+        :param type_: A SQLAlchemy TypeEngine instance representing a column type
 
-        Returns:
-            ColumnType: A new ColumnType instance with mapped type information
+        :returns: A new ColumnType instance with mapped type information
 
         Example:
             >>> from sqlalchemy import String, Integer, DECIMAL

@@ -1,4 +1,4 @@
-Quick Start Guide
+Quick Start
 ==============================================================================
 Welcome to ``mcp_ohmy_sql``! This guide will get you up and running with the SQL Model Context Protocol (MCP) server in just a few minutes.
 
@@ -581,21 +581,23 @@ Advanced Configuration
 📊 **Multi-Database Setup**
 
 Connect to multiple databases simultaneously:
-    
-.. code-block:: json
 
-    "databases": [
-        {
-            "identifier": "production_db",
-            "description": "Production PostgreSQL database",
-            "connection": {"type": "sqlalchemy", ...}
-        },
-        {
-            "identifier": "analytics_db",
-            "description": "Analytics warehouse",
-            "connection": {"type": "sqlalchemy", ...}
-        }
-    ]
+.. code-block:: python
+
+    {
+        "databases": [
+            {
+                "identifier": "production_db",
+                "description": "Production PostgreSQL database",
+                "connection": {"type": "sqlalchemy", ...}
+            },
+            {
+                "identifier": "analytics_db",
+                "description": "Analytics warehouse",
+                "connection": {"type": "sqlalchemy", ...}
+            }
+        ]
+    }
 
 🔒 **Security & Access Control**
     - Set up table filtering to filter out irrelevant data

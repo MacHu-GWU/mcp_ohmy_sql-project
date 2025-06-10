@@ -12,5 +12,4 @@ sub packages and modules
 
     config_define_00_main <config_define_00_main>
     config_define_01_database_schema <config_define_01_database_schema>
-    config_init <config_init>
     

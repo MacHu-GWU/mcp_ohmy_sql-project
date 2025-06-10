@@ -244,5 +244,6 @@ docfly.ApiDocGenerator(
         # Module
         f"{package_name}._version",
         f"{package_name}.paths",
+        f"{package_name}.config.config_init",
     ],
 ).fly()

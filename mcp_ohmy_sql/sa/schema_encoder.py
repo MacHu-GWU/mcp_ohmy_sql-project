@@ -8,7 +8,6 @@ consumption in text-to-SQL applications, significantly reducing token usage
 while preserving essential structural and constraint information.
 """
 
-import typing as T
 import textwrap
 
 from ..constants import (
@@ -19,12 +18,6 @@ from ..constants import (
     FK,
     NN,
     TableTypeEnum,
-)
-from .metadata import (
-    ForeignKeyInfo,
-    ColumnInfo,
-    TableInfo,
-    SchemaInfo,
 )
 from .metadata import (
     ColumnInfo,
@@ -51,13 +44,13 @@ def encode_column_info(
 
     Constraints are encoded as:
 
-    - *PK: Primary Key (implies unique and indexed)
-    - *UQ: Unique constraint (implies indexed)
-    - *NN: Not Null constraint
-    - *IDX: Has database index
-    - *FK->Table.Column: Foreign key reference
+    - ``*PK``: Primary Key (implies unique and indexed)
+    - ``*UQ``: Unique constraint (implies indexed)
+    - ``*NN``: Not Null constraint
+    - ``*IDX``: Has database index
+    - ``*FK->Table.Column``: Foreign key reference
 
-    Redundant constraints are automatically omitted (PK/UQ don't show *IDX).
+    Redundant constraints are automatically omitted (PK/UQ don't show IDX).
 
     :param table_info: Table metadata containing primary key information
     :param column_info: Column metadata with type, constraints, and relationships

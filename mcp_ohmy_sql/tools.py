@@ -44,7 +44,9 @@ async def get_database_schema_details() -> str:
         columns, relationships, and constraints in the following formats
         optimized for LLM consumption.
 
-    Database Schema Format::
+    Database Schema Format:
+
+    .. code-block:: typescript
 
         Database <Database 1 Identifier>(
           Schema <Schema 1 Name>(
@@ -62,11 +64,11 @@ async def get_database_schema_details() -> str:
 
     Constraints are encoded as:
 
-    - *PK: Primary Key (implies unique and indexed)
-    - *UQ: Unique constraint (implies indexed)
-    - *NN: Not Null constraint
-    - *IDX: Has database index
-    - *FK->Table.Column: Foreign key reference
+    - ``*PK``: Primary Key (implies unique and indexed)
+    - ``*UQ``: Unique constraint (implies indexed)
+    - ``*NN``: Not Null constraint
+    - ``*IDX``: Has database index
+    - ``*FK->Table.Column``: Foreign key reference
 
     Example output::
 
@@ -205,12 +207,8 @@ async def get_schema_details(
     generation. ALWAYS use this tool before writing any SQL query to get the 
     exact table structure, column names, data types, and relationships.
 
-    This tool returns comprehensive schema metadata in a compact, LLM-optimized 
-    format that provides everything needed to write syntactically correct and 
-    semantically accurate SQL queries. The schema encoding reduces token usage 
-    by ~70% while preserving all essential information.
-
     **MANDATORY USAGE BEFORE SQL QUERIES:**
+
     - Get exact column names and data types
     - Understand table relationships and foreign keys
     - Identify primary keys for JOIN operations
@@ -219,6 +217,7 @@ async def get_schema_details(
     - Understand database-specific data types
 
     **Schema Encoding Format:**
+
     The output uses a special compact format optimized for LLM consumption:
 
     - Tables: ``Table TableName(columns...)``
@@ -228,6 +227,7 @@ async def get_schema_details(
       ``*NN`` (Not Null), ``*UQ`` (Unique), ``*IDX`` (Indexed)
 
     **What this tool provides:**
+
     - Complete table and view structures
     - All column names with exact spelling/case
     - Data types mapped to simple categories (INT, STR, DEC, DT, TS, etc.)
@@ -243,7 +243,9 @@ async def get_schema_details(
     :returns: Compact schema representation showing all tables, columns, 
         data types, and relationships in the specified schema.
 
-    Example output::
+    Example output:
+
+    .. code-block:: typescript
 
         Schema default(
           Table Album(

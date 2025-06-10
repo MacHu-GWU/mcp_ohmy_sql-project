@@ -306,4 +306,4 @@ After configuring your databases:
 2. Use the ``get_database_schema`` tool to verify your databases are accessible
 3. Begin querying your databases through the AI assistant
 
-For more information on available tools and their usage, see the :doc:`todo-add-link` documentation.
+For more information on available tools and their usage, see the :ref:`tools-guide` documentation.

@@ -18,9 +18,9 @@ def match(
 
     Pattern Types:
 
-    - Wildcard patterns: Use * to match any characters (e.g., "EMPLOYEE*", "*_TEMP")
+    - Wildcard patterns: Use * to match any characters (e.g., ``"EMPLOYEE*"``, ``"*_TEMP"``)
     - Regex patterns: Automatically detected when regex metacharacters are present
-      (e.g., "^EMP.*", ".*_TABLE$", "[A-Z]+_\\d+")
+      (e.g., ``"^EMP.*"``, ``".*_TABLE$"``, ``"[A-Z]+_\\d+"``)
 
     Matching Rules:
 
