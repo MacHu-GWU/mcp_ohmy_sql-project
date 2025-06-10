@@ -1,5 +1,31 @@
 # -*- coding: utf-8 -*-
 
+"""
+Test Database Setup Module
+
+This module provides automated setup functionality for creating and populating test databases
+with the Chinook sample dataset. It supports multiple database backends including SQLite and
+PostgreSQL, making it easy to provision identical test environments across different database
+systems.
+
+Key Features:
+
+- Automated schema creation using SQLAlchemy ORM models
+- Data population from Chinook JSON dataset
+- Cross-database compatibility (SQLite, PostgreSQL)
+- Sample view creation for testing complex queries
+- Idempotent operations (safe to run multiple times)
+
+Typical Usage:
+    >>> from mcp_ohmy_sql.tests.test_database_setup import setup_test_database, DatabaseEnum
+    >>> 
+    >>> # Setup SQLite test database
+    >>> setup_test_database(DatabaseEnum.sqlite)
+    >>> 
+    >>> # Setup PostgreSQL test database
+    >>> setup_test_database(DatabaseEnum.postgres)
+"""
+
 import typing as T
 import json
 from decimal import Decimal
@@ -158,7 +184,7 @@ album_sales_stats_view_select_stmt = (
 )
 
 
-class _EngineEnum:
+class _DatabaseEnum:
     @cached_property
     def sqlite(self) -> sa.engine.Engine:
         path = dir_tmp / "Chinook_Sqlite.sqlite"
@@ -172,10 +198,40 @@ class _EngineEnum:
         )
 
 
-EngineEnum = _EngineEnum()
+DatabaseEnum = _DatabaseEnum()
 
 
-def prepare_data(engine: sa.engine.Engine):
+def setup_test_database(engine: sa.engine.Engine) -> None:
+    """
+    Set up a complete test database with Chinook sample data and views.
+
+    This function performs a comprehensive database setup by:
+    
+    1. Dropping all existing tables (if any) to ensure a clean state
+    2. Creating all tables using SQLAlchemy ORM models based on the Chinook schema
+    3. Loading sample data from the Chinook JSON dataset
+    4. Converting datetime strings to proper datetime objects for database compatibility
+    5. Creating sample views (like AlbumSalesStats) for testing complex queries
+
+    The setup is idempotent - it can be run multiple times safely as it drops
+    existing tables before recreation.
+
+    Example:
+
+        >>> from mcp_ohmy_sql.tests.test_database_setup import setup_test_database, DatabaseEnum
+        >>>
+        >>> # Setup SQLite test database
+        >>> setup_test_database(DatabaseEnum.sqlite)
+        >>>
+        >>> # Setup PostgreSQL test database (requires running postgres container)
+        >>> setup_test_database(DatabaseEnum.postgres)
+
+    .. note::
+
+        - For PostgreSQL, ensure the database server is running and accessible
+        - The function automatically handles database-specific SQL differences
+        - All foreign key relationships are properly maintained during data insertion
+    """
     with engine.connect() as conn:
         Base.metadata.drop_all(engine, checkfirst=True)
         Base.metadata.create_all(engine, checkfirst=True)
@@ -202,7 +258,7 @@ def prepare_data(engine: sa.engine.Engine):
             engine,
             compile_kwargs={"literal_binds": True},
         )
-        create_view_sql = f"CREATE VIEW \"AlbumSalesStats\" AS {select_sql}"
+        create_view_sql = f'CREATE VIEW "AlbumSalesStats" AS {select_sql}'
         print(create_view_sql)
         conn.execute(sa.text(create_view_sql))
         conn.commit()
