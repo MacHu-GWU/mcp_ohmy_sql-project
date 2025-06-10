@@ -50,22 +50,147 @@ Welcome to ``mcp_ohmy_sql`` Documentation
 .. image:: https://mcp-ohmy-sql.readthedocs.io/en/latest/_static/mcp_ohmy_sql-logo.png
     :target: https://mcp-ohmy-sql.readthedocs.io/en/latest/
 
-``mcp_ohmy_sql`` is a state-of-the-art SQL Model Context Protocol (MCP) server built on SQLAlchemy that provides universal database connectivity with intelligent query optimization, configurable tool exposure, and built-in safeguards against excessive data loads to LLMs. It supports schema introspection, query execution with result pagination, data export capabilities, and fine-grained access control (upcoming), making it the ideal bridge between AI assistants and SQL databases while ensuring performance, security, and flexibility across all major database engines.
+
+👀 Overview
+------------------------------------------------------------------------------
+``mcp_ohmy_sql`` is a powerful SQL `Model Context Protocol (MCP) <https://modelcontextprotocol.io/>`_ server that bridges AI assistants with your databases. Built on `SQLAlchemy <http://sqlalchemy.org/>`_'s robust foundation, it provides universal database connectivity with intelligent query optimization, configurable access controls, and built-in safeguards against excessive data loads to LLMs.
+
+Transform your database interactions with natural language queries, automatic schema discovery, and intelligent result formatting—all while maintaining enterprise-grade security and performance.
 
 
-.. _install:
-
-Install
+🚀 Key Features
 ------------------------------------------------------------------------------
 
-``mcp_ohmy_sql`` is released on PyPI, so all you need is to:
+**Universal Database Support**
 
-.. code-block:: console
+Connect to virtually any SQL database through SQLAlchemy's proven architecture. From lightweight SQLite to enterprise PostgreSQL, MySQL, Oracle, and SQL Server—all supported out of the box.
 
-    $ pip install mcp-ohmy-sql
+**Multi-Database Architecture**
+    Manage multiple databases and schemas simultaneously from a single MCP server. Perfect for complex environments with dev/staging/production databases or multi-tenant applications.
 
-To upgrade to latest version:
+**Intelligent Query Optimization**
+    Built-in query analysis engine prevents expensive operations, automatically limits result sets, and provides performance feedback to help you write efficient queries.
 
-.. code-block:: console
+**AI-Optimized Schema Encoding**
+    Schema information is compressed by ~70% using a specialized encoding format, dramatically reducing token usage while preserving all essential metadata for accurate query generation.
 
-    $ pip install --upgrade mcp-ohmy-sql
+**Enterprise-Ready Security**
+    Fine-grained table filtering, parameterized query support, and read-only operations by default. Access controls ensure your production data stays safe.
+
+
+💎 Why Choose ``mcp_ohmy_sql``?
+------------------------------------------------------------------------------
+While other SQL MCP servers exist, ``mcp_ohmy_sql`` stands out through:
+
+✨ **Comprehensive Database Ecosystem**
+    Beyond traditional SQL databases, we're expanding to support modern data platforms including AWS Aurora, Redshift, Glue Catalog, MongoDB Atlas SQL, ElasticSearch, OpenSearch, DuckDB, and S3 data files.
+
+🔧 **Production-Ready Architecture**
+    Designed for real-world usage with connection pooling, error handling, query timeouts, and result size limits that prevent your LLM conversations from breaking.
+
+📊 **Intelligent Result Formatting**
+    Query results are automatically formatted as Markdown tables—the optimal format for LLM comprehension, using 24% fewer tokens than JSON while maintaining perfect readability.
+
+🔒 **Security-First Approach**
+    Built-in safeguards include SQL injection prevention, read-only operations, table filtering, and upcoming fine-grained access controls for enterprise deployments.
+
+🎯 **Developer Experience**
+    Comprehensive documentation, clear error messages, and extensive configuration options make setup and maintenance straightforward.
+
+**Coming Soon**: Remote MCP server deployment, advanced access controls, and expanded database ecosystem support.
+
+See our `ROADMAP.md <https://github.com/MacHu-GWU/mcp_ohmy_sql-project/blob/main/ROADMAP.md>`_ for the complete vision and upcoming features.
+
+
+🛢️ Supported Databases
+------------------------------------------------------------------------------
+.. raw:: html
+
+    <style type="text/css">
+    .tg  {border-collapse:collapse;border-spacing:0;}
+    .tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+      overflow:hidden;padding:10px 5px;word-break:normal;}
+    .tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+      font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+    .tg .tg-baqh{text-align:center;vertical-align:top}
+    .tg .tg-amwm{font-weight:bold;text-align:center;vertical-align:top}
+    </style>
+    <table class="tg"><thead>
+      <tr>
+        <th class="tg-amwm">Database</th>
+        <th class="tg-amwm">Status</th>
+        <th class="tg-amwm">Note</th>
+      </tr></thead>
+    <tbody>
+      <tr>
+        <td class="tg-baqh">Sqlite</td>
+        <td class="tg-baqh">✅ Supported</td>
+        <td class="tg-baqh">via Sqlalchemy</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">Postgres</td>
+        <td class="tg-baqh">✅ Supported</td>
+        <td class="tg-baqh">via Sqlalchemy</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">MySQL</td>
+        <td class="tg-baqh">✅ Supported</td>
+        <td class="tg-baqh">via Sqlalchemy</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">Oracle</td>
+        <td class="tg-baqh">✅ Supported</td>
+        <td class="tg-baqh">via Sqlalchemy</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">MSSQL</td>
+        <td class="tg-baqh">✅ Supported</td>
+        <td class="tg-baqh">via Sqlalchemy</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">AWS Aurora</td>
+        <td class="tg-baqh">⏳ In Progress</td>
+        <td class="tg-baqh">via boto3</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">AWS Redshift</td>
+        <td class="tg-baqh">⏳ In Progress</td>
+        <td class="tg-baqh">via boto3</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">AWS Glue Catalog Databases</td>
+        <td class="tg-baqh">⏳ In Progress</td>
+        <td class="tg-baqh">via boto3</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">MongoDB</td>
+        <td class="tg-baqh">⏳ In Progress</td>
+        <td class="tg-baqh">via Atlas SQL</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">ElasticSearch</td>
+        <td class="tg-baqh">⏳ In Progress</td>
+        <td class="tg-baqh">via ElasticSearch SQL</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">OpenSearch</td>
+        <td class="tg-baqh">⏳ In Progress</td>
+        <td class="tg-baqh">via OpenSearch SQL</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">DuckDB</td>
+        <td class="tg-baqh">⏳ In Progress</td>
+        <td class="tg-baqh">via duckdb</td>
+      </tr>
+      <tr>
+        <td class="tg-baqh">Data Files on AWS S3</td>
+        <td class="tg-baqh">⏳ In Progress</td>
+        <td class="tg-baqh">via boto3</td>
+      </tr>
+    </tbody></table>
+
+
+🎯 Get Started
+------------------------------------------------------------------------------
+- `Quick Start Guide <docs/source/01-Quick-Start/index.rst>`_: Set up and run the server in under 5 minutes
+- `Configuration Guide <docs/source/02-Configuration/index.rst>`_: Configure multiple databases and advanced security settings
