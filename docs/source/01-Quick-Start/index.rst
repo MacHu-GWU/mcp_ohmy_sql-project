@@ -2,31 +2,52 @@ Quick Start Guide
 ==============================================================================
 Welcome to ``mcp_ohmy_sql``! This guide will get you up and running with the SQL Model Context Protocol (MCP) server in just a few minutes.
 
-With ``mcp_ohmy_sql``, you can connect AI assistants and ...:
 
-- Get more familiar with the tables and data
-- Explore data and relationships
-- Ask business questions in natural language and get answer
-- Visualize dataset and entity relationships
-- Generate business reports
-- Export query results to files
-
-
-Installation and Setup
+What You'll Achieve
 ------------------------------------------------------------------------------
-In this tutorial, we will use `Claude Desktop <https://claude.ai/download>`_ as our AI client.
+By the end of this guide, you'll have a fully functional SQL MCP server that enables you to:
+
+✨ **Database Discovery**
+    - List available databases and their schemas
+    - Explore table structures and relationships
+    - Understand data models through AI-generated insights
+
+📊 **Natural Language Querying**
+    - Ask business questions in plain English
+    - Get SQL queries generated automatically
+    - Receive formatted results with explanations
+
+📈 **Data Analysis & Visualization**
+    - Generate business reports and insights
+    - Create visualizations and charts
+    - Build entity relationship diagrams
 
 
-Step 1. Add the MCP server
+Prerequisites
 ------------------------------------------------------------------------------
-Following the official `Claude Desktop Manual <https://modelcontextprotocol.io/quickstart/user>`_, we locate the ``claude_desktop_config.json`` file.
+Before we begin, make sure you have:
 
-- macOS: ``~/Library/Application Support/Claude/claude_desktop_config.json``
-- Windows: ``%APPDATA%\Claude\claude_desktop_config.json``
+- `Claude Desktop <https://claude.ai/download>`_ installed (our AI client for this tutorial)
+- Basic familiarity with JSON configuration files
+- Access to download a sample database file
 
-Open it and add the following configuration to the ``mcpServers`` section:
+.. note::
 
-.. code-block:: javascript
+    While this guide uses Claude Desktop, ``mcp_ohmy_sql`` works with any MCP-compatible AI client.
+
+
+Step 1: Configure Claude Desktop
+------------------------------------------------------------------------------
+First, we need to tell Claude Desktop about our MCP server. Following the official `Claude Desktop Manual <https://modelcontextprotocol.io/quickstart/user>`_, locate your ``claude_desktop_config.json`` file:
+
+**Configuration File Locations:**
+
+- **macOS**: ``~/Library/Application Support/Claude/claude_desktop_config.json``
+- **Windows**: ``%APPDATA%\Claude\claude_desktop_config.json``
+
+Open the file and add the following configuration to the ``mcpServers`` section:
+
+.. code-block:: json
 
     {
         "mcpServers": {
@@ -44,29 +65,63 @@ Open it and add the following configuration to the ``mcpServers`` section:
         }
     }
 
-Explains:
+.. tip::
 
-- We need additional dependencies depends on the database system you are using, the ``mcp-ohmy-sql[sqlite,postgres]`` defines the extra dependencies for SQLite and PostgreSQL. Currently it supports ``sqlite``, ``postgres``, ``mysql``, ``mssql``, ``oracle``.
-- The ``MCP_OHMY_SQL_CONFIG`` environment variable points to your configuration file, which defines the databases and their connection settings. You can create it anywhere you like. Please read the :ref:`configuration-guide` for details on how to create this file.
+    **Database-Specific Dependencies**
+   
+    The ``[sqlite,postgres]`` part specifies which database drivers to install. Choose the ones you need:
+   
+    - ``sqlite`` - For SQLite databases
+    - ``postgres`` - For PostgreSQL databases
+    - ``mysql`` - For MySQL/MariaDB databases
+    - ``mssql`` - For Microsoft SQL Server
+    - ``oracle`` - For Oracle databases
+   
+    Example: For MySQL and PostgreSQL, use ``mcp-ohmy-sql[mysql,postgres]``
+
+.. important::
+
+    Remember to update the ``MCP_OHMY_SQL_CONFIG`` path to point to where you'll create your configuration file in the next step.
 
 
-Step 2. Create the Configuration File
+Step 2: Set Up Sample Database & Configuration
 ------------------------------------------------------------------------------
-In this section, we will use a test sqlite database to get you started quickly.
+Now we'll create a database configuration file and download a sample database to get you started quickly.
 
-First you can download the `Chinook_sqlite.sqlite <https://github.com/lerocha/chinook-database/releases/download/v1.4.5/Chinook_Sqlite.sqlite>`_ file, which is a sample database that contains data about a music store. You can put the ``Chinook_Sqlite.sqlite`` file anywhere you like.
+**2.1 Download Sample Database**
 
-Then create a configuration file named ``mcp_ohmy_sql.json`` using the following content:
+We'll use the Chinook database, a popular sample database that contains data about a digital music store:
 
-.. code-block:: javascript
+1. Download the `Chinook_Sqlite.sqlite <https://github.com/lerocha/chinook-database/releases/download/v1.4.5/Chinook_Sqlite.sqlite>`_ file
+2. Save it to a convenient location (e.g., your home directory or Documents folder)
+3. Note the full path to this file—you'll need it for the configuration
+
+.. tip::
+
+    **About the Chinook Database**
+   
+    Chinook contains realistic data about:
+
+    - Artists, albums, and tracks
+    - Customers and employees
+    - Invoices and sales data
+    - Music genres and media types
+   
+    It's perfect for learning SQL and demonstrating database analytics!
+
+**2.2 Create Configuration File**
+
+Create a new file named ``mcp_ohmy_sql.json`` with the following content:
+
+.. code-block:: json
 
     {
         "version": "0.1.1",
         "settings": {},
         "databases": [
             {
-                "identifier": "chinook sqlite",
-                "description": "Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
+                "identifier": "chinook_sqlite",
+                "description": "Chinook music store sample database - contains artists, albums, tracks, customers, and sales data",
                 "connection": {
                     "type": "sqlalchemy",
                     "create_engine_kwargs": {
@@ -89,113 +144,481 @@ Then create a configuration file named ``mcp_ohmy_sql.json`` using the following
         ]
     }
 
-Explains:
+.. seealso::
 
-- You can put it anywhere you like, but make sure to update the ``MCP_OHMY_SQL_CONFIG`` field in ``claude_desktop_config.json`` to point to the location of your ``mcp_ohmy_sql.json`` file.
-- The ``databases.[0].connection.create_engine_kwargs.url`` field should point to the location of your ``Chinook_Sqlite.sqlite`` file. Make sure to use ``sqlite:///{absolute_path_to_your_sqlite_file}`` format.
+    See :ref:`configuration-guide` for a complete reference on the configuration options available in ``mcp_ohmy_sql.json``.
+
+**2.3 Update Configuration Paths**
+
+.. important::
+
+    **Critical Configuration Updates**
+   
+    1. **Database Path**: Replace ``/path/to/Chinook_Sqlite.sqlite`` with the actual absolute path to your downloaded database file
+    2. **Environment Variable**: Update the ``MCP_OHMY_SQL_CONFIG`` path in ``claude_desktop_config.json`` to point to your ``mcp_ohmy_sql.json`` file
+   
+    **Example paths:**
+   
+    - macOS/Linux: ``sqlite:////Users/username/Downloads/Chinook_Sqlite.sqlite``
+    - Windows: ``sqlite:///C:\\Users\\username\\Downloads\\Chinook_Sqlite.sqlite``
+
+.. note::
+
+    **Configuration Explanation**
+   
+    - **Table Filtering**: We exclude ``Playlist`` and ``PlaylistTrack`` tables to keep the initial exploration focused on core music store data
+    - **Schema Name**: ``null`` means we're using the default SQLite schema
+    - **Identifier**: ``chinook_sqlite`` is how we'll reference this database in queries
 
 
-Step 3. Start the MCP Server
+Step 3: Launch Claude Desktop
 ------------------------------------------------------------------------------
-Now you can launch your Claude Desktop application, and it will automatically start the MCP server with the configuration you provided.
+With your configuration complete, it's time to start Claude Desktop and connect to your database.
 
-.. image:: ./01-launch-claude-desktop.png
+1. **Restart Claude Desktop** completely (quit and relaunch) to load the new MCP configuration
+2. **Start a new conversation** - you should see the MCP tools become available
+3. **Verify connection** by checking the tools panel - you should see available database tools
+
+.. image:: ./01-Launch-Claude-Desktop.png
+    :alt: Claude Desktop showing available MCP tools including database functions
+
+.. tip::
+
+    **Success Indicators**
+   
+    Look for these signs that everything is working:
+   
+    - Tools panel shows database-related functions
+    - No error messages in Claude Desktop
+    - You can start asking database questions immediately
 
 
+Troubleshooting
+------------------------------------------------------------------------------
+If you encounter issues, here are the most common problems and solutions:
 
-Trouble Shooting
+.. image:: ./02-Trouble-Shooting.png
+    :alt: Common troubleshooting scenarios
+
+**Problem: "uvx command not found"**
+
+This means the ``uvx`` package manager isn't installed or available in your system PATH.
+
+.. code-block:: bash
+
+    # Install uvx
+    pip install uv
+
+    # Test installation
+    uvx --version
+
+If the global installation doesn't work, you can specify the absolute path in your Claude configuration:
+
+.. code-block:: json
+
+    {
+        "command": "/path/to/uvx",
+        "args": ["--with", "mcp-ohmy-sql[sqlite]", "mcp-ohmy-sql"]
+    }
+
+**Problem: "Claude Desktop cannot connect to the MCP server"**
+
+This is usually a configuration issue. Check these items:
+
+1. **Verify JSON syntax** - Ensure your :ref:`mcp_ohmy_sql.json <configuration-guide>` file is valid JSON
+2. **Check file paths** - Confirm all paths are absolute and accessible
+3. **Test database connection** independently:
+
+.. code-block:: python
+
+    import sqlalchemy as sa
+
+    # Test your exact connection string
+    engine = sa.create_engine("sqlite:////your/path/to/Chinook_Sqlite.sqlite")
+    with engine.connect() as conn:
+       result = conn.execute(sa.text("SELECT 1"))
+       print("Database connection successful:", result.fetchone())
+
+**Problem: "No tools available" or missing database functions**
+
+- Restart Claude Desktop completely (not just refresh)
+- Check the Claude Desktop logs for detailed error messages
+- Verify the ``MCP_OHMY_SQL_CONFIG`` environment variable path is correct
+
+
+Exploring Your Database with AI
+------------------------------------------------------------------------------
+Now comes the exciting part! Let's explore what you can do with your connected database. The following examples show real interactions with the Chinook database using natural language.
+
+**What You Can Do:**
+
+🔍 **Database Discovery**
+    - List available databases and schemas
+    - Explore table structures and relationships
+    - Understand your data model
+
+📊 **Business Intelligence**
+    - Ask complex business questions in plain English
+    - Get automatically generated SQL queries
+    - Receive formatted results with insights
+
+📈 **Data Visualization**
+    - Create charts and reports
+    - Generate entity relationship diagrams
+    - Export results for presentations
+
+
+**Example 1: Discover Your Data**
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. image:: ./02-trouble-shooting.png
+Start by asking AI what's available in your database:
 
-Problem: uvx command not found
-
-    Solution: Make sure you have installed ``uvx``. Follow the `official guide <https://docs.astral.sh/uv/getting-started/installation/>`_ to install it, and test it with the ``uvx --version`` command. If you didn't install it globally, you can use the absolute path to the ``uvx`` command in the ``claude_desktop_config.json`` file, for xample: ``"command": "/path/to/uvx"``.
-
-    .. code-block:: bash
-
-        pip install uvx
-
-
-Problem: Claude Desktop cannot connect to the MCP server
-
-    Solution:
-
-    1. make sure the ``mcp_ohmy_sql.json`` format is correct.
-    2. make sure the Database connection information in ``mcp_ohmy_sql.json`` is correct, you can test it with the SQLAlchemy directly.
-
-    .. code-block:: python
-
-        import sqlalchemy as sa
-
-        engine = sa.create_engine("db_url_here")
-        sql = "SELECT 1"
-        with engine.connect() as conn:
-            result = conn.execute(sql)
-            print(result.fetchone())
-
-
-Tools
-------------------------------------------------------------------------------
-For full list of available tools, see the :ref:`tools-guide`.
-
-
-
-Usage Example
-------------------------------------------------------------------------------
-
-
-
-- Get more familiar with the tables and data
-- Explore data and relationships
-- Ask business questions in natural language and get answer
-- Visualize dataset and entity relationships
-- Generate business reports
-- Export query results to files
-
-1. Get Basic Database Information
-------------------------------------------------------------------------------
-In this example, we will ask AI to tell us what databases are available to explore.
+    *"Tell me about all databases I have"*
 
 .. image:: ./11-List-Databases.png
+    :alt: Claude listing available databases with descriptions
+
+As you can see, AI uses the ``list_databases`` tool to show your configured databases. In this case, we have both SQLite and PostgreSQL versions of the Chinook database available.
 
 
+**Example 2: Understand Your Schema**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Next, explore the structure of your database:
 
-2. Explore data and relationships
-------------------------------------------------------------------------------
-We want to get more familiar with the table structure and explore important entities, and key relationships in the database.
+    *"Show me the schema details of the chinook database"*
 
 .. image:: ./12-Get-Database-Schema-Details.png
+    :alt: Claude displaying detailed database schema information
+
+AI retrieves the complete schema structure, showing tables, columns, data types, and relationships. This gives you a comprehensive understanding of your data model.
+
+.. dropdown:: Sample Database Schema Details
+
+    .. code-block:: typescript
+
+        Database chinook sqlite(
+          Schema default(
+            Table Album(
+              AlbumId:INT*PK*NN,
+              Title:STR*NN,
+              ArtistId:INT*NN*FK->Artist.ArtistId,
+            )
+            Table Artist(
+              ArtistId:INT*PK*NN,
+              Name:STR,
+            )
+            Table Customer(
+              CustomerId:INT*PK*NN,
+              FirstName:STR*NN,
+              LastName:STR*NN,
+              Company:STR,
+              Address:STR,
+              City:STR,
+              State:STR,
+              Country:STR,
+              PostalCode:STR,
+              Phone:STR,
+              Fax:STR,
+              Email:STR*NN,
+              SupportRepId:INT*FK->Employee.EmployeeId,
+            )
+            Table Employee(
+              EmployeeId:INT*PK*NN,
+              LastName:STR*NN,
+              FirstName:STR*NN,
+              Title:STR,
+              ReportsTo:INT*FK->Employee.EmployeeId,
+              BirthDate:DT,
+              HireDate:DT,
+              Address:STR,
+              City:STR,
+              State:STR,
+              Country:STR,
+              PostalCode:STR,
+              Phone:STR,
+              Fax:STR,
+              Email:STR,
+            )
+            Table Genre(
+              GenreId:INT*PK*NN,
+              Name:STR,
+            )
+            Table Invoice(
+              InvoiceId:INT*PK*NN,
+              CustomerId:INT*NN*FK->Customer.CustomerId,
+              InvoiceDate:DT*NN,
+              BillingAddress:STR,
+              BillingCity:STR,
+              BillingState:STR,
+              BillingCountry:STR,
+              BillingPostalCode:STR,
+              Total:DEC*NN,
+            )
+            Table InvoiceLine(
+              InvoiceLineId:INT*PK*NN,
+              InvoiceId:INT*NN*FK->Invoice.InvoiceId,
+              TrackId:INT*NN*FK->Track.TrackId,
+              UnitPrice:DEC*NN,
+              Quantity:INT*NN,
+            )
+            Table Track(
+              TrackId:INT*PK*NN,
+              Name:STR*NN,
+              AlbumId:INT*FK->Album.AlbumId,
+              MediaTypeId:INT*NN*FK->MediaType.MediaTypeId,
+              GenreId:INT*FK->Genre.GenreId,
+              Composer:STR,
+              Milliseconds:INT*NN,
+              Bytes:INT,
+              UnitPrice:DEC*NN,
+            )
+            Table MediaType(
+              MediaTypeId:INT*PK*NN,
+              Name:STR,
+            )
+            View AlbumSalesStats(
+              AlbumId:INT,
+              AlbumTitle:STR,
+              ArtistName:STR,
+              TotalSales:INT,
+              TotalQuantity:INT,
+              TotalRevenue:DEC,
+              AvgTrackPrice:DEC,
+              TracksInAlbum:INT,
+            )
+          )
+        )
+        Database chinook postgres(
+          Schema default(
+            Table Employee(
+              EmployeeId:INT*PK*NN,
+              LastName:STR*NN,
+              FirstName:STR*NN,
+              Title:STR,
+              ReportsTo:INT*FK->Employee.EmployeeId,
+              BirthDate:TS,
+              HireDate:TS,
+              Address:STR,
+              City:STR,
+              State:STR,
+              Country:STR,
+              PostalCode:STR,
+              Phone:STR,
+              Fax:STR,
+              Email:STR,
+            )
+            Table Artist(
+              ArtistId:INT*PK*NN,
+              Name:STR,
+            )
+            Table Album(
+              AlbumId:INT*PK*NN,
+              Title:STR*NN,
+              ArtistId:INT*NN*FK->Artist.ArtistId,
+            )
+            Table Customer(
+              CustomerId:INT*PK*NN,
+              FirstName:STR*NN,
+              LastName:STR*NN,
+              Company:STR,
+              Address:STR,
+              City:STR,
+              State:STR,
+              Country:STR,
+              PostalCode:STR,
+              Phone:STR,
+              Fax:STR,
+              Email:STR*NN,
+              SupportRepId:INT*FK->Employee.EmployeeId,
+            )
+            Table Track(
+              TrackId:INT*PK*NN,
+              Name:STR*NN,
+              AlbumId:INT*FK->Album.AlbumId,
+              MediaTypeId:INT*NN*FK->MediaType.MediaTypeId,
+              GenreId:INT*FK->Genre.GenreId,
+              Composer:STR,
+              Milliseconds:INT*NN,
+              Bytes:INT,
+              UnitPrice:DEC*NN,
+            )
+            Table Genre(
+              GenreId:INT*PK*NN,
+              Name:STR,
+            )
+            Table MediaType(
+              MediaTypeId:INT*PK*NN,
+              Name:STR,
+            )
+            Table Invoice(
+              InvoiceId:INT*PK*NN,
+              CustomerId:INT*NN*FK->Customer.CustomerId,
+              InvoiceDate:TS*NN,
+              BillingAddress:STR,
+              BillingCity:STR,
+              BillingState:STR,
+              BillingCountry:STR,
+              BillingPostalCode:STR,
+              Total:DEC*NN,
+            )
+            Table InvoiceLine(
+              InvoiceLineId:INT*PK*NN,
+              InvoiceId:INT*NN*FK->Invoice.InvoiceId,
+              TrackId:INT*NN*FK->Track.TrackId,
+              UnitPrice:DEC*NN,
+              Quantity:INT*NN,
+            )
+            View AlbumSalesStats(
+              AlbumId:INT,
+              AlbumTitle:STR,
+              ArtistName:STR,
+              TotalSales:INT,
+              TotalQuantity:INT,
+              TotalRevenue:DEC,
+              AvgTrackPrice:DEC,
+              TracksInAlbum:INT,
+            )
+          )
+        )
 
 
-3. Ask Business Questions in Natural Language
-------------------------------------------------------------------------------
-We would like to ask AI to answer business questions in natural language. AI then can leverage the database schema information to understand the question, write the SQL, and provide answers.
+
+
+**Example 3: Ask Business Questions**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is where the magic happens—ask real business questions in natural language:
+
+    *"Find me the top 3 sales albums"*
 
 .. image:: ./13-Ask-Business-Question.png
+    :alt: Claude executing a complex business query and showing results
+
+.. dropdown:: AI writen SQL query
+
+    .. code-block:: sql
+
+        SELECT
+            AlbumTitle,
+            ArtistName,
+            TotalRevenue,
+            TotalQuantity,
+            TracksInAlbum
+        FROM AlbumSalesStats
+        ORDER BY TotalRevenue DESC
+        LIMIT 3
+
+.. dropdown:: Encoded Query Result
+
+    .. code-block:: markdown
+
+        # Execution Time
+        0.014 seconds
+
+        # Query Result
+        | AlbumTitle                               | ArtistName                     |   TotalRevenue |   TotalQuantity |   TracksInAlbum |
+        |:-----------------------------------------|:-------------------------------|---------------:|----------------:|----------------:|
+        | Battlestar Galactica (Classic), Season 1 | Battlestar Galactica (Classic) |        35.8200 |              18 |              24 |
+        | The Office, Season 3                     | The Office                     |        31.8400 |              16 |              25 |
+        | Minha Historia                           | Chico Buarque                  |        26.7300 |              27 |              34 |
+
+AI automatically:
+
+1. Understands your business question
+2. Writes the appropriate SQL query
+3. Executes it against your database
+4. Formats the results clearly
+5. Provides insights about the data
 
 
-4. Generate Business Reports
-------------------------------------------------------------------------------
-Image are easier to consume for human, sometime we would like visualized data report to present, we can ask AI to generate a report for us.
+**Example 4: Create Visual Reports**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Generate visual reports and charts from your data:
+
+    *"Create a visualization showing sales trends"*
 
 .. image:: ./14-Visualize-Data.png
+    :alt: Claude generating charts and visual reports from database data
+
+AI can create various types of visualizations including bar charts, pie charts, and trend analyses—all from your database data.
 
 
-5. Visualize Dataset and Entity Relationships
-------------------------------------------------------------------------------
-ER Diagrams are a great way to visualize the relationships between entities in a database. We can ask AI to generate an ER diagram for us, without using any third-party tools.
+**Example 5: Generate ER Diagrams**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Understand your data relationships visually:
+
+    *"Create an entity relationship diagram for the music store database"*
 
 .. image:: ./15-Visualize-Relationship.png
+    :alt: Claude generating an entity relationship diagram
+
+AI generates professional ER diagrams showing how your tables connect, helping you understand the database structure at a glance.
 
 
-Next Steps
+🚀 What's Next?
 ------------------------------------------------------------------------------
-Now that you have ``mcp_ohmy_sql`` running:
+Congratulations! You now have a fully functional AI-powered database assistant. Here's how to expand your setup and unlock more capabilities:
 
-1. **Configure Multiple Databases**: Add additional databases to your configuration file
-2. **Set Up Table Filters**: Use the filtering system to control which tables are accessible
-3. **Optimize Performance**: Configure connection pooling for production databases
-4. **Explore Schema Introspection**: Use Claude to understand your database structure
-5. **Prepare for Query Execution**: Once available, you'll be ready to run natural language queries
 
-For detailed configuration options and advanced features, continue to the :doc:`../02-Configuration/index` guide.
+Immediate Next Steps
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+🎯 **Try More Queries**
+    Start experimenting with different types of questions:
+    
+    - *"What are the most popular music genres by sales?"*
+    - *"Show me customer demographics by country"*
+    - *"Which employees have the highest sales performance?"*
+    - *"Create a report showing revenue trends over time"*
+
+🔧 **Connect Your Own Databases**
+    Replace the sample Chinook database with your real data:
+    
+    - Update the connection URL in your configuration
+    - Add multiple databases for different environments
+    - Configure table filters to control access
+
+
+Advanced Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+📊 **Multi-Database Setup**
+
+Connect to multiple databases simultaneously:
+    
+.. code-block:: json
+
+    "databases": [
+        {
+            "identifier": "production_db",
+            "description": "Production PostgreSQL database",
+            "connection": {"type": "sqlalchemy", ...}
+        },
+        {
+            "identifier": "analytics_db",
+            "description": "Analytics warehouse",
+            "connection": {"type": "sqlalchemy", ...}
+        }
+    ]
+
+🔒 **Security & Access Control**
+    - Set up table filtering to filter out irrelevant data
+    - Configure read-only database users
+    - Use environment variables for database credentials
+
+⚡ **Performance Optimization**
+    - Set up query timeouts and result limits
+    - Monitor query performance and optimize slow operations
+
+
+**Real-World Applications**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+💼 **Business Analytics**
+    Use natural language to generate business reports, analyze trends, and create executive dashboards directly from your operational databases.
+
+🔍 **Data Exploration**
+    Quickly understand new datasets, discover data quality issues, and explore relationships between tables without writing complex SQL.
+
+📊 **Reporting Automation**
+    Create automated reports by asking AI to generate and format query results, export to files, and schedule regular data exports.
+
+🎯 **Database Documentation**
+    Generate comprehensive database documentation, ER diagrams, and data dictionaries automatically from your schema.
+
+Ready to transform how you work with data? Start with your own databases and see what insights you can uncover!

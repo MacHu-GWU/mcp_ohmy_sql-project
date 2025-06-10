@@ -57,6 +57,8 @@ Welcome to ``mcp_ohmy_sql`` Documentation
 
 Transform your database interactions with natural language queries, automatic schema discovery, and intelligent result formatting—all while maintaining enterprise-grade security and performance.
 
+See `📚 Full Documentation HERE <https://mcp-ohmy-sql.readthedocs.io/en/latest/>`_
+
 
 🚀 Key Features
 ------------------------------------------------------------------------------

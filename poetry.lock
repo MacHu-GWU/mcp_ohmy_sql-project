@@ -2056,7 +2056,7 @@ description = "DB-API interface to Microsoft SQL Server for Python. (new Cython-
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"pymssql\""
+markers = "extra == \"mssql\""
 files = [
     {file = "pymssql-2.3.4-cp310-cp310-macosx_13_0_x86_64.whl", hash = "sha256:cec30403e10f7e8135c8aea9c764b1f1fc40b64d5d957802c3d537fdb34677e9"},
     {file = "pymssql-2.3.4-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:35cf87fcd0537272b35a5a683597996fe96bee4554d1944fe990c51d7dcb4143"},
@@ -3457,14 +3457,14 @@ type = ["pytest-mypy"]
 auto = []
 dev = ["build", "claude-desktop-config", "rich", "sqlalchemy_mate", "twine", "wheel"]
 doc = ["Sphinx", "docfly", "furo", "ipython", "nbsphinx", "pygments", "rstobj", "sphinx-copybutton", "sphinx-design", "sphinx-jinja"]
+mssql = ["pymssql"]
 mysql = ["PyMySQL"]
 oracle = ["oracledb"]
 postgres = ["psycopg2-binary"]
-pymssql = ["pymssql"]
 sqlite = []
 test = ["pytest", "pytest-asyncio", "pytest-cov", "requests"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "046705e0b8af826af02ce3faff1f5e465f387041981b402e894a36b4a5b25b24"
+content-hash = "c64152973719c39ffe2dda10ccf9f90500218e85d90a0aa7b229b7dca461a93c"
