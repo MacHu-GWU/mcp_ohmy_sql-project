@@ -6,6 +6,8 @@ This script sets up a test configuration for testing purposes.
 
 import os
 
+from which_runtime.api import runtime
+
 from ..paths import path_sample_config
 from ..constants import EnvVarEnum
 from ..config.config_define_00_main import (
@@ -56,12 +58,15 @@ class DatabaseEnum:
         ],
     )
 
+databases = [
+    DatabaseEnum.chinook_sqlite,
+]
+# we only use sqlite in CI test runtime
+if runtime.is_local_runtime_group:
+    databases.append(DatabaseEnum.chinook_postgres)
 
 config = Config(
     version="0.1.1",
     settings=Settings(),
-    databases=[
-        DatabaseEnum.chinook_sqlite,
-        DatabaseEnum.chinook_postgres,
-    ],
+    databases=databases,
 )

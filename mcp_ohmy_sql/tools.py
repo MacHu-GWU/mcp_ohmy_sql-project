@@ -70,7 +70,9 @@ async def get_database_schema_details() -> str:
     - ``*IDX``: Has database index
     - ``*FK->Table.Column``: Foreign key reference
 
-    Example output::
+    Example output:
+
+    .. code-block:: typescript
 
         Database chinook(
           Schema default(
