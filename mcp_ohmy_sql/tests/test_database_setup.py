@@ -34,7 +34,7 @@ from functools import cached_property
 
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
-from .chinook import dir_tmp, path_ChinookData_json
+from .chinook import path_ChinookData_json, path_Chinook_Sqlite_sqlite
 
 
 class Base(orm.DeclarativeBase):
@@ -184,18 +184,20 @@ album_sales_stats_view_select_stmt = (
 )
 
 
+class DBUrlEnum:
+    sqlite = f"sqlite:///{path_Chinook_Sqlite_sqlite}"
+    postgres = "postgresql+psycopg2://postgres:password@localhost:40311/postgres"
+
+
 class _DatabaseEnum:
     @cached_property
     def sqlite(self) -> sa.engine.Engine:
-        path = dir_tmp / "Chinook_Sqlite.sqlite"
-        path.unlink(missing_ok=True)
-        return sa.create_engine(f"sqlite:///{path}")
+        path_Chinook_Sqlite_sqlite.unlink(missing_ok=True)
+        return sa.create_engine(DBUrlEnum.sqlite)
 
     @cached_property
     def postgres(self) -> sa.engine.Engine:
-        return sa.create_engine(
-            "postgresql+psycopg2://postgres:password@localhost:40311/postgres"
-        )
+        return sa.create_engine(DBUrlEnum.postgres)
 
 
 DatabaseEnum = _DatabaseEnum()
@@ -206,7 +208,7 @@ def setup_test_database(engine: sa.engine.Engine) -> None:
     Set up a complete test database with Chinook sample data and views.
 
     This function performs a comprehensive database setup by:
-    
+
     1. Dropping all existing tables (if any) to ensure a clean state
     2. Creating all tables using SQLAlchemy ORM models based on the Chinook schema
     3. Loading sample data from the Chinook JSON dataset

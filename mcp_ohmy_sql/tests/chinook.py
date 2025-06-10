@@ -29,4 +29,5 @@ def download_file(file: str, tag: str = TAG):
 
 
 path_ChinookData_json = dir_tmp / "ChinookData.json"
+path_Chinook_Sqlite_sqlite = dir_tmp / "Chinook_Sqlite.sqlite"
 download_file("ChinookData.json")
