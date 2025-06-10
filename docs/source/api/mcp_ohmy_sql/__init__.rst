@@ -13,6 +13,7 @@ sub packages and modules
     config <config/__init__>
     sa <sa/__init__>
     api <api>
+    app <app>
     constants <constants>
     create_app <create_app>
     server <server>

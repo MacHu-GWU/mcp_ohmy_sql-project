@@ -6,8 +6,8 @@ cdc = ClaudeDesktopConfig()
 
 
 class MCPEnum(BaseMcpEnum):
-    OHMY_SQL = Mcp(
-        name="OhMySql",
+    OHMY_SQL_VENV = Mcp(
+        name="OhMySqlVenv",
         settings={
             "command": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/.venv/bin/python",
             "args": [
@@ -41,8 +41,8 @@ class MCPEnum(BaseMcpEnum):
     )
 
 wanted_mcps = {
-    # MCPEnum.OHMY_SQL,
-    MCPEnum.OHMY_SQL_UVX,
+    MCPEnum.OHMY_SQL_VENV,
+    # MCPEnum.OHMY_SQL_UVX,
     # MCPEnum.NEON,
 }
 MCPEnum.apply(wanted_mcps, cdc)

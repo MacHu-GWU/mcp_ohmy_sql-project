@@ -5,13 +5,10 @@ import time
 
 from .server import mcp
 
-from .config.config_define_00_main import Database, Schema
 from .config.config_init import config
 
 from .sa.api import (
-    SchemaInfo,
     encode_schema_info,
-    execute_count_query,
     execute_select_query,
 )
 
