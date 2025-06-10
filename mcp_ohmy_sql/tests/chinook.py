@@ -1,23 +1,32 @@
 # -*- coding: utf-8 -*-
 
+"""
+In this project, we use the Chinook database as a sample database for testing.
+
+See: https://github.com/lerocha/chinook-database
+"""
+
 import requests
 
-from ..paths import path_chinook_sqlite
+from ..paths import dir_tmp
+
+TAG = "v1.4.5"
 
 
-def _download_chinook_sqlite():
+def get_url(file: str, tag: str = TAG) -> str:
     """
-    See: https://github.com/lerocha/chinook-database
+    Get the URL for the Chinook release file based on the tag and file name.
     """
-    print(f"Downloading chinook database to {path_chinook_sqlite} ...")
-    url = "https://github.com/lerocha/chinook-database/releases/download/v1.4.5/Chinook_Sqlite.sqlite"
+    return f"https://github.com/lerocha/chinook-database/releases/download/{tag}/{file}"
+
+
+def download_file(file: str, tag: str = TAG):
+    url = get_url(file, tag)
+    path = dir_tmp / file
+    print(f"Downloading chinook file from {url} to {path} ...")
     res = requests.get(url)
-    path_chinook_sqlite.write_bytes(res.content)
+    path.write_bytes(res.content)
 
 
-def download_chinook_sqlite():
-    if not path_chinook_sqlite.exists():
-        _download_chinook_sqlite()
-
-
-download_chinook_sqlite()
+path_ChinookData_json = dir_tmp / "ChinookData.json"
+download_file("ChinookData.json")

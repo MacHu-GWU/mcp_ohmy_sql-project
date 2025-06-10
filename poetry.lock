@@ -1721,6 +1721,25 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
+name = "prettytable"
+version = "3.16.0"
+description = "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format"
+optional = true
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "prettytable-3.16.0-py3-none-any.whl", hash = "sha256:b5eccfabb82222f5aa46b798ff02a8452cf530a352c31bddfa29be41242863aa"},
+    {file = "prettytable-3.16.0.tar.gz", hash = "sha256:3c64b31719d961bf69c9a7e03d0c1e477320906a98da63952bc6698d6164ff57"},
+]
+
+[package.dependencies]
+wcwidth = "*"
+
+[package.extras]
+tests = ["pytest", "pytest-cov", "pytest-lazy-fixtures"]
+
+[[package]]
 name = "prompt-toolkit"
 version = "3.0.50"
 description = "Library for building powerful interactive command lines in Python"
@@ -3025,6 +3044,27 @@ pymysql = ["pymysql"]
 sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
+name = "sqlalchemy-mate"
+version = "2.0.0.3"
+description = "A library extend sqlalchemy module, makes CRUD easier."
+optional = true
+python-versions = ">=3.8"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "sqlalchemy_mate-2.0.0.3-py3-none-any.whl", hash = "sha256:c2244478a203dc2f17063b701612b97759ba2a757d3768869a40af48dfa898d6"},
+    {file = "sqlalchemy_mate-2.0.0.3.tar.gz", hash = "sha256:f0e74fc40b437fb0c96b79710e68a1f0b46cbc78ac64df1e34e6721621d03ce8"},
+]
+
+[package.dependencies]
+prettytable = ">=3.0.0,<4.0.0"
+sqlalchemy = ">=2.0.0,<3.0.0"
+
+[package.extras]
+docs = ["Sphinx (==5.3.0)", "docfly (==2.0.3)", "furo (==2023.03.27)", "ipython (==8.10.0)", "nbsphinx (==0.8.12)", "pygments (==2.15.1)", "rstobj (==1.2.1)", "sphinx-copybutton (==0.5.1)", "sphinx-design (==0.5.0)", "sphinx-jinja (==2.0.2)"]
+tests = ["attrs", "boto-session-manager (>=1.7.2,<2.0.0)", "moto (>=4.1.12,<5.0.0)", "pandas (>=2.0.0,<3.0.0)", "pg8000", "pytest", "pytest-cov", "s3pathlib (>=2.1.2,<3.0.0)", "superjson"]
+
+[[package]]
 name = "sse-starlette"
 version = "2.3.6"
 description = "SSE plugin for Starlette"
@@ -3320,7 +3360,7 @@ description = "Measures the displayed width of unicode strings in a terminal"
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "extra == \"doc\""
+markers = "extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "wcwidth-0.2.13-py2.py3-none-any.whl", hash = "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"},
     {file = "wcwidth-0.2.13.tar.gz", hash = "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"},
@@ -3395,7 +3435,7 @@ type = ["pytest-mypy"]
 
 [extras]
 auto = []
-dev = ["build", "claude-desktop-config", "rich", "twine", "wheel"]
+dev = ["build", "claude-desktop-config", "rich", "sqlalchemy_mate", "twine", "wheel"]
 doc = ["Sphinx", "docfly", "furo", "ipython", "nbsphinx", "pygments", "rstobj", "sphinx-copybutton", "sphinx-design", "sphinx-jinja"]
 mysql = ["PyMySQL"]
 oracle = ["oracledb"]
@@ -3407,4 +3447,4 @@ test = ["pytest", "pytest-cov", "requests"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "8cee7270b80b76d4b0e2bd1b2e39a7bda5a36cca78f7da2391b14518da914367"
+content-hash = "513de8ed870d3dbc874fa7213dd8c904816a354fe1f6cbe7d4eae665c1bb96cc"

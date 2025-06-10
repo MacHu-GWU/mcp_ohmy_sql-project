@@ -92,7 +92,8 @@ dev = [
     "wheel>=0.45.0,<1.0.0", # build wheel package
     "build>=1.2.1,<2.0.0", # build source distribution
     "rich>=13.8.1,<14.0.0", # pretty print
-    "claude-desktop-config>=0.2.1,<1.0.0",
+    "claude-desktop-config>=0.2.1,<1.0.0", # claude desktop management
+    "sqlalchemy_mate>=2.0.0.3,<3.0.0.0", # SQLAlchemy utilities
 ]
 
 # ------------------------------------------------------------------------------
