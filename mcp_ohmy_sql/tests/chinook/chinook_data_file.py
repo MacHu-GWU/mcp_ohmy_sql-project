@@ -3,12 +3,14 @@
 """
 In this project, we use the Chinook database as a sample database for testing.
 
+This script automates the download of the Chinook database files from GitHub.
+
 See: https://github.com/lerocha/chinook-database
 """
 
 import requests
 
-from ..paths import dir_tmp
+from ...paths import dir_tmp
 
 TAG = "v1.4.5"
 

@@ -16,7 +16,7 @@ from ..config.config_define import (
     Config,
 )
 
-from .chinook import path_Chinook_Sqlite_sqlite
+from .chinook.chinook_data_file import path_Chinook_Sqlite_sqlite
 
 
 # os.environ[EnvVarEnum.MCP_OHMY_SQL_CONFIG.name] = str(path_sample_config)
