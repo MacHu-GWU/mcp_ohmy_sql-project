@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # uncomment this line when running this directly in venv Python
-from mcp_ohmy_sql.tests.test_hub_init import hub
 from mcp_ohmy_sql.create_app import create_app
 
 
