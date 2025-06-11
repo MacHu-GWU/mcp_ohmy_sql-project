@@ -6,9 +6,12 @@ omit =
     mcp_ohmy_sql/tests/*
     mcp_ohmy_sql/vendor/*
     mcp_ohmy_sql/config/config_init.py
+    mcp_ohmy_sql/hub/hub_init.py
     mcp_ohmy_sql/_version.py
     mcp_ohmy_sql/cli.py
     mcp_ohmy_sql/paths.py
+    mcp_ohmy_sql/server.py
+    mcp_ohmy_sql/tools.py
     mcp_ohmy_sql/create_app.py
     mcp_ohmy_sql/app.py
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.config.config_define_00_main import (
+from mcp_ohmy_sql.config.config_define import (
     Settings,
     TableFilter,
     Schema,
@@ -75,6 +75,6 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.config.config_define_00_main.py",
+        "mcp_ohmy_sql.config.config_define.py",
         preview=False,
     )

@@ -244,7 +244,9 @@ docfly.ApiDocGenerator(
         # Module
         f"{package_name}._version",
         f"{package_name}.paths",
-        f"{package_name}.config.config_init",
+        f"{package_name}.config.config_init.py",
+        f"{package_name}.hub.hub_init.py",
+        f"{package_name}.tools.py",
     ],
 ).fly()
 

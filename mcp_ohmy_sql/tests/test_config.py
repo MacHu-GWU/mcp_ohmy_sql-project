@@ -4,13 +4,10 @@
 This script sets up a test configuration for testing purposes.
 """
 
-import os
 
 from which_runtime.api import runtime
 
-from ..paths import path_sample_config
-from ..constants import EnvVarEnum
-from ..config.config_define_00_main import (
+from ..config.config_define import (
     Settings,
     TableFilter,
     Schema,
@@ -21,9 +18,8 @@ from ..config.config_define_00_main import (
 
 from .chinook import path_Chinook_Sqlite_sqlite
 
-os.environ[EnvVarEnum.MCP_OHMY_SQL_CONFIG.name] = str(path_sample_config)
 
-
+# os.environ[EnvVarEnum.MCP_OHMY_SQL_CONFIG.name] = str(path_sample_config)
 class DatabaseEnum:
     chinook_sqlite = Database(
         identifier="chinook sqlite",
@@ -58,9 +54,11 @@ class DatabaseEnum:
         ],
     )
 
+
 databases = [
     DatabaseEnum.chinook_sqlite,
 ]
+
 # we only use sqlite in CI test runtime
 if runtime.is_local_runtime_group:
     databases.append(DatabaseEnum.chinook_postgres)

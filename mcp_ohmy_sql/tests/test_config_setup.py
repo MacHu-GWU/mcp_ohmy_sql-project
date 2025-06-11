@@ -2,13 +2,17 @@
 
 
 import json
-from mcp_ohmy_sql.tests.test_config import path_sample_config, config
+
+from ..paths import path_sample_config
+
+from .test_config import config
 
 
-path_sample_config.write_text(
-    json.dumps(
-        config.model_dump(),
-        indent=4,
-        ensure_ascii=False,
-    ),
-)
+def setup_test_config():
+    path_sample_config.write_text(
+        json.dumps(
+            config.model_dump(),
+            indent=4,
+            ensure_ascii=False,
+        ),
+    )

@@ -172,13 +172,13 @@ class SchemaInfo(BaseModel):
 
         if include is None:  # pragma: no cover
             include = []
-        if exclude is None:
+        if exclude is None:  # pragma: no cover
             exclude = []
 
         tables = list()
         for table_name, table in metadata.tables.items():
             # don't include tables from other schemas
-            if table.schema != schema_name:
+            if table.schema != schema_name:  # pragma: no cover
                 continue
             # don't include tables that don't match the criteria
             if match(table_name, include, exclude) is False:

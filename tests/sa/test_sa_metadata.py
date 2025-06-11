@@ -26,6 +26,7 @@ class TestSchemaInfo:
         table_info = schema_info.tables[0]
         # rprint(table_info)
         # rprint(table_info.columns_mapping)
+        assert table_info.columns[0].name in table_info.columns_mapping
 
         column_info = table_info.columns[0]
         # rprint(column_info)

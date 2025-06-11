@@ -12,8 +12,6 @@ try:
 except ImportError:  # pragma: no cover
     pass
 
-from .config_define_01_database_schema import ConfigDatabaseSchemaMixin
-
 
 class Settings(BaseModel):
     pass
@@ -73,10 +71,7 @@ class Database(BaseModel):
         return metadata
 
 
-class Config(
-    BaseModel,
-    ConfigDatabaseSchemaMixin,
-):
+class Config(BaseModel):
     version: str = Field()
     settings: Settings = Field(default_factory=Settings)
     databases: list[Database] = Field()
