@@ -1,48 +1,47 @@
 # -*- coding: utf-8 -*-
 
+from pathlib import Path
 from claude_desktop_config.api import ClaudeDesktopConfig, Mcp, BaseMcpEnum
+from mcp_ohmy_sql.paths import dir_venv_bin, dir_unit_test, path_sample_config
+
 
 cdc = ClaudeDesktopConfig()
 
 
+dir_home = Path.home()
+
+
 class MCPEnum(BaseMcpEnum):
-    OHMY_SQL_VENV = Mcp(
-        name="OhMySqlVenv",
+    OHMY_SQL_DEV = Mcp(
+        name="OhMySqlDev",
         settings={
-            "command": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/.venv/bin/python",
+            "command": f"{dir_venv_bin}/python",
             "args": [
-                "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/mcp_ohmy_sql/app.py",
+                f"{dir_unit_test}/app.py",
             ],
             "env": {
-                "MCP_OHMY_SQL_CONFIG": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/sample_mcp_ohmy_sql_config.json",
+                "MCP_OHMY_SQL_CONFIG": f"{path_sample_config}",
             },
         },
     )
     OHMY_SQL_UVX = Mcp(
         name="OhMySql",
         settings={
-            "command": "/Users/sanhehu/.pyenv/shims/uvx",
+            "command": f"{dir_home}/.pyenv/shims/uvx",
             "args": [
                 "--with",
-                "mcp-ohmy-sql[postgres]==0.1.2.dev1",
+                "mcp-ohmy-sql[sqlite,postgres]",  # you can add ==${version} if you want to specify a version
                 "mcp-ohmy-sql",
             ],
             "env": {
-                "MCP_OHMY_SQL_CONFIG": "/Users/sanhehu/Documents/GitHub/mcp_ohmy_sql-project/sample_mcp_ohmy_sql_config.json",
+                "MCP_OHMY_SQL_CONFIG": f"{path_sample_config}",
             },
         },
     )
-    NEON = Mcp(
-        name="Neon",
-        settings={
-            "command": "npx",
-            "args": ["-y", "mcp-remote", "https://mcp.neon.tech/sse"],
-        },
-    )
+
 
 wanted_mcps = {
-    MCPEnum.OHMY_SQL_VENV,
+    MCPEnum.OHMY_SQL_DEV,
     # MCPEnum.OHMY_SQL_UVX,
-    # MCPEnum.NEON,
 }
 MCPEnum.apply(wanted_mcps, cdc)
