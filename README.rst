@@ -29,9 +29,6 @@
 .. image:: https://img.shields.io/badge/Link-API-blue.svg
     :target: https://mcp-ohmy-sql.readthedocs.io/en/latest/py-modindex.html
 
-.. image:: https://img.shields.io/badge/Link-Install-blue.svg
-    :target: `install`_
-
 .. image:: https://img.shields.io/badge/Link-GitHub-blue.svg
     :target: https://github.com/MacHu-GWU/mcp_ohmy_sql-project
 
