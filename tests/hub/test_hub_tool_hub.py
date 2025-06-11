@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.tests.config import DatabaseEnum
-from mcp_ohmy_sql.tests.hub import hub
+from mcp_ohmy_sql.tests.test_config_init import DatabaseEnum
+from mcp_ohmy_sql.tests.test_hub_init import hub
 
 
 def test_tool_list_databases():

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.tests.config import DatabaseEnum, config
-from mcp_ohmy_sql.tests.hub import hub
+from mcp_ohmy_sql.tests.test_config_init import DatabaseEnum, config
+from mcp_ohmy_sql.tests.test_hub_init import hub
 
 from rich import print as rprint
 

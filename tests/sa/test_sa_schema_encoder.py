@@ -2,7 +2,7 @@
 
 import textwrap
 
-from mcp_ohmy_sql.tests.config import config, DatabaseEnum
+from mcp_ohmy_sql.tests.test_config_init import config, DatabaseEnum
 from mcp_ohmy_sql.sa.metadata import SchemaInfo
 from mcp_ohmy_sql.sa.schema_encoder import (
     encode_column_info,

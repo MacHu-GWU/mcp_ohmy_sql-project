@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from mcp_ohmy_sql.tests.config import config, chinook_db
+from mcp_ohmy_sql.tests.test_config_init import config, chinook_db
 from mcp_ohmy_sql.sa.api import SchemaInfo, encode_schema_info
 
 dir_here = Path(__file__).absolute().parent

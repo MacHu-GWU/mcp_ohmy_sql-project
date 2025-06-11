@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.tests.config import config
+from mcp_ohmy_sql.tests.test_config_init import config
 
 from rich import print as rprint
 
