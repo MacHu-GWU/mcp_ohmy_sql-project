@@ -83,6 +83,10 @@ mssql = [
 oracle = [
     "oracledb>=3.0.0,<4.0.0", # Oracle database adapter for Python
 ]
+aws = [
+    "boto3>=1.37.38,<2.0.0", # Amazon Web Services SDK for Python
+    "boto_session_manager>=1.8.1,<2.0.0", # Boto3 session manager for AWS
+]
 
 # ------------------------------------------------------------------------------
 # Local Development dependenceies
@@ -94,6 +98,11 @@ dev = [
     "rich>=13.8.1,<14.0.0", # pretty print
     "claude-desktop-config>=0.2.1,<1.0.0", # claude desktop management
     "sqlalchemy_mate>=2.0.0.3,<3.0.0.0", # SQLAlchemy utilities
+    "boto3>=1.37.38,<2.0.0", # Amazon Web Services SDK for Python
+    "boto_session_manager>=1.8.1,<2.0.0", # Boto3 session manager for AWS
+#    "aws-cdk-lib>=2.179.0,<3.0.0",
+    "aws-cdk-lib==2.179.0",
+    "cdk_mate>=0.1.6,<1.0.0",
 ]
 
 # ------------------------------------------------------------------------------

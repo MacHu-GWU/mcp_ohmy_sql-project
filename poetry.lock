@@ -72,7 +72,7 @@ description = "Classes Without Boilerplate"
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"doc\""
+markers = "extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "attrs-25.3.0-py3-none-any.whl", hash = "sha256:427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3"},
     {file = "attrs-25.3.0.tar.gz", hash = "sha256:75d7cefc7fb576747b2c81b4442d4d4a1ce0900973527c011d1030fd3bf4af1b"},
@@ -105,6 +105,82 @@ attrs = ">=21.3.0"
 [package.extras]
 docs = ["Sphinx (==5.3.0)", "docfly (==2.0.1)", "furo (==2023.03.27)", "ipython (==8.10.0)", "nbsphinx (==0.8.12)", "pygments (==2.15.1)", "rstobj (==1.2.1)", "sphinx-copybutton (==0.5.1)", "sphinx-design (==0.5.0)", "sphinx-jinja (==2.0.2)"]
 tests = ["cached-property (>=1.5.2) ; python_version < \"3.8\"", "pytest", "pytest-cov"]
+
+[[package]]
+name = "aws-cdk-asset-awscli-v1"
+version = "2.2.237"
+description = "A library that contains the AWS CLI for use in Lambda Layers"
+optional = true
+python-versions = "~=3.9"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "aws_cdk_asset_awscli_v1-2.2.237-py3-none-any.whl", hash = "sha256:642805ba143b35d11d5b5e80ab728db2ec8b894b2837b629ad95601e7e189e4c"},
+    {file = "aws_cdk_asset_awscli_v1-2.2.237.tar.gz", hash = "sha256:e1dd0086af180c381d3ee81eb963a1f469627763e0507982b6f2d4075446bdf4"},
+]
+
+[package.dependencies]
+jsii = ">=1.112.0,<2.0.0"
+publication = ">=0.0.3"
+typeguard = ">=2.13.3,<4.3.0"
+
+[[package]]
+name = "aws-cdk-asset-node-proxy-agent-v6"
+version = "2.1.0"
+description = "@aws-cdk/asset-node-proxy-agent-v6"
+optional = true
+python-versions = "~=3.8"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "aws_cdk.asset_node_proxy_agent_v6-2.1.0-py3-none-any.whl", hash = "sha256:24a388b69a44d03bae6dbf864c4e25ba650d4b61c008b4568b94ffbb9a69e40e"},
+    {file = "aws_cdk_asset_node_proxy_agent_v6-2.1.0.tar.gz", hash = "sha256:1f292c0631f86708ba4ee328b3a2b229f7e46ea1c79fbde567ee9eb119c2b0e2"},
+]
+
+[package.dependencies]
+jsii = ">=1.103.1,<2.0.0"
+publication = ">=0.0.3"
+typeguard = ">=2.13.3,<5.0.0"
+
+[[package]]
+name = "aws-cdk-cloud-assembly-schema"
+version = "39.2.20"
+description = "Cloud Assembly Schema"
+optional = true
+python-versions = "~=3.8"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "aws_cdk.cloud_assembly_schema-39.2.20-py3-none-any.whl", hash = "sha256:7b1ab0593fbfaac4ff0d5d0aa6a3b54185e0286f4aa68376557cac2d50c59183"},
+    {file = "aws_cdk_cloud_assembly_schema-39.2.20.tar.gz", hash = "sha256:e110b22f961d15c25a9099590375280c0b45637c8325ade9b570a0ef11e6e907"},
+]
+
+[package.dependencies]
+jsii = ">=1.106.0,<2.0.0"
+publication = ">=0.0.3"
+typeguard = ">=2.13.3,<4.3.0"
+
+[[package]]
+name = "aws-cdk-lib"
+version = "2.179.0"
+description = "Version 2 of the AWS Cloud Development Kit library"
+optional = true
+python-versions = "~=3.8"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "aws_cdk_lib-2.179.0-py3-none-any.whl", hash = "sha256:1d7b88ee69067b8d58dac9eeb6697bbaf5d5c032a3070898389c41e7c4f3e3d7"},
+    {file = "aws_cdk_lib-2.179.0.tar.gz", hash = "sha256:b653a55754f4020a4b36e4ae183d213e76e27b18b842cbf9e430e9eccb700550"},
+]
+
+[package.dependencies]
+"aws-cdk.asset-awscli-v1" = ">=2.2.208,<3.0.0"
+"aws-cdk.asset-node-proxy-agent-v6" = ">=2.1.0,<3.0.0"
+"aws-cdk.cloud-assembly-schema" = ">=39.2.0,<40.0.0"
+constructs = ">=10.0.0,<11.0.0"
+jsii = ">=1.106.0,<2.0.0"
+publication = ">=0.0.3"
+typeguard = ">=2.13.3,<4.3.0"
 
 [[package]]
 name = "babel"
@@ -184,6 +260,68 @@ webencodings = "*"
 css = ["tinycss2 (>=1.1.0,<1.5)"]
 
 [[package]]
+name = "boto-session-manager"
+version = "1.8.1"
+description = "Provides an alternative, or maybe a more user friendly way to use the native boto3 API."
+optional = true
+python-versions = ">=3.8"
+groups = ["main"]
+markers = "extra == \"aws\" or extra == \"dev\""
+files = [
+    {file = "boto_session_manager-1.8.1-py3-none-any.whl", hash = "sha256:ca73b7356cc6af626a9794bc36a44d998312cb4686f5c408d45603cce3e47323"},
+    {file = "boto_session_manager-1.8.1.tar.gz", hash = "sha256:68f8cd1f60ab7e245875caacbc58416830f0c6dc5562ed9cbea6a55db100382f"},
+]
+
+[package.dependencies]
+boto3 = "*"
+
+[package.extras]
+docs = ["Sphinx (==5.3.0)", "docfly (==2.0.3)", "furo (==2023.03.27)", "ipython (==8.10.0)", "nbsphinx (==0.8.12)", "pygments (==2.15.1)", "rstobj (==1.2.1)", "sphinx-copybutton (==0.5.1)", "sphinx-design (==0.5.0)", "sphinx-jinja (==2.0.2)"]
+tests = ["awscli", "boto3", "pytest", "pytest-cov"]
+
+[[package]]
+name = "boto3"
+version = "1.38.34"
+description = "The AWS SDK for Python"
+optional = true
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "extra == \"aws\" or extra == \"dev\""
+files = [
+    {file = "boto3-1.38.34-py3-none-any.whl", hash = "sha256:7d9409be63a11c1684427a9b06d6820ec72785cb275b56affe437f3709a80eb3"},
+    {file = "boto3-1.38.34.tar.gz", hash = "sha256:25e76b9fec8db8e21adaf84df0de5c58fa779be121bc327e07e920c7c0870394"},
+]
+
+[package.dependencies]
+botocore = ">=1.38.34,<1.39.0"
+jmespath = ">=0.7.1,<2.0.0"
+s3transfer = ">=0.13.0,<0.14.0"
+
+[package.extras]
+crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
+
+[[package]]
+name = "botocore"
+version = "1.38.34"
+description = "Low-level, data-driven core of boto 3."
+optional = true
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "extra == \"aws\" or extra == \"dev\""
+files = [
+    {file = "botocore-1.38.34-py3-none-any.whl", hash = "sha256:95ff2c4819498e94b321c9b5ac65d02267df93ff7ce7617323b19f19ea7cb545"},
+    {file = "botocore-1.38.34.tar.gz", hash = "sha256:a105f4d941f329aa72c43ddf42371ec4bee50ab3619fc1ef35d0005520219612"},
+]
+
+[package.dependencies]
+jmespath = ">=0.7.1,<2.0.0"
+python-dateutil = ">=2.1,<3.0.0"
+urllib3 = {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""}
+
+[package.extras]
+crt = ["awscrt (==0.23.8)"]
+
+[[package]]
 name = "build"
 version = "1.2.2.post1"
 description = "A simple, correct Python build frontend"
@@ -209,6 +347,58 @@ test = ["build[uv,virtualenv]", "filelock (>=3)", "pytest (>=6.2.4)", "pytest-co
 typing = ["build[uv]", "importlib-metadata (>=5.1)", "mypy (>=1.9.0,<1.10.0)", "tomli", "typing-extensions (>=3.7.4.3)"]
 uv = ["uv (>=0.1.18)"]
 virtualenv = ["virtualenv (>=20.0.35)"]
+
+[[package]]
+name = "cattrs"
+version = "24.1.3"
+description = "Composable complex class support for attrs and dataclasses."
+optional = true
+python-versions = ">=3.8"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "cattrs-24.1.3-py3-none-any.whl", hash = "sha256:adf957dddd26840f27ffbd060a6c4dd3b2192c5b7c2c0525ef1bd8131d8a83f5"},
+    {file = "cattrs-24.1.3.tar.gz", hash = "sha256:981a6ef05875b5bb0c7fb68885546186d306f10f0f6718fe9b96c226e68821ff"},
+]
+
+[package.dependencies]
+attrs = ">=23.1.0"
+exceptiongroup = {version = ">=1.1.1", markers = "python_version < \"3.11\""}
+typing-extensions = {version = ">=4.1.0,<4.6.3 || >4.6.3", markers = "python_version < \"3.11\""}
+
+[package.extras]
+bson = ["pymongo (>=4.4.0)"]
+cbor2 = ["cbor2 (>=5.4.6)"]
+msgpack = ["msgpack (>=1.0.5)"]
+msgspec = ["msgspec (>=0.18.5) ; implementation_name == \"cpython\""]
+orjson = ["orjson (>=3.9.2) ; implementation_name == \"cpython\""]
+pyyaml = ["pyyaml (>=6.0)"]
+tomlkit = ["tomlkit (>=0.11.8)"]
+ujson = ["ujson (>=5.7.0)"]
+
+[[package]]
+name = "cdk-mate"
+version = "0.1.6"
+description = "A comprehensive Python toolkit for simplifying AWS CDK deployment workflows across multiple stacks"
+optional = true
+python-versions = "<4.0,>=3.9"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "cdk_mate-0.1.6-py3-none-any.whl", hash = "sha256:7b3e6ca74c5292b280123dbc73a165fdc0fb9ef0ecf69eb104c30404c0e17f28"},
+    {file = "cdk_mate-0.1.6.tar.gz", hash = "sha256:35155368233c3f6fcbc1b674f86daa017732af5d79e4055bab58bb045c3bf600"},
+]
+
+[package.dependencies]
+aws-cdk-lib = ">=2.179.0,<3.0.0"
+boto-session-manager = ">=1.7.2,<2.0.0"
+boto3 = ">=1.35.99,<2.0.0"
+func_args = ">=1.0.0,<2.0.0"
+
+[package.extras]
+dev = ["build (>=1.2.1,<2.0.0)", "rich (>=13.8.1,<14.0.0)", "twine (>=6.0.0,<7.0.0)", "wheel (>=0.45.0,<1.0.0)"]
+doc = ["Sphinx (>=7.4.7,<8.0.0)", "docfly (==3.0.0)", "furo (==2024.8.6)", "ipython (>=8.18.1,<8.19.0)", "nbsphinx (>=0.8.12,<1.0.0)", "pygments (>=2.18.0,<3.0.0)", "rstobj (==1.2.1)", "sphinx-copybutton (>=0.5.2,<1.0.0)", "sphinx-design (>=0.6.1,<1.0.0)", "sphinx-jinja (>=2.0.2,<3.0.0)"]
+test = ["moto (>=5.0.28,<6.0.0)", "pytest (>=8.2.2,<9.0.0)", "pytest-cov (>=6.0.0,<7.0.0)"]
 
 [[package]]
 name = "certifi"
@@ -451,6 +641,24 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
+
+[[package]]
+name = "constructs"
+version = "10.4.2"
+description = "A programming model for software-defined state"
+optional = true
+python-versions = "~=3.8"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "constructs-10.4.2-py3-none-any.whl", hash = "sha256:1f0f59b004edebfde0f826340698b8c34611f57848139b7954904c61645f13c1"},
+    {file = "constructs-10.4.2.tar.gz", hash = "sha256:ce54724360fffe10bab27d8a081844eb81f5ace7d7c62c84b719c49f164d5307"},
+]
+
+[package.dependencies]
+jsii = ">=1.102.0,<2.0.0"
+publication = ">=0.0.3"
+typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "coverage"
@@ -711,6 +919,24 @@ files = [
 devel = ["colorama", "json-spec", "jsonschema", "pylint", "pytest", "pytest-benchmark", "pytest-cache", "validictory"]
 
 [[package]]
+name = "func-args"
+version = "1.0.1"
+description = "A lightweight Python library for creating wrapper functions with enhanced argument handling using sentinel values to mark parameters as required or optional."
+optional = true
+python-versions = "<4.0,>=3.9"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "func_args-1.0.1-py3-none-any.whl", hash = "sha256:4562f4eaa0d68142a6ab5ad1f212959fabc2c4cc029b77446bcc377d737e3db4"},
+    {file = "func_args-1.0.1.tar.gz", hash = "sha256:f07c2620fa446da54eb0888d5063167b1068d566e1f9a1879fe912c3d7497821"},
+]
+
+[package.extras]
+dev = ["build (>=1.2.1,<2.0.0)", "rich (>=13.8.1,<14.0.0)", "twine (>=6.0.0,<7.0.0)", "wheel (>=0.45.0,<1.0.0)"]
+doc = ["Sphinx (>=7.4.7,<8.0.0)", "docfly (==3.0.0)", "furo (==2024.8.6)", "ipython (>=8.18.1,<8.19.0)", "nbsphinx (>=0.8.12,<1.0.0)", "pygments (>=2.18.0,<3.0.0)", "rstobj (==1.2.1)", "sphinx-copybutton (>=0.5.2,<1.0.0)", "sphinx-design (>=0.6.1,<1.0.0)", "sphinx-jinja (>=2.0.2,<3.0.0)"]
+test = ["pytest (>=8.2.2,<9.0.0)", "pytest-cov (>=6.0.0,<7.0.0)"]
+
+[[package]]
 name = "furo"
 version = "2024.8.6"
 description = "A clean customisable Sphinx documentation theme."
@@ -944,6 +1170,27 @@ test = ["flufl.flake8", "importlib_resources (>=1.3) ; python_version < \"3.9\""
 type = ["pytest-mypy"]
 
 [[package]]
+name = "importlib-resources"
+version = "6.5.2"
+description = "Read resources from Python packages"
+optional = true
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "importlib_resources-6.5.2-py3-none-any.whl", hash = "sha256:789cfdc3ed28c78b67a06acb8126751ced69a3d5f79c095a98298cd8a760ccec"},
+    {file = "importlib_resources-6.5.2.tar.gz", hash = "sha256:185f87adef5bcc288449d98fb4fba07cea78bc036455dd44c5fc4a2fe78fed2c"},
+]
+
+[package.extras]
+check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1) ; sys_platform != \"cygwin\""]
+cover = ["pytest-cov"]
+doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
+enabler = ["pytest-enabler (>=2.2)"]
+test = ["jaraco.test (>=5.4)", "pytest (>=6,!=8.1.*)", "zipp (>=3.17)"]
+type = ["pytest-mypy"]
+
+[[package]]
 name = "iniconfig"
 version = "2.1.0"
 description = "brain-dead simple config-ini parsing"
@@ -1114,6 +1361,41 @@ MarkupSafe = ">=2.0"
 
 [package.extras]
 i18n = ["Babel (>=2.7)"]
+
+[[package]]
+name = "jmespath"
+version = "1.0.1"
+description = "JSON Matching Expressions"
+optional = true
+python-versions = ">=3.7"
+groups = ["main"]
+markers = "extra == \"aws\" or extra == \"dev\""
+files = [
+    {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
+    {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
+]
+
+[[package]]
+name = "jsii"
+version = "1.112.0"
+description = "Python client for jsii runtime"
+optional = true
+python-versions = "~=3.9"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "jsii-1.112.0-py3-none-any.whl", hash = "sha256:6510c223074d9b206fd0570849a791e4d9ecfff7ffe68428de73870cea9f55a1"},
+    {file = "jsii-1.112.0.tar.gz", hash = "sha256:6b7d19f361c2565b76828ecbe8cbed8b8d6028a82aa98a46b206a4ee5083157e"},
+]
+
+[package.dependencies]
+attrs = ">=21.2,<26.0"
+cattrs = ">=1.8,<24.2"
+importlib_resources = ">=5.2.0"
+publication = ">=0.0.3"
+python-dateutil = "*"
+typeguard = ">=2.13.3,<4.5.0"
+typing_extensions = ">=3.8,<5.0"
 
 [[package]]
 name = "jsonschema"
@@ -1848,6 +2130,19 @@ files = [
 ]
 
 [[package]]
+name = "publication"
+version = "0.0.3"
+description = "Publication helps you maintain public-api-friendly modules by preventing unintentional access to private implementation details via introspection."
+optional = true
+python-versions = "*"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "publication-0.0.3-py2.py3-none-any.whl", hash = "sha256:0248885351febc11d8a1098d5c8e3ab2dabcf3e8c0c96db1e17ecd12b53afbe6"},
+    {file = "publication-0.0.3.tar.gz", hash = "sha256:68416a0de76dddcdd2930d1c8ef853a743cc96c82416c4e4d3b5d901c6276dc4"},
+]
+
+[[package]]
 name = "pure-eval"
 version = "0.2.3"
 description = "Safely evaluate AST nodes without side effects"
@@ -2215,7 +2510,7 @@ description = "Extensions to the standard Python datetime module"
 optional = true
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 groups = ["main"]
-markers = "extra == \"doc\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
     {file = "python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
@@ -2661,6 +2956,25 @@ docs = ["docfly (==1.0.2)", "furo (==2021.8.31)", "rstobj", "sphinx (==4.3.0)", 
 tests = ["pytest", "pytest-cov"]
 
 [[package]]
+name = "s3transfer"
+version = "0.13.0"
+description = "An Amazon S3 Transfer Manager"
+optional = true
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "extra == \"aws\" or extra == \"dev\""
+files = [
+    {file = "s3transfer-0.13.0-py3-none-any.whl", hash = "sha256:0148ef34d6dd964d0d8cf4311b2b21c474693e57c2e069ec708ce043d2b527be"},
+    {file = "s3transfer-0.13.0.tar.gz", hash = "sha256:f5e6db74eb7776a37208001113ea7aa97695368242b364d73e91c981ac522177"},
+]
+
+[package.dependencies]
+botocore = ">=1.37.4,<2.0a.0"
+
+[package.extras]
+crt = ["botocore[crt] (>=1.37.4,<2.0a.0)"]
+
+[[package]]
 name = "secretstorage"
 version = "3.3.3"
 description = "Python bindings to FreeDesktop.org Secret Service API"
@@ -2696,7 +3010,7 @@ description = "Python 2 and 3 compatibility utilities"
 optional = true
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 groups = ["main"]
-markers = "extra == \"doc\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
     {file = "six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"},
@@ -3289,6 +3603,23 @@ urllib3 = ">=1.26.0"
 keyring = ["keyring (>=15.1)"]
 
 [[package]]
+name = "typeguard"
+version = "2.13.3"
+description = "Run-time type checker for Python"
+optional = true
+python-versions = ">=3.5.3"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "typeguard-2.13.3-py3-none-any.whl", hash = "sha256:5e3e3be01e887e7eafae5af63d1f36c849aaa94e3a0112097312aabfa16284f1"},
+    {file = "typeguard-2.13.3.tar.gz", hash = "sha256:00edaa8da3a133674796cf5ea87d9f4b4c367d77476e185e80251cc13dfbb8c4"},
+]
+
+[package.extras]
+doc = ["sphinx-autodoc-typehints (>=1.2.0)", "sphinx-rtd-theme"]
+test = ["mypy ; platform_python_implementation != \"PyPy\"", "pytest", "typing-extensions"]
+
+[[package]]
 name = "typer"
 version = "0.16.0"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
@@ -3340,7 +3671,7 @@ description = "HTTP library with thread-safe connection pooling, file post, and 
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"dev\" or extra == \"test\" or extra == \"doc\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"doc\""
 files = [
     {file = "urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df"},
     {file = "urllib3-2.3.0.tar.gz", hash = "sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d"},
@@ -3455,7 +3786,8 @@ type = ["pytest-mypy"]
 
 [extras]
 auto = []
-dev = ["build", "claude-desktop-config", "rich", "sqlalchemy_mate", "twine", "wheel"]
+aws = ["boto3", "boto_session_manager"]
+dev = ["aws-cdk-lib", "boto3", "boto_session_manager", "build", "cdk_mate", "claude-desktop-config", "rich", "sqlalchemy_mate", "twine", "wheel"]
 doc = ["Sphinx", "docfly", "furo", "ipython", "nbsphinx", "pygments", "rstobj", "sphinx-copybutton", "sphinx-design", "sphinx-jinja"]
 mssql = ["pymssql"]
 mysql = ["PyMySQL"]
@@ -3467,4 +3799,4 @@ test = ["pytest", "pytest-asyncio", "pytest-cov", "requests"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "c64152973719c39ffe2dda10ccf9f90500218e85d90a0aa7b229b7dca461a93c"
+content-hash = "c4711765e2bf42626701a043f1a7b3a60619b29278656317bbbe2c608a565206"
