@@ -194,5 +194,4 @@ See our `ROADMAP.md <https://github.com/MacHu-GWU/mcp_ohmy_sql-project/blob/main
 
 🎯 Get Started
 ------------------------------------------------------------------------------
-- `Quick Start Guide <docs/source/01-Quick-Start/index.rst>`_: Set up and run the server in under 5 minutes
-- `Configuration Guide <docs/source/02-Configuration/index.rst>`_: Configure multiple databases and advanced security settings
+- `Quick Start Guide <https://mcp-ohmy-sql.readthedocs.io/en/latest/01-Quick-Start/index.html>`_: Set up and run the server in under 5 minutes

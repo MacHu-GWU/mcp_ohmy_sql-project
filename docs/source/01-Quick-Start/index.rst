@@ -114,7 +114,7 @@ We'll use the Chinook database, a popular sample database that contains data abo
 
 **2.2 Create Configuration File**
 
-Create a new file named ``mcp_ohmy_sql.json`` with the following content:
+Create a new file named :ref:`mcp_ohmy_sql.json <configuration-guide>` with the following content:
 
 .. code-block:: json
 
@@ -149,7 +149,7 @@ Create a new file named ``mcp_ohmy_sql.json`` with the following content:
 
 .. seealso::
 
-    See :ref:`configuration-guide` for a complete reference on the configuration options available in ``mcp_ohmy_sql.json``.
+    See :ref:`configuration-guide` for a complete reference on the configuration options available in :ref:`mcp_ohmy_sql.json <configuration-guide>`.
 
 **2.3 Update Configuration Paths**
 
@@ -158,7 +158,7 @@ Create a new file named ``mcp_ohmy_sql.json`` with the following content:
     **Critical Configuration Updates**
    
     1. **Database Path**: Replace ``/path/to/Chinook_Sqlite.sqlite`` with the actual absolute path to your downloaded database file
-    2. **Environment Variable**: Update the ``MCP_OHMY_SQL_CONFIG`` path in ``claude_desktop_config.json`` to point to your ``mcp_ohmy_sql.json`` file
+    2. **Environment Variable**: Update the ``MCP_OHMY_SQL_CONFIG`` path in ``claude_desktop_config.json`` to point to your :ref:`mcp_ohmy_sql.json <configuration-guide>` file
    
     **Example paths:**
    
