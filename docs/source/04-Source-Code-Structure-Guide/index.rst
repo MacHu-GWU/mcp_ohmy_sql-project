@@ -1,4 +1,4 @@
-📐 Source Code Structure Guide
+Source Code Structure Guide
 ==============================================================================
 *A comprehensive guide for contributors to understand the architectural design patterns and code organization of the mcp_ohmy_sql project.*
 

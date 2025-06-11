@@ -241,50 +241,15 @@ class ToolHubMixin:
         params: T.Optional[dict[str, T.Any]] = None,
     ) -> str:
         """
-        Execute SQL SELECT statements with performance monitoring and result formatting.
+        Execute SELECT queries with performance timing and formatted results.
 
-        This MCP tool executes SELECT queries against the connected database and returns
-        both execution timing information and formatted results. The execution time is
-        critical for query optimization - use this data to identify slow queries that
-        may need optimization through indexing, query restructuring, or result limiting.
+        **Read-only tool** that executes SELECT statements and returns execution time
+        plus Markdown-formatted results. Use execution time (>1s = slow, >5s = needs optimization)
+        to guide query performance decisions.
 
-        **Performance Monitoring:**
+        **Sample Output:**
 
-        - Execution time is measured in seconds with millisecond precision
-        - Times > 1 second indicate potential optimization opportunities
-        - Times > 5 seconds suggest immediate attention needed for query optimization
-        - Consider adding WHERE clauses, LIMIT statements, or indexes for slow queries
-
-        **Result Safety:**
-
-        - Results are automatically limited to prevent overwhelming LLM context
-        - Large datasets are truncated with indicators showing partial results
-        - Use COUNT queries first to estimate result size before full SELECT
-
-        :param database_identifier: The identifier of the database to query
-            (obtained from list_databases tool).
-        :param sql: The SELECT statement to execute. Must be a valid SELECT query only.
-            DDL, DML, and other non-SELECT statements are not permitted.
-        :param params: Optional dictionary of parameter values for parameterized queries.
-            Use this for safe value substitution (e.g., {"user_id": 123}).
-
-        :returns: Formatted response containing:
-            - Execution time in seconds (use this to assess query performance)
-            - Query results formatted as a readable Markdown table
-            - Arbitrary additional information
-
-        Example usage::
-
-            # Simple query
-            execute_select_statement("SELECT * FROM users LIMIT 10")
-
-            # Parameterized query (recommended for dynamic values)
-            execute_select_statement(
-                "SELECT * FROM orders WHERE user_id = :user_id LIMIT 20",
-                {"user_id": 123}
-            )
-
-        Example output::
+        .. code-block:: markdown
 
             # Execution Time
             0.045 seconds
@@ -295,11 +260,24 @@ class ToolHubMixin:
             | 1  | John Doe | john@example.com   |
             | 2  | Alice    | alice@example.com  |
 
-        .. note::
+        **Usage Examples:**
 
-            This tool is read-only and only accepts SELECT statements. Use the execution
-            time feedback to guide query optimization decisions and ensure efficient
-            database interactions that respect LLM context limitations.
+        .. code-block:: python
+
+            # Simple query
+            execute_select_statement("chinook_sqlite", "SELECT * FROM Album LIMIT 5")
+
+            # Parameterized query (recommended for dynamic values)
+            execute_select_statement(
+                "chinook_sqlite",
+                "SELECT * FROM Album WHERE ArtistId = :artist_id",
+                {"artist_id": 1}
+            )
+
+        :param database_identifier: Database identifier from list_databases.
+        :param sql: SELECT statement only (DDL/DML not permitted).
+        :param params: Optional parameters for safe value substitution.
+        :returns: Execution time and query results in Markdown table format.
         """
         start_time = time.time()
         if database_identifier not in self.config.databases_mapping:

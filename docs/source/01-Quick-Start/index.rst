@@ -7,20 +7,23 @@ What You'll Achieve
 ------------------------------------------------------------------------------
 By the end of this guide, you'll have a fully functional SQL MCP server that enables you to:
 
-✨ **Database Discovery**
-    - List available databases and their schemas
-    - Explore table structures and relationships
-    - Understand data models through AI-generated insights
+**Database Discovery**
 
-📊 **Natural Language Querying**
-    - Ask business questions in plain English
-    - Get SQL queries generated automatically
-    - Receive formatted results with explanations
+- List available databases and their schemas
+- Explore table structures and relationships
+- Understand data models through AI-generated insights
 
-📈 **Data Analysis & Visualization**
-    - Generate business reports and insights
-    - Create visualizations and charts
-    - Build entity relationship diagrams
+**Natural Language Querying**
+
+- Ask business questions in plain English
+- Get SQL queries generated automatically
+- Receive formatted results with explanations
+
+**Data Analysis & Visualization**
+
+- Generate business reports and insights
+- Create visualizations and charts
+- Build entity relationship diagrams
 
 
 Prerequisites
@@ -252,20 +255,23 @@ Now comes the exciting part! Let's explore what you can do with your connected d
 
 **What You Can Do:**
 
-🔍 **Database Discovery**
-    - List available databases and schemas
-    - Explore table structures and relationships
-    - Understand your data model
+**Database Discovery**
 
-📊 **Business Intelligence**
-    - Ask complex business questions in plain English
-    - Get automatically generated SQL queries
-    - Receive formatted results with insights
+- List available databases and schemas
+- Explore table structures and relationships
+- Understand your data model
 
-📈 **Data Visualization**
-    - Create charts and reports
-    - Generate entity relationship diagrams
-    - Export results for presentations
+**Business Intelligence**
+
+- Ask complex business questions in plain English
+- Get automatically generated SQL queries
+- Receive formatted results with insights
+
+**Data Visualization**
+
+- Create charts and reports
+- Generate entity relationship diagrams
+- Export results for presentations
 
 
 **Example 1: Discover Your Data**
@@ -553,32 +559,34 @@ Understand your data relationships visually:
 AI generates professional ER diagrams showing how your tables connect, helping you understand the database structure at a glance.
 
 
-🚀 What's Next?
+What's Next?
 ------------------------------------------------------------------------------
 Congratulations! You now have a fully functional AI-powered database assistant. Here's how to expand your setup and unlock more capabilities:
 
 
 Immediate Next Steps
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-🎯 **Try More Queries**
-    Start experimenting with different types of questions:
-    
-    - *"What are the most popular music genres by sales?"*
-    - *"Show me customer demographics by country"*
-    - *"Which employees have the highest sales performance?"*
-    - *"Create a report showing revenue trends over time"*
+**Try More Queries**
 
-🔧 **Connect Your Own Databases**
-    Replace the sample Chinook database with your real data:
+Start experimenting with different types of questions:
     
-    - Update the connection URL in your configuration
-    - Add multiple databases for different environments
-    - Configure table filters to control access
+- *"What are the most popular music genres by sales?"*
+- *"Show me customer demographics by country"*
+- *"Which employees have the highest sales performance?"*
+- *"Create a report showing revenue trends over time"*
+
+**Connect Your Own Databases**
+
+Replace the sample Chinook database with your real data:
+    
+- Update the connection URL in your configuration
+- Add multiple databases for different environments
+- Configure table filters to control access
 
 
 Advanced Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-📊 **Multi-Database Setup**
+**Multi-Database Setup**
 
 Connect to multiple databases simultaneously:
 
@@ -599,28 +607,30 @@ Connect to multiple databases simultaneously:
         ]
     }
 
-🔒 **Security & Access Control**
-    - Set up table filtering to filter out irrelevant data
-    - Configure read-only database users
-    - Use environment variables for database credentials
+**Security & Access Control**
 
-⚡ **Performance Optimization**
-    - Set up query timeouts and result limits
-    - Monitor query performance and optimize slow operations
+- Set up table filtering to filter out irrelevant data
+- Configure read-only database users
+- Use environment variables for database credentials
+
+**Performance Optimization**
+
+- Set up query timeouts and result limits
+- Monitor query performance and optimize slow operations
 
 
 **Real-World Applications**
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-💼 **Business Analytics**
+**Business Analytics**
     Use natural language to generate business reports, analyze trends, and create executive dashboards directly from your operational databases.
 
-🔍 **Data Exploration**
+**Data Exploration**
     Quickly understand new datasets, discover data quality issues, and explore relationships between tables without writing complex SQL.
 
-📊 **Reporting Automation**
+**Reporting Automation**
     Create automated reports by asking AI to generate and format query results, export to files, and schedule regular data exports.
 
-🎯 **Database Documentation**
+**Database Documentation**
     Generate comprehensive database documentation, ER diagrams, and data dictionaries automatically from your schema.
 
 Ready to transform how you work with data? Start with your own databases and see what insights you can uncover!
