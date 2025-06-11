@@ -82,6 +82,18 @@ Open the file and add the following configuration to the ``mcpServers`` section:
    
     Example: For MySQL and PostgreSQL, use ``mcp-ohmy-sql[mysql,postgres]``
 
+.. tip::
+
+    To use specific version of ``mcp_ohmy_sql``, you can specify the claude_desktop_config.json::
+
+    .. code-block:: python
+
+        "args": [
+            "--with",
+            "mcp-ohmy-sql[sqlite,postgres]==0.1.2",
+            "mcp-ohmy-sql"
+        ],
+
 .. important::
 
     Remember to update the ``MCP_OHMY_SQL_CONFIG`` path to point to where you'll create your configuration file in the next step.
@@ -226,7 +238,9 @@ If the global installation doesn't work, you can specify the absolute path in yo
 
 **Problem: "Claude Desktop cannot connect to the MCP server"**
 
-This is usually a configuration issue. Check these items:
+First, ensure you have the latest version of `uv <https://github.com/astral-sh/uv>`_ installed. If you encounter error messages related to ``claude_desktop_config.json``, this typically indicates that the uv command is not properly recognizing your MCP server configuration.
+
+Otherwise, this is usually a configuration issue. Check these items:
 
 1. **Verify JSON syntax** - Ensure your :ref:`mcp_ohmy_sql.json <configuration-guide>` file is valid JSON
 2. **Check file paths** - Confirm all paths are absolute and accessible
