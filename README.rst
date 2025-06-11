@@ -57,9 +57,8 @@ Transform your database interactions with natural language queries, automatic sc
 See `📚 Full Documentation HERE <https://mcp-ohmy-sql.readthedocs.io/en/latest/>`_
 
 
-🚀 Key Features
+🚀 Feature Highlights
 ------------------------------------------------------------------------------
-
 **Universal Database Support**
 
 Connect to virtually any SQL database through SQLAlchemy's proven architecture. From lightweight SQLite to enterprise PostgreSQL, MySQL, Oracle, and SQL Server—all supported out of the box.
@@ -101,83 +100,96 @@ While other SQL MCP servers exist, ``mcp_ohmy_sql`` stands out through:
 See our `ROADMAP.md <https://github.com/MacHu-GWU/mcp_ohmy_sql-project/blob/main/ROADMAP.md>`_ for the complete vision and upcoming features.
 
 
+🚀️ Supported Features
+------------------------------------------------------------------------------
+See our `ROADMAP.md <https://github.com/MacHu-GWU/mcp_ohmy_sql-project/blob/main/ROADMAP.md>`_ for the complete vision and upcoming features.
+
+.. list-table:: Feature Support Status
+   :header-rows: 1
+   :widths: 25 15 40
+
+   * - **Feature**
+     - **Status**
+     - **Note**
+   * - Multi Database Support
+     - ✅ Supported
+     -
+   * - Local MCP Server via UV
+     - ✅ Supported
+     -
+   * - Local MCP Server via Docker
+     - ⏳ In Progress
+     -
+   * - Remote MCP Server
+     - ⏳ In Progress
+     -
+   * - One Click to Deploy Remote MCP Server
+     - ⏳ In Progress
+     -
+   * - Export Results to Local Files
+     - ⏳ In Progress
+     -
+   * - Local Data File Analysis
+     - ⏳ In Progress
+     -
+   * - User Management
+     - ⏳ In Progress
+     - Remote MCP server only feature
+   * - Access Control Management
+     - ⏳ In Progress
+     - Remote MCP server only feature
+
+
 🛢️ Supported Databases
 ------------------------------------------------------------------------------
-.. raw:: html
+See our `ROADMAP.md <https://github.com/MacHu-GWU/mcp_ohmy_sql-project/blob/main/ROADMAP.md>`_ for the complete vision and upcoming features.
 
-    <table class="tg"><thead>
-      <tr>
-        <th class="tg-amwm">Database</th>
-        <th class="tg-amwm">Status</th>
-        <th class="tg-amwm">Note</th>
-      </tr></thead>
-    <tbody>
-      <tr>
-        <td class="tg-baqh">Sqlite</td>
-        <td class="tg-baqh">✅ Supported</td>
-        <td class="tg-baqh">via Sqlalchemy</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">Postgres</td>
-        <td class="tg-baqh">✅ Supported</td>
-        <td class="tg-baqh">via Sqlalchemy</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">MySQL</td>
-        <td class="tg-baqh">✅ Supported</td>
-        <td class="tg-baqh">via Sqlalchemy</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">Oracle</td>
-        <td class="tg-baqh">✅ Supported</td>
-        <td class="tg-baqh">via Sqlalchemy</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">MSSQL</td>
-        <td class="tg-baqh">✅ Supported</td>
-        <td class="tg-baqh">via Sqlalchemy</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">AWS Aurora</td>
-        <td class="tg-baqh">⏳ In Progress</td>
-        <td class="tg-baqh">via boto3</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">AWS Redshift</td>
-        <td class="tg-baqh">⏳ In Progress</td>
-        <td class="tg-baqh">via boto3</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">AWS Glue Catalog Databases</td>
-        <td class="tg-baqh">⏳ In Progress</td>
-        <td class="tg-baqh">via boto3</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">MongoDB</td>
-        <td class="tg-baqh">⏳ In Progress</td>
-        <td class="tg-baqh">via Atlas SQL</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">ElasticSearch</td>
-        <td class="tg-baqh">⏳ In Progress</td>
-        <td class="tg-baqh">via ElasticSearch SQL</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">OpenSearch</td>
-        <td class="tg-baqh">⏳ In Progress</td>
-        <td class="tg-baqh">via OpenSearch SQL</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">DuckDB</td>
-        <td class="tg-baqh">⏳ In Progress</td>
-        <td class="tg-baqh">via duckdb</td>
-      </tr>
-      <tr>
-        <td class="tg-baqh">Data Files on AWS S3</td>
-        <td class="tg-baqh">⏳ In Progress</td>
-        <td class="tg-baqh">via boto3</td>
-      </tr>
-    </tbody></table>
+.. list-table:: Database Support Status
+   :header-rows: 1
+   :widths: 25 15 40
+
+   * - **Database**
+     - **Status**
+     - **Note**
+   * - Sqlite
+     - ✅ Supported
+     - via Sqlalchemy
+   * - Postgres
+     - ✅ Supported
+     - via Sqlalchemy
+   * - MySQL
+     - ✅ Supported
+     - via Sqlalchemy
+   * - Oracle
+     - ✅ Supported
+     - via Sqlalchemy
+   * - MSSQL
+     - ✅ Supported
+     - via Sqlalchemy
+   * - AWS Aurora
+     - ⏳ In Progress
+     - via boto3
+   * - AWS Redshift
+     - ⏳ In Progress
+     - via boto3
+   * - AWS Glue Catalog Databases
+     - ⏳ In Progress
+     - via boto3
+   * - MongoDB
+     - ⏳ In Progress
+     - via Atlas SQL
+   * - ElasticSearch
+     - ⏳ In Progress
+     - via ElasticSearch SQL
+   * - OpenSearch
+     - ⏳ In Progress
+     - via OpenSearch SQL
+   * - DuckDB
+     - ⏳ In Progress
+     - via duckdb
+   * - Data Files on AWS S3
+     - ⏳ In Progress
+     - via boto3
 
 
 🎯 Get Started
