@@ -1,7 +1,7 @@
-config
-======
+aws
+===
 
-.. automodule:: mcp_ohmy_sql.config
+.. automodule:: mcp_ohmy_sql.aws
     :members:
 
 sub packages and modules
@@ -11,5 +11,4 @@ sub packages and modules
     :maxdepth: 1
 
     api <api>
-    config_define <config_define>
     

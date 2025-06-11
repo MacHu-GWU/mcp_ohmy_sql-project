@@ -22,6 +22,7 @@ class TestConfig:
                 Database(
                     identifier="chinook_sqlite",
                     description="...",
+                    db_type="sqlite",
                     connection=SqlalchemyConnection(
                         create_engine_kwargs={"url": "..."},
                     ),
@@ -48,6 +49,7 @@ class TestConfig:
             "databases": [
                 {
                     "identifier": "chinook_sqlite",
+                    "db_type": "sqlite",
                     "connection": {
                         "type": "sqlalchemy",
                         "create_engine_kwargs": {"url": "..."},

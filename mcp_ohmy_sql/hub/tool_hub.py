@@ -16,6 +16,10 @@ if T.TYPE_CHECKING:  # pragma: no cover
 
 
 class ToolHubMixin:
+    """
+    MCP tools low level implementation.
+    """
+
     def tool_list_databases(self: "Hub") -> str:
         """
         List all configured databases available for querying.
@@ -40,19 +44,50 @@ class ToolHubMixin:
         :returns: A formatted string listing all configured databases with their
             identifiers, schema counts, and descriptions.
 
-        Example output::
+        Example output:
+
+        .. code-block:: typescript
 
             Available Databases:
-
-            - 'production_db': 3 schemas, Production PostgreSQL database
-            - 'analytics_warehouse': 1 schemas, Data warehouse for reporting
-            - 'chinook_sqlite': 1 schemas, Sample music store database
+            Database(
+                identifier='production_db',
+                db_type=postgres,
+                number_of_schemas=3,
+                description=Production PostgreSQL database,
+            )
+            Database(
+                identifier='analytics_warehouse',
+                db_type=aws_redshift,
+                number_of_schemas=1,
+                description=Data warehouse for reporting,
+            )
+            Database(
+                identifier='chinook_sqlite',
+                db_type=sqlite,
+                number_of_schemas=1,
+                description=Sample music store database,
+            )
         """
         lines = [
             "Available Databases:",
         ]
+        template = textwrap.dedent(
+            """
+            Database(
+                identifier={identifier!r},
+                db_type={db_type},
+                number_of_schemas={number_of_schemas},
+                description={description},
+            )
+        """
+        ).strip()
         for database in self.config.databases:
-            line = f"- {database.identifier!r}: {len(database.schemas)} schemas, {database.description or 'No description'})"
+            line = template.format(
+                identifier=database.identifier,
+                db_type=database.db_type,
+                number_of_schemas=len(database.schemas),
+                description=database.description or "No description",
+            )
             lines.append(line)
         return "\n".join(lines)
 
@@ -89,21 +124,24 @@ class ToolHubMixin:
         :returns: A formatted string listing all accessible tables, views, and
             materialized views with their types and comments.
 
-        Example output::
+        Example output:
+
+        .. code-block:: typescript
 
             Available Tables, Views, and Materialized Views:
 
-            - Table 'Album': Music album information
-            - Table 'Artist': Recording artist details
-            - Table 'Customer': Customer contact information
-            - View 'AlbumSalesStats': Pre-calculated album sales metrics
-            - Table 'Invoice': Sales transaction records
+            - Table 'Album': 3 columns, Music album information
+            - Table 'Artist': 2 columns, Recording artist details
+            - Table 'Customer': 13 columns, Customer contact information
+            - Table 'Invoice': 9 columns, Sales transaction records
+            - View 'AlbumSalesStats': 8 columns, Pre-calculated album sales metrics
         """
         (flag, msg, database, schema) = self.get_database_and_schema_object(
             database_identifier, schema_name
         )
         if flag is False:
             return msg
+
         schema_info = self.get_schema_info(database, schema)
         lines = [
             "Available Tables, Views, and Materialized Views:",
@@ -147,7 +185,7 @@ class ToolHubMixin:
 
         .. code-block:: typescript
 
-            Database <Database 1 Identifier>(
+            <db_type> Database <Database 1 Identifier>(
               Schema <Schema 1 Name>(
                 Table or View or MaterializedView <Table 1 Name>(
                   ${COLUMN_NAME}:${DATA_TYPE}${PRIMARY_KEY}${UNIQUE}${NOT_NULL}${INDEX}${FOREIGN_KEY},
@@ -173,7 +211,7 @@ class ToolHubMixin:
 
         .. code-block:: typescript
 
-            Database chinook(
+            sqlite Database chinook(
               Schema default(
                 Table Album(
                   AlbumId:INT*PK*NN,
@@ -201,7 +239,7 @@ class ToolHubMixin:
                 s = encode_schema_info(schema_info)
                 schema_lines.append(textwrap.indent(s, prefix=TAB))
             schemas_def = "\n".join(schema_lines)
-            s = f"Database {database.identifier}(\n{schemas_def}\n)"
+            s = f"{database.db_type} Database {database.identifier}(\n{schemas_def}\n)"
             database_lines.append(s)
         databases_def = "\n".join(database_lines)
         return databases_def
@@ -218,7 +256,7 @@ class ToolHubMixin:
         generation. ALWAYS use this tool before writing any SQL query to get the
         exact table structure, column names, data types, and relationships.
 
-        **MANDATORY USAGE BEFORE SQL QUERIES:**
+        **MANDATORY USAGE BEFORE SQL QUERY**:
 
         - Get exact column names and data types
         - Understand table relationships and foreign keys
@@ -227,7 +265,7 @@ class ToolHubMixin:
         - Check constraints and nullable columns
         - Understand database-specific data types
 
-        **Schema Encoding Format:**
+        **Schema Encoding Format**:
 
         The output uses a special compact format optimized for LLM consumption:
 
@@ -237,7 +275,7 @@ class ToolHubMixin:
         - Constraints: ``*PK`` (Primary Key), ``*FK->Table.Column`` (Foreign Key),
           ``*NN`` (Not Null), ``*UQ`` (Unique), ``*IDX`` (Indexed)
 
-        **What this tool provides:**
+        **What this tool provides**:
 
         - Complete table and view structures
         - All column names with exact spelling/case
@@ -247,7 +285,7 @@ class ToolHubMixin:
         - Filtered tables based on configuration
 
         :param database_identifier: The identifier of the database to analyze
-            (obtained from list_databases tool).
+            (obtained from :meth:`tool_list_databases`).
         :param schema_name: Optional schema name. If not provided or None,
             uses the default schema for the database.
 

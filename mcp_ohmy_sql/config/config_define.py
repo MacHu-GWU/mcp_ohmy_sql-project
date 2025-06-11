@@ -40,9 +40,27 @@ class SqlalchemyConnection(BaseConnection):
         return sa.create_engine(**self.create_engine_kwargs)
 
 
+T_DB_TYPE = T.Literal[
+    "sqlite",
+    "postgres",
+    "mysql",
+    "mssql",
+    "oracle",
+    "aws_redshift",
+    "aws_redshift_data_api",
+    "aws_athena",
+    "aws_opensearch",
+    "aws_s3_data_file",
+    "elasticsearch",
+    "opensearch",
+    "duckdb",
+]
+
+
 class Database(BaseModel):
     identifier: str = Field()
     description: str = Field(default="")
+    db_type: T_DB_TYPE = Field()
     connection: T.Union[SqlalchemyConnection] = Field(
         discriminator="type",
     )

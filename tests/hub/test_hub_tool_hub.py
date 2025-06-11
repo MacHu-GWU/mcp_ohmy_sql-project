@@ -6,7 +6,7 @@ from mcp_ohmy_sql.tests.test_hub_init import hub
 
 def test_tool_list_databases():
     s = hub.tool_list_databases()
-    # print(s)
+    print(s)
 
 
 def test_tool_list_tables():

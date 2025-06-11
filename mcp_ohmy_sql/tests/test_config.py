@@ -24,6 +24,7 @@ class DatabaseEnum:
     chinook_sqlite = Database(
         identifier="chinook sqlite",
         description="Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
+        db_type="sqlite",
         connection=SqlalchemyConnection(
             create_engine_kwargs={"url": f"sqlite:///{path_Chinook_Sqlite_sqlite}"},
         ),
@@ -39,6 +40,7 @@ class DatabaseEnum:
     chinook_postgres = Database(
         identifier="chinook postgres",
         description="Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
+        db_type="postgres",
         connection=SqlalchemyConnection(
             create_engine_kwargs={
                 "url": "postgresql+psycopg2://postgres:password@localhost:40311/postgres",

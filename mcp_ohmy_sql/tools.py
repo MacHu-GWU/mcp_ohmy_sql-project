@@ -15,7 +15,6 @@ def get_description(method: T.Callable) -> str:
 
 
 @mcp.tool(
-    name="List Databases",
     description=get_description(hub.tool_list_databases),
 )
 async def list_databases() -> str:
@@ -23,7 +22,6 @@ async def list_databases() -> str:
 
 
 @mcp.tool(
-    name="List Tables",
     description=get_description(hub.tool_list_tables),
 )
 async def list_tables(
@@ -37,7 +35,6 @@ async def list_tables(
 
 
 @mcp.tool(
-    name="Get Database Details",
     description=get_description(hub.tool_get_database_details),
 )
 async def get_database_details() -> str:
@@ -45,7 +42,6 @@ async def get_database_details() -> str:
 
 
 @mcp.tool(
-    name="Get Schema Details",
     description=get_description(hub.tool_get_schema_details),
 )
 async def get_schema_details(
@@ -59,7 +55,6 @@ async def get_schema_details(
 
 
 @mcp.tool(
-    name="Execute Select Statement",
     description=get_description(hub.tool_execute_select_statement),
 )
 async def execute_select_statement(
