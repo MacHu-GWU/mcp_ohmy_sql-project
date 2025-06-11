@@ -22,29 +22,12 @@ class ToolHubMixin:
 
     def tool_list_databases(self: "Hub") -> str:
         """
-        List all configured databases available for querying.
+        List all configured databases with identifiers and basic information.
 
-        This MCP tool provides discovery of all databases configured in the server,
-        showing their identifiers, schema counts, and descriptions. Use this tool
-        when you need to understand what databases are available before performing
-        any database operations.
+        Use this tool to discover available databases before exploring schemas
+        or executing queries. Returns database identifiers needed for other tools.
 
-        **When to use this tool:**
-        - User asks "what databases do I have?"
-        - Before selecting a database for schema exploration
-        - When you need to show available data sources
-        - To understand the scope of configured databases
-
-        **Key Information Returned:**
-        - Database identifier (used in other tools)
-        - Number of schemas per database
-        - Human-readable descriptions
-        - Configuration summary
-
-        :returns: A formatted string listing all configured databases with their
-            identifiers, schema counts, and descriptions.
-
-        Example output:
+        **Sample Output:**
 
         .. code-block:: typescript
 
@@ -56,17 +39,13 @@ class ToolHubMixin:
                 description=Production PostgreSQL database,
             )
             Database(
-                identifier='analytics_warehouse',
-                db_type=aws_redshift,
-                number_of_schemas=1,
-                description=Data warehouse for reporting,
-            )
-            Database(
                 identifier='chinook_sqlite',
                 db_type=sqlite,
                 number_of_schemas=1,
                 description=Sample music store database,
             )
+
+        :returns: Formatted list of databases with identifiers, types, schema counts, and descriptions.
         """
         lines = [
             "Available Databases:",
@@ -97,34 +76,12 @@ class ToolHubMixin:
         schema_name: T.Optional[str] = None,
     ) -> str:
         """
-        List all tables, views, and materialized views in a specific database schema.
+        List tables, views, and materialized views in a database schema.
 
-        This MCP tool provides a high-level overview of all database objects
-        (tables, views, materialized views) in a specific schema, including their
-        types and comments. Use this tool for quick discovery of available data
-        sources before exploring detailed schema information.
+        Provides quick overview of available database objects with column counts
+        and comments. Use this for discovery before getting detailed schema information.
 
-        **When to use this tool:**
-        - User asks "what tables are in this database?"
-        - Quick overview of available data objects
-        - Before diving into detailed schema exploration
-        - To understand the scope of tables in a schema
-
-        **Key Information Returned:**
-        - Object type (Table, View, MaterializedView)
-        - Object names (table/view names)
-        - Comments or descriptions for each object
-        - Filtered results based on configuration
-
-        :param database_identifier: The identifier of the database to query
-            (get this from list_databases tool).
-        :param schema_name: Optional schema name to filter the results. If not
-            provided or None, uses the default schema for the database.
-
-        :returns: A formatted string listing all accessible tables, views, and
-            materialized views with their types and comments.
-
-        Example output:
+        **Sample Output:**
 
         .. code-block:: typescript
 
@@ -133,8 +90,11 @@ class ToolHubMixin:
             - Table 'Album': 3 columns, Music album information
             - Table 'Artist': 2 columns, Recording artist details
             - Table 'Customer': 13 columns, Customer contact information
-            - Table 'Invoice': 9 columns, Sales transaction records
             - View 'AlbumSalesStats': 8 columns, Pre-calculated album sales metrics
+
+        :param database_identifier: Database identifier from list_databases.
+        :param schema_name: Optional schema name (uses default if None).
+        :returns: List of tables/views with column counts and descriptions.
         """
         (flag, msg, database, schema) = self.get_database_and_schema_object(
             database_identifier, schema_name
@@ -153,61 +113,31 @@ class ToolHubMixin:
 
     def tool_get_database_details(self: "Hub") -> str:
         """
-        Retrieve comprehensive database, schema, table, information for AI query assistance.
+        Get complete schema information for all configured databases.
 
-        This MCP tool performs database metadata inspection to extract complete structural
-        information about all databases, all schemas, filtered tables, columns, relationships,
-        and constraints in the connected database. The returned data provides LLMs
-        with sufficient context to understand the database schema and write accurate SQL queries.
+        Returns detailed metadata for all databases, schemas, tables, columns,
+        and relationships. Use this for comprehensive database discovery or when
+        you need schema details across multiple databases.
 
-        The tool analyzes the database metadata and returns a structured JSON containing:
-
-        - All table names and their full qualified names
-        - Complete column definitions with data types, nullability, and properties
-        - Primary key specifications for each table
-        - Foreign key relationships with referential actions (CASCADE, SET NULL, etc.)
-        - Column constraints (UNIQUE, CHECK, etc.)
-        - Index information and computed column details
-        - Autoincrement and identity column specifications
-
-        This comprehensive schema information enables LLMs to:
-
-        - Understand table relationships and design proper JOIN queries
-        - Respect data types and constraints when generating SQL
-        - Identify primary and foreign keys for correct record relationships
-        - Write syntactically correct queries that align with the database structure
-
-        :returns: A structured text that includes all databases, schema, filtered tables,
-            columns, relationships, and constraints in the following formats
-            optimized for LLM consumption.
-
-        Database Schema Format:
+        **Output Format:**
 
         .. code-block:: typescript
 
-            <db_type> Database <Database 1 Identifier>(
-              Schema <Schema 1 Name>(
-                Table or View or MaterializedView <Table 1 Name>(
-                  ${COLUMN_NAME}:${DATA_TYPE}${PRIMARY_KEY}${UNIQUE}${NOT_NULL}${INDEX}${FOREIGN_KEY},
-                  more columns ...
+            <db_type> Database <identifier>(
+              Schema <name>(
+                Table <name>(
+                  column:TYPE*CONSTRAINTS,
+                  ...
                 )
-                more tables ...
+                ...
               )
-              more schemas ...
+              ...
             )
-            more databases ...
 
-        There might be multiple Foreign Keys encoded as ``*FK->Table1.Column1*FK->Table2.Column2``.
+        **Constraints:** ``*PK`` (Primary Key), ``*FK->Table.Column`` (Foreign Key),
+        ``*NN`` (Not Null), ``*UQ`` (Unique), ``*IDX`` (Indexed)
 
-        Constraints are encoded as:
-
-        - ``*PK``: Primary Key (implies unique and indexed)
-        - ``*UQ``: Unique constraint (implies indexed)
-        - ``*NN``: Not Null constraint
-        - ``*IDX``: Has database index
-        - ``*FK->Table.Column``: Foreign key reference
-
-        Example output:
+        **Sample Output:**
 
         .. code-block:: typescript
 
@@ -225,11 +155,7 @@ class ToolHubMixin:
               )
             )
 
-        Note:
-
-            This tool requires no parameters and operates on the currently configured
-            database connection. The metadata is cached for performance and reflects
-            the database state at server startup.
+        :returns: Complete schema information for all configured databases.
         """
         database_lines = []
         for database in self.config.databases:
@@ -250,49 +176,31 @@ class ToolHubMixin:
         schema_name: T.Optional[str] = None,
     ) -> str:
         """
-        Get detailed schema information essential for writing accurate SQL queries.
+        **CRITICAL FOR SQL WRITING**: Get detailed schema for a specific database.
 
-        **CRITICAL FOR SQL QUERY WRITING**: This is the most important tool for SQL
-        generation. ALWAYS use this tool before writing any SQL query to get the
-        exact table structure, column names, data types, and relationships.
+        **ALWAYS use this tool before writing SQL queries** to get exact table
+        structures, column names, data types, and relationships for accurate SQL generation.
 
-        **MANDATORY USAGE BEFORE SQL QUERY**:
+        **Output Format:**
 
-        - Get exact column names and data types
-        - Understand table relationships and foreign keys
-        - Identify primary keys for JOIN operations
-        - Verify table and view names exist
-        - Check constraints and nullable columns
-        - Understand database-specific data types
+        .. code-block:: typescript
 
-        **Schema Encoding Format**:
+            Schema <name>(
+              Table <name>(
+                column:TYPE*CONSTRAINTS,
+                ...
+              )
+              View <name>(
+                column:TYPE*CONSTRAINTS,
+                ...
+              )
+              ...
+            )
 
-        The output uses a special compact format optimized for LLM consumption:
+        **Constraints:** ``*PK`` (Primary Key), ``*FK->Table.Column`` (Foreign Key),
+        ``*NN`` (Not Null), ``*UQ`` (Unique), ``*IDX`` (Indexed)
 
-        - Tables: ``Table TableName(columns...)``
-        - Views: ``View ViewName(columns...)``
-        - Columns: ``ColumnName:DataType*Constraints``
-        - Constraints: ``*PK`` (Primary Key), ``*FK->Table.Column`` (Foreign Key),
-          ``*NN`` (Not Null), ``*UQ`` (Unique), ``*IDX`` (Indexed)
-
-        **What this tool provides**:
-
-        - Complete table and view structures
-        - All column names with exact spelling/case
-        - Data types mapped to simple categories (INT, STR, DEC, DT, TS, etc.)
-        - Primary and foreign key relationships
-        - Constraint information for safe query writing
-        - Filtered tables based on configuration
-
-        :param database_identifier: The identifier of the database to analyze
-            (obtained from :meth:`tool_list_databases`).
-        :param schema_name: Optional schema name. If not provided or None,
-            uses the default schema for the database.
-
-        :returns: Compact schema representation showing all tables, columns,
-            data types, and relationships in the specified schema.
-
-        Example output:
+        **Sample Output:**
 
         .. code-block:: typescript
 
@@ -313,15 +221,9 @@ class ToolHubMixin:
               )
             )
 
-        .. important::
-
-            **AI Assistants MUST use this tool before writing SQL queries** to ensure:
-
-            1. Correct table and column names (exact spelling/case)
-            2. Proper JOIN syntax using foreign key relationships
-            3. Appropriate data type handling in WHERE clauses
-            4. Awareness of NOT NULL constraints
-            5. Understanding of available tables and views
+        :param database_identifier: Database identifier from list_databases.
+        :param schema_name: Optional schema name (uses default if None).
+        :returns: Schema structure with tables, columns, types, and relationships.
         """
         (flag, msg, database, schema) = self.get_database_and_schema_object(
             database_identifier, schema_name
