@@ -9,9 +9,14 @@ from functools import cached_property
 
 import aws_cdk as cdk
 
-from .stacks.mcp_ohmy_sql_stack.iac_define import Stack
-
+from .constants import (
+    security_group_name,
+    namespace_name,
+    workgroup_name,
+    database_name,
+)
 from .stack_ctx_enum import stack_ctx_enum
+from .stacks.mcp_ohmy_sql_stack.iac_define import Stack
 
 
 @dataclasses.dataclass
@@ -27,6 +32,11 @@ class StackEnum:
         return Stack(
             scope=self.app,
             **stack_ctx_enum.my_ohmy_sql_dev.to_stack_kwargs(),
+            vpc_id="vpc-0d87d639dc2503350",
+            security_group_name=security_group_name,
+            namespace_name=namespace_name,
+            db_name=database_name,
+            workgroup_name=workgroup_name,
         )
 
 
