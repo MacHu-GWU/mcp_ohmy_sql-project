@@ -46,6 +46,7 @@ mdurl==0.1.2 ; python_version >= "3.10" and python_version < "4.0"
 more-itertools==10.6.0 ; python_version >= "3.10" and python_version < "4.0" and platform_machine != "ppc64le" and platform_machine != "s390x"
 nh3==0.2.21 ; python_version >= "3.10" and python_version < "4.0"
 packaging==24.2 ; python_version >= "3.10" and python_version < "4.0"
+polars==1.30.0 ; python_version >= "3.10" and python_version < "4.0"
 prettytable==3.16.0 ; python_version >= "3.10" and python_version < "4.0"
 publication==0.0.3 ; python_version >= "3.10" and python_version < "4.0"
 pycparser==2.22 ; python_version >= "3.10" and python_version < "4.0" and (platform_python_implementation != "PyPy" or implementation_name == "pypy")

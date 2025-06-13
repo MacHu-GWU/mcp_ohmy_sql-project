@@ -12,11 +12,14 @@ from ..config.config_define import (
     TableFilter,
     Schema,
     SqlalchemyConnection,
+    BotoSessionKwargs,
+    AWSRedshiftConnection,
     Database,
     Config,
 )
 
 from .chinook.chinook_data_file import path_Chinook_Sqlite_sqlite
+from .aws.constants import aws_profile, database_name, workgroup_name
 
 
 # os.environ[EnvVarEnum.MCP_OHMY_SQL_CONFIG.name] = str(path_sample_config)
@@ -55,6 +58,30 @@ class DatabaseEnum:
             )
         ],
     )
+    chinook_redshift = Database(
+        identifier="chinook redshift",
+        description="Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
+        db_type="postgres",
+        connection=AWSRedshiftConnection(
+            boto_session_kwargs=BotoSessionKwargs(profile_name=aws_profile),
+            redshift_connector_kwargs=dict(
+                iam=True,
+                database=database_name,
+                is_serverless=True,
+                serverless_work_group=workgroup_name,
+                profile=aws_profile,
+                timeout=5,
+            ),
+        ),
+        schemas=[
+            Schema(
+                table_filter=TableFilter(
+                    include=[],
+                    exclude=["Playlist", "PlaylistTrack"],
+                )
+            )
+        ],
+    )
 
 
 databases = [
@@ -64,6 +91,7 @@ databases = [
 # we only use sqlite in CI test runtime
 if runtime.is_local_runtime_group:
     databases.append(DatabaseEnum.chinook_postgres)
+    databases.append(DatabaseEnum.chinook_redshift)
 
 config = Config(
     version="0.1.1",
