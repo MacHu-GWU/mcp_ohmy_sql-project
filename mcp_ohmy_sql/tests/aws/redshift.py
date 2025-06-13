@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import enum
 import textwrap
 
+import polars as pl
+
 from ..chinook.chinook_data_model import (
+    ChinookTableNameEnum,
+    ChinookViewNameEnum,
     Artist,
     Album,
     Genre,
@@ -17,354 +20,433 @@ from ..chinook.chinook_data_model import (
     InvoiceLine,
 )
 
-class ChinookTableNameEnum(str, enum.Enum):
-    Artist = "Artist"
-    Album = "Album"
-    Genre = "Genre"
-    MediaType = "MediaType"
-    Track = "Track"
-    Playlist = "Playlist"
-    PlaylistTrack = "PlaylistTrack"
-    Employee = "Employee"
-    Customer = "Customer"
-    Invoice = "Invoice"
-    InvoiceLine = "InvoiceLine"
-
-
-class ChinookViewNameEnum(str, enum.Enum):
-    AlbumSalesStats = "AlbumSalesStats"
-
 
 # Artist table - Small lookup table, use DISTSTYLE ALL for better joins
 sql_create_table_artist = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS Artist (
-    ArtistId INTEGER NOT NULL,
-    Name VARCHAR(255),
-    PRIMARY KEY (ArtistId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.Artist.value} (
+    {Artist.ArtistId.name} INTEGER NOT NULL,
+    {Artist.Name.name} VARCHAR(255),
+    PRIMARY KEY ({Artist.ArtistId.name})
 )
 DISTSTYLE ALL
-SORTKEY (ArtistId);
+SORTKEY ({Artist.ArtistId.name});
 """
 )
 
 # Album table - Distribute by ArtistId for better joins with Artist
 sql_create_table_album = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS Album (
-    AlbumId INTEGER NOT NULL,
-    Title VARCHAR(255) NOT NULL,
-    ArtistId INTEGER NOT NULL,
-    PRIMARY KEY (AlbumId),
-    FOREIGN KEY (ArtistId) REFERENCES Artist(ArtistId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.Album.value} (
+    {Album.AlbumId.name} INTEGER NOT NULL,
+    {Album.Title.name} VARCHAR(255) NOT NULL,
+    {Album.ArtistId.name} INTEGER NOT NULL,
+    PRIMARY KEY ({Album.AlbumId.name}),
+    FOREIGN KEY ({Album.ArtistId.name}) REFERENCES {ChinookTableNameEnum.Artist.value}({Artist.ArtistId.name})
 )
-DISTKEY (ArtistId)
-SORTKEY (AlbumId, ArtistId);
+DISTKEY ({Album.ArtistId.name})
+SORTKEY ({Album.AlbumId.name}, {Album.ArtistId.name});
 """
 )
 
 # Genre table - Small lookup table, use DISTSTYLE ALL
 sql_create_table_genre = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS Genre (
-    GenreId INTEGER NOT NULL,
-    Name VARCHAR(255),
-    PRIMARY KEY (GenreId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.Genre.value} (
+    {Genre.GenreId.name} INTEGER NOT NULL,
+    {Genre.Name.name} VARCHAR(255),
+    PRIMARY KEY ({Genre.GenreId.name})
 )
 DISTSTYLE ALL
-SORTKEY (GenreId);
+SORTKEY ({Genre.GenreId.name});
 """
 )
 
 # MediaType table - Small lookup table, use DISTSTYLE ALL
 sql_create_table_mediatype = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS MediaType (
-    MediaTypeId INTEGER NOT NULL,
-    Name VARCHAR(255),
-    PRIMARY KEY (MediaTypeId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.MediaType.value} (
+    {MediaType.MediaTypeId.name} INTEGER NOT NULL,
+    {MediaType.Name.name} VARCHAR(255),
+    PRIMARY KEY ({MediaType.MediaTypeId.name})
 )
 DISTSTYLE ALL
-SORTKEY (MediaTypeId);
+SORTKEY ({MediaType.MediaTypeId.name});
 """
 )
 
 # Track table - Main fact table, distribute by TrackId and sort by common query patterns
 sql_create_table_track = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS Track (
-    TrackId INTEGER NOT NULL,
-    Name VARCHAR(500) NOT NULL,
-    AlbumId INTEGER,
-    MediaTypeId INTEGER NOT NULL,
-    GenreId INTEGER,
-    Composer VARCHAR(500),
-    Milliseconds INTEGER NOT NULL,
-    Bytes INTEGER,
-    UnitPrice DECIMAL(10,2) NOT NULL,
-    PRIMARY KEY (TrackId),
-    FOREIGN KEY (AlbumId) REFERENCES Album(AlbumId),
-    FOREIGN KEY (MediaTypeId) REFERENCES MediaType(MediaTypeId),
-    FOREIGN KEY (GenreId) REFERENCES Genre(GenreId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.Track.value} (
+    {Track.TrackId.name} INTEGER NOT NULL,
+    {Track.Name.name} VARCHAR(500) NOT NULL,
+    {Track.AlbumId.name} INTEGER,
+    {Track.MediaTypeId.name} INTEGER NOT NULL,
+    {Track.GenreId.name} INTEGER,
+    {Track.Composer.name} VARCHAR(500),
+    {Track.Milliseconds.name} INTEGER NOT NULL,
+    {Track.Bytes.name} INTEGER,
+    {Track.UnitPrice.name} DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY ({Track.TrackId.name}),
+    FOREIGN KEY ({Track.AlbumId.name}) REFERENCES {ChinookTableNameEnum.Album.value}({Album.AlbumId.name}),
+    FOREIGN KEY ({Track.MediaTypeId.name}) REFERENCES {ChinookTableNameEnum.MediaType.value}({MediaType.MediaTypeId.name}),
+    FOREIGN KEY ({Track.GenreId.name}) REFERENCES {ChinookTableNameEnum.Genre.value}({Genre.GenreId.name})
 )
-DISTKEY (TrackId)
-SORTKEY (TrackId, AlbumId, GenreId);
+DISTKEY ({Track.TrackId.name})
+SORTKEY ({Track.TrackId.name}, {Track.AlbumId.name}, {Track.GenreId.name});
 """
 )
 
 # Playlist table - Small table, use DISTSTYLE ALL
 sql_create_table_playlist = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS Playlist (
-    PlaylistId INTEGER NOT NULL,
-    Name VARCHAR(255),
-    PRIMARY KEY (PlaylistId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.Playlist.value} (
+    {Playlist.PlaylistId.name} INTEGER NOT NULL,
+    {Playlist.Name.name} VARCHAR(255),
+    PRIMARY KEY ({Playlist.PlaylistId.name})
 )
 DISTSTYLE ALL
-SORTKEY (PlaylistId);
+SORTKEY ({Playlist.PlaylistId.name});
 """
 )
 
 # PlaylistTrack table - Junction table, distribute by TrackId for better joins with Track
 sql_create_table_playlisttrack = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS PlaylistTrack (
-    PlaylistId INTEGER NOT NULL,
-    TrackId INTEGER NOT NULL,
-    PRIMARY KEY (PlaylistId, TrackId),
-    FOREIGN KEY (PlaylistId) REFERENCES Playlist(PlaylistId),
-    FOREIGN KEY (TrackId) REFERENCES Track(TrackId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.PlaylistTrack.value} (
+    {PlaylistTrack.PlaylistId.name} INTEGER NOT NULL,
+    {PlaylistTrack.TrackId.name} INTEGER NOT NULL,
+    PRIMARY KEY ({PlaylistTrack.PlaylistId.name}, {PlaylistTrack.TrackId.name}),
+    FOREIGN KEY ({PlaylistTrack.PlaylistId.name}) REFERENCES {ChinookTableNameEnum.Playlist.value}({Playlist.PlaylistId.name}),
+    FOREIGN KEY ({PlaylistTrack.TrackId.name}) REFERENCES {ChinookTableNameEnum.Track.value}({Track.TrackId.name})
 )
-DISTKEY (TrackId)
-SORTKEY (PlaylistId, TrackId);
+DISTKEY ({PlaylistTrack.TrackId.name})
+SORTKEY ({PlaylistTrack.PlaylistId.name}, {PlaylistTrack.TrackId.name});
 """
-)
+).strip()
 
 # Employee table - Small table, use DISTSTYLE ALL
 sql_create_table_employee = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS Employee (
-    EmployeeId INTEGER NOT NULL,
-    LastName VARCHAR(255) NOT NULL,
-    FirstName VARCHAR(255) NOT NULL,
-    Title VARCHAR(255),
-    ReportsTo INTEGER,
-    BirthDate TIMESTAMP,
-    HireDate TIMESTAMP,
-    Address VARCHAR(500),
-    City VARCHAR(100),
-    State VARCHAR(100),
-    Country VARCHAR(100),
-    PostalCode VARCHAR(20),
-    Phone VARCHAR(50),
-    Fax VARCHAR(50),
-    Email VARCHAR(255),
-    PRIMARY KEY (EmployeeId),
-    FOREIGN KEY (ReportsTo) REFERENCES Employee(EmployeeId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.Employee.value} (
+    {Employee.EmployeeId.name} INTEGER NOT NULL,
+    {Employee.LastName.name} VARCHAR(255) NOT NULL,
+    {Employee.FirstName.name} VARCHAR(255) NOT NULL,
+    {Employee.Title.name} VARCHAR(255),
+    {Employee.ReportsTo.name} INTEGER,
+    {Employee.BirthDate.name} TIMESTAMP,
+    {Employee.HireDate.name} TIMESTAMP,
+    {Employee.Address.name} VARCHAR(500),
+    {Employee.City.name} VARCHAR(100),
+    {Employee.State.name} VARCHAR(100),
+    {Employee.Country.name} VARCHAR(100),
+    {Employee.PostalCode.name} VARCHAR(20),
+    {Employee.Phone.name} VARCHAR(50),
+    {Employee.Fax.name} VARCHAR(50),
+    {Employee.Email.name} VARCHAR(255),
+    PRIMARY KEY ({Employee.EmployeeId.name}),
+    FOREIGN KEY ({Employee.ReportsTo.name}) REFERENCES {ChinookTableNameEnum.Employee.value}({Employee.EmployeeId.name})
 )
 DISTSTYLE ALL
-SORTKEY (EmployeeId);
+SORTKEY ({Employee.EmployeeId.name});
 """
-)
+).strip()
 
 # Customer table - Distribute by CustomerId, sort by common query patterns
 sql_create_table_customer = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS Customer (
-    CustomerId INTEGER NOT NULL,
-    FirstName VARCHAR(255) NOT NULL,
-    LastName VARCHAR(255) NOT NULL,
-    Company VARCHAR(255),
-    Address VARCHAR(500),
-    City VARCHAR(100),
-    State VARCHAR(100),
-    Country VARCHAR(100),
-    PostalCode VARCHAR(20),
-    Phone VARCHAR(50),
-    Fax VARCHAR(50),
-    Email VARCHAR(255) NOT NULL,
-    SupportRepId INTEGER,
-    PRIMARY KEY (CustomerId),
-    FOREIGN KEY (SupportRepId) REFERENCES Employee(EmployeeId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.Customer.value} (
+    {Customer.CustomerId.name} INTEGER NOT NULL,
+    {Customer.FirstName.name} VARCHAR(255) NOT NULL,
+    {Customer.LastName.name} VARCHAR(255) NOT NULL,
+    {Customer.Company.name} VARCHAR(255),
+    {Customer.Address.name} VARCHAR(500),
+    {Customer.City.name} VARCHAR(100),
+    {Customer.State.name} VARCHAR(100),
+    {Customer.Country.name} VARCHAR(100),
+    {Customer.PostalCode.name} VARCHAR(20),
+    {Customer.Phone.name} VARCHAR(50),
+    {Customer.Fax.name} VARCHAR(50),
+    {Customer.Email.name} VARCHAR(255) NOT NULL,
+    {Customer.SupportRepId.name} INTEGER,
+    PRIMARY KEY ({Customer.CustomerId.name}),
+    FOREIGN KEY ({Customer.SupportRepId.name}) REFERENCES {ChinookTableNameEnum.Employee.value}({Employee.EmployeeId.name})
 )
-DISTKEY (CustomerId)
-SORTKEY (CustomerId, Country, City);
+DISTKEY ({Customer.CustomerId.name})
+SORTKEY ({Customer.CustomerId.name}, {Customer.Country.name}, {Customer.City.name});
 """
-)
+).strip()
 
 # Invoice table - Fact table, distribute by CustomerId for better joins
 sql_create_table_invoice = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS Invoice (
-    InvoiceId INTEGER NOT NULL,
-    CustomerId INTEGER NOT NULL,
-    InvoiceDate TIMESTAMP NOT NULL,
-    BillingAddress VARCHAR(500),
-    BillingCity VARCHAR(100),
-    BillingState VARCHAR(100),
-    BillingCountry VARCHAR(100),
-    BillingPostalCode VARCHAR(20),
-    Total DECIMAL(10,2) NOT NULL,
-    PRIMARY KEY (InvoiceId),
-    FOREIGN KEY (CustomerId) REFERENCES Customer(CustomerId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.Invoice.value} (
+    {Invoice.InvoiceId.name} INTEGER NOT NULL,
+    {Invoice.CustomerId.name} INTEGER NOT NULL,
+    {Invoice.InvoiceDate.name} TIMESTAMP NOT NULL,
+    {Invoice.BillingAddress.name} VARCHAR(500),
+    {Invoice.BillingCity.name} VARCHAR(100),
+    {Invoice.BillingState.name} VARCHAR(100),
+    {Invoice.BillingCountry.name} VARCHAR(100),
+    {Invoice.BillingPostalCode.name} VARCHAR(20),
+    {Invoice.Total.name} DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY ({Invoice.InvoiceId.name}),
+    FOREIGN KEY ({Invoice.CustomerId.name}) REFERENCES {ChinookTableNameEnum.Customer.value}({Customer.CustomerId.name})
 )
-DISTKEY (CustomerId)
-SORTKEY (InvoiceDate, CustomerId);
+DISTKEY ({Invoice.CustomerId.name})
+SORTKEY ({Invoice.InvoiceDate.name}, {Invoice.CustomerId.name});
 """
-)
+).strip()
 
 # InvoiceLine table - Main fact table, distribute by InvoiceId for better joins with Invoice
 sql_create_table_invoiceline = textwrap.dedent(
-    """
-CREATE TABLE IF NOT EXISTS InvoiceLine (
-    InvoiceLineId INTEGER NOT NULL,
-    InvoiceId INTEGER NOT NULL,
-    TrackId INTEGER NOT NULL,
-    UnitPrice DECIMAL(10,2) NOT NULL,
-    Quantity INTEGER NOT NULL,
-    PRIMARY KEY (InvoiceLineId),
-    FOREIGN KEY (InvoiceId) REFERENCES Invoice(InvoiceId),
-    FOREIGN KEY (TrackId) REFERENCES Track(TrackId)
+    f"""
+CREATE TABLE IF NOT EXISTS {ChinookTableNameEnum.InvoiceLine.value} (
+    {InvoiceLine.InvoiceLineId.name} INTEGER NOT NULL,
+    {InvoiceLine.InvoiceId.name} INTEGER NOT NULL,
+    {InvoiceLine.TrackId.name} INTEGER NOT NULL,
+    {InvoiceLine.UnitPrice.name} DECIMAL(10,2) NOT NULL,
+    {InvoiceLine.Quantity.name} INTEGER NOT NULL,
+    PRIMARY KEY ({InvoiceLine.InvoiceLineId.name}),
+    FOREIGN KEY ({InvoiceLine.InvoiceId.name}) REFERENCES {ChinookTableNameEnum.Invoice.value}({Invoice.InvoiceId.name}),
+    FOREIGN KEY ({InvoiceLine.TrackId.name}) REFERENCES {ChinookTableNameEnum.Track.value}({Track.TrackId.name})
 )
-DISTKEY (InvoiceId)
-SORTKEY (InvoiceId, TrackId);
+DISTKEY ({InvoiceLine.InvoiceId.name})
+SORTKEY ({InvoiceLine.InvoiceId.name}, {InvoiceLine.TrackId.name});
 """
-)
+).strip()
 
 # AlbumSalesStats view - Based on your SQLAlchemy select statement
 sql_create_view_albumsalesstats = textwrap.dedent(
-    """
-CREATE OR REPLACE VIEW AlbumSalesStats AS
+    f"""
+CREATE OR REPLACE VIEW {ChinookViewNameEnum.AlbumSalesStats.value} AS
 SELECT 
-    a.AlbumId,
-    a.Title AS AlbumTitle,
-    ar.Name AS ArtistName,
-    COUNT(DISTINCT il.InvoiceLineId)::INTEGER AS TotalSales,
-    COALESCE(SUM(il.Quantity), 0)::INTEGER AS TotalQuantity,
-    COALESCE(SUM(il.UnitPrice * il.Quantity), 0)::DECIMAL(10,2) AS TotalRevenue,
-    COALESCE(ROUND(AVG(il.UnitPrice), 2), 0)::DECIMAL(10,2) AS AvgTrackPrice,
-    COUNT(DISTINCT t.TrackId)::INTEGER AS TracksInAlbum
-FROM Album a
-JOIN Artist ar ON a.ArtistId = ar.ArtistId
-JOIN Track t ON a.AlbumId = t.AlbumId
-LEFT JOIN InvoiceLine il ON t.TrackId = il.TrackId
-GROUP BY a.AlbumId, a.Title, ar.Name
-ORDER BY COALESCE(SUM(il.UnitPrice * il.Quantity), 0) DESC;
+    a.{Album.AlbumId.name},
+    a.{Album.Title.name} AS AlbumTitle,
+    ar.{Artist.Name.name} AS ArtistName,
+    COUNT(DISTINCT il.{InvoiceLine.InvoiceLineId.name})::INTEGER AS TotalSales,
+    COALESCE(SUM(il.{InvoiceLine.Quantity.name}), 0)::INTEGER AS TotalQuantity,
+    COALESCE(SUM(il.{InvoiceLine.UnitPrice.name} * il.{InvoiceLine.Quantity.name}), 0)::DECIMAL(10,2) AS TotalRevenue,
+    COALESCE(ROUND(AVG(il.{InvoiceLine.UnitPrice.name}), 2), 0)::DECIMAL(10,2) AS AvgTrackPrice,
+    COUNT(DISTINCT t.{Track.TrackId.name})::INTEGER AS TracksInAlbum
+FROM {ChinookTableNameEnum.Album.value} a
+JOIN {ChinookTableNameEnum.Artist.value} ar ON a.{Album.ArtistId.name} = ar.{Artist.ArtistId.name}
+JOIN {ChinookTableNameEnum.Track.value} t ON a.{Album.AlbumId.name} = t.{Track.AlbumId.name}
+LEFT JOIN {ChinookTableNameEnum.InvoiceLine.value} il ON t.{Track.TrackId.name} = il.{InvoiceLine.TrackId.name}
+GROUP BY a.{Album.AlbumId.name}, a.{Album.Title.name}, ar.{Artist.Name.name}
+ORDER BY COALESCE(SUM(il.{InvoiceLine.UnitPrice.name} * il.{InvoiceLine.Quantity.name}), 0) DESC;
 """
-)
+).strip()
 
 # Complete DDL script that creates all tables in dependency order
 sql_create_all_tables = textwrap.dedent(
-    """
+    f"""
 -- Create tables in dependency order to handle foreign key constraints
 
 -- 1. Create lookup tables first (no dependencies)
-{artist}
+{sql_create_table_artist}
 
-{genre}
+{sql_create_table_genre}
 
-{mediatype}
+{sql_create_table_mediatype}
 
-{employee}
+{sql_create_table_employee}
 
 -- 2. Create tables with single dependencies
-{album}
+{sql_create_table_album}
 
-{playlist}
+{sql_create_table_playlist}
 
-{customer}
+{sql_create_table_customer}
 
 -- 3. Create tables with multiple dependencies
-{track}
+{sql_create_table_track}
 
-{playlisttrack}
+{sql_create_table_playlisttrack}
 
-{invoice}
+{sql_create_table_invoice}
 
 -- 4. Create main fact table last
-{invoiceline}
+{sql_create_table_invoiceline}
 
 -- 5. Create views
-{albumsalesstats_view}
+{sql_create_view_albumsalesstats}
 """
-).format(
-    artist=sql_create_table_artist.strip(),
-    genre=sql_create_table_genre.strip(),
-    mediatype=sql_create_table_mediatype.strip(),
-    employee=sql_create_table_employee.strip(),
-    album=sql_create_table_album.strip(),
-    playlist=sql_create_table_playlist.strip(),
-    customer=sql_create_table_customer.strip(),
-    track=sql_create_table_track.strip(),
-    playlisttrack=sql_create_table_playlisttrack.strip(),
-    invoice=sql_create_table_invoice.strip(),
-    invoiceline=sql_create_table_invoiceline.strip(),
-    albumsalesstats_view=sql_create_view_albumsalesstats.strip(),
-)
+).strip()
 
-# Drop all tables and views script (in reverse dependency order)
-sql_drop_all_tables = textwrap.dedent(
-    """
+# Individual drop statements using enum values
+# fmt: off
+sql_drop_view_albumsalesstats = f"DROP VIEW IF EXISTS {ChinookViewNameEnum.AlbumSalesStats.value};"
+sql_drop_table_invoiceline = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.InvoiceLine.value};"
+sql_drop_table_invoice = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Invoice.value};"
+sql_drop_table_playlisttrack = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.PlaylistTrack.value};"
+sql_drop_table_track = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Track.value};"
+sql_drop_table_customer = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Customer.value};"
+sql_drop_table_playlist = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Playlist.value};"
+sql_drop_table_album = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Album.value};"
+sql_drop_table_employee = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Employee.value};"
+sql_drop_table_mediatype = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.MediaType.value};"
+sql_drop_table_genre = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Genre.value};"
+sql_drop_table_artist = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Artist.value};"
+# fmt: on
+
+# Drop all tables and views script using f-string composition
+sql_drop_all_tables = f"""
 -- Drop views first
-DROP VIEW IF EXISTS AlbumSalesStats;
+{sql_drop_view_albumsalesstats}
 
 -- Drop tables in reverse dependency order (fact tables first, then dimension tables)
-DROP TABLE IF EXISTS InvoiceLine;
-DROP TABLE IF EXISTS Invoice;
-DROP TABLE IF EXISTS PlaylistTrack;
-DROP TABLE IF EXISTS Track;
-DROP TABLE IF EXISTS Customer;
-DROP TABLE IF EXISTS Playlist;
-DROP TABLE IF EXISTS Album;
-DROP TABLE IF EXISTS Employee;
-DROP TABLE IF EXISTS MediaType;
-DROP TABLE IF EXISTS Genre;
-DROP TABLE IF EXISTS Artist;
+{sql_drop_table_invoiceline}
+{sql_drop_table_invoice}
+{sql_drop_table_playlisttrack}
+{sql_drop_table_track}
+{sql_drop_table_customer}
+{sql_drop_table_playlist}
+{sql_drop_table_album}
+{sql_drop_table_employee}
+{sql_drop_table_mediatype}
+{sql_drop_table_genre}
+{sql_drop_table_artist}
 """
-)
-
-# Individual drop statements
-sql_drop_view_albumsalesstats = "DROP VIEW IF EXISTS AlbumSalesStats;"
-sql_drop_table_invoiceline = "DROP TABLE IF EXISTS InvoiceLine;"
-sql_drop_table_invoice = "DROP TABLE IF EXISTS Invoice;"
-sql_drop_table_playlisttrack = "DROP TABLE IF EXISTS PlaylistTrack;"
-sql_drop_table_track = "DROP TABLE IF EXISTS Track;"
-sql_drop_table_customer = "DROP TABLE IF EXISTS Customer;"
-sql_drop_table_playlist = "DROP TABLE IF EXISTS Playlist;"
-sql_drop_table_album = "DROP TABLE IF EXISTS Album;"
-sql_drop_table_employee = "DROP TABLE IF EXISTS Employee;"
-sql_drop_table_mediatype = "DROP TABLE IF EXISTS MediaType;"
-sql_drop_table_genre = "DROP TABLE IF EXISTS Genre;"
-sql_drop_table_artist = "DROP TABLE IF EXISTS Artist;"
 
 # Dictionary for easy access to individual table scripts
 table_creation_scripts = {
-    "Artist": sql_create_table_artist,
-    "Album": sql_create_table_album,
-    "Genre": sql_create_table_genre,
-    "MediaType": sql_create_table_mediatype,
-    "Track": sql_create_table_track,
-    "Playlist": sql_create_table_playlist,
-    "PlaylistTrack": sql_create_table_playlisttrack,
-    "Employee": sql_create_table_employee,
-    "Customer": sql_create_table_customer,
-    "Invoice": sql_create_table_invoice,
-    "InvoiceLine": sql_create_table_invoiceline,
-    "AlbumSalesStats": sql_create_view_albumsalesstats,
+    ChinookTableNameEnum.Artist.value: sql_create_table_artist,
+    ChinookTableNameEnum.Album.value: sql_create_table_album,
+    ChinookTableNameEnum.Genre.value: sql_create_table_genre,
+    ChinookTableNameEnum.MediaType.value: sql_create_table_mediatype,
+    ChinookTableNameEnum.Track.value: sql_create_table_track,
+    ChinookTableNameEnum.Playlist.value: sql_create_table_playlist,
+    ChinookTableNameEnum.PlaylistTrack.value: sql_create_table_playlisttrack,
+    ChinookTableNameEnum.Employee.value: sql_create_table_employee,
+    ChinookTableNameEnum.Customer.value: sql_create_table_customer,
+    ChinookTableNameEnum.Invoice.value: sql_create_table_invoice,
+    ChinookTableNameEnum.InvoiceLine.value: sql_create_table_invoiceline,
+    ChinookViewNameEnum.AlbumSalesStats.value: sql_create_view_albumsalesstats,
 }
 
-# Dictionary for easy access to individual drop scripts
+# Dictionary for easy access to individual drop scripts (reordered: views first, then reverse dependency order)
 table_drop_scripts = {
-    "Artist": sql_drop_table_artist,
-    "Album": sql_drop_table_album,
-    "Genre": sql_drop_table_genre,
-    "MediaType": sql_drop_table_mediatype,
-    "Track": sql_drop_table_track,
-    "Playlist": sql_drop_table_playlist,
-    "PlaylistTrack": sql_drop_table_playlisttrack,
-    "Employee": sql_drop_table_employee,
-    "Customer": sql_drop_table_customer,
-    "Invoice": sql_drop_table_invoice,
-    "InvoiceLine": sql_drop_table_invoiceline,
-    "AlbumSalesStats": sql_drop_view_albumsalesstats,
+    # Views first
+    ChinookViewNameEnum.AlbumSalesStats.value: sql_drop_view_albumsalesstats,
+    # Fact tables (most dependent)
+    ChinookTableNameEnum.InvoiceLine.value: sql_drop_table_invoiceline,
+    ChinookTableNameEnum.Invoice.value: sql_drop_table_invoice,
+    ChinookTableNameEnum.PlaylistTrack.value: sql_drop_table_playlisttrack,
+    ChinookTableNameEnum.Track.value: sql_drop_table_track,
+    # Dimension tables with dependencies
+    ChinookTableNameEnum.Customer.value: sql_drop_table_customer,
+    ChinookTableNameEnum.Album.value: sql_drop_table_album,
+    # Lookup tables (least dependent)
+    ChinookTableNameEnum.Playlist.value: sql_drop_table_playlist,
+    ChinookTableNameEnum.Employee.value: sql_drop_table_employee,
+    ChinookTableNameEnum.MediaType.value: sql_drop_table_mediatype,
+    ChinookTableNameEnum.Genre.value: sql_drop_table_genre,
+    ChinookTableNameEnum.Artist.value: sql_drop_table_artist,
+}
+
+
+# Artist table schema
+pl_schema_artist = {"ArtistId": pl.Int32, "Name": pl.Utf8}
+
+# Album table schema
+pl_schema_album = {"AlbumId": pl.Int32, "Title": pl.Utf8, "ArtistId": pl.Int32}
+
+# Genre table schema
+pl_schema_genre = {"GenreId": pl.Int32, "Name": pl.Utf8}
+
+# MediaType table schema
+pl_schema_mediatype = {"MediaTypeId": pl.Int32, "Name": pl.Utf8}
+
+# Track table schema
+pl_schema_track = {
+    "TrackId": pl.Int32,
+    "Name": pl.Utf8,
+    "AlbumId": pl.Int32,
+    "MediaTypeId": pl.Int32,
+    "GenreId": pl.Int32,
+    "Composer": pl.Utf8,
+    "Milliseconds": pl.Int32,
+    "Bytes": pl.Int32,
+    "UnitPrice": pl.Decimal(precision=10, scale=2),
+}
+
+# Playlist table schema
+pl_schema_playlist = {"PlaylistId": pl.Int32, "Name": pl.Utf8}
+
+# PlaylistTrack table schema
+pl_schema_playlisttrack = {"PlaylistId": pl.Int32, "TrackId": pl.Int32}
+
+# Employee table schema
+pl_schema_employee = {
+    "EmployeeId": pl.Int32,
+    "LastName": pl.Utf8,
+    "FirstName": pl.Utf8,
+    "Title": pl.Utf8,
+    "ReportsTo": pl.Int32,
+    "BirthDate": pl.Datetime,
+    "HireDate": pl.Datetime,
+    "Address": pl.Utf8,
+    "City": pl.Utf8,
+    "State": pl.Utf8,
+    "Country": pl.Utf8,
+    "PostalCode": pl.Utf8,
+    "Phone": pl.Utf8,
+    "Fax": pl.Utf8,
+    "Email": pl.Utf8,
+}
+
+# Customer table schema
+pl_schema_customer = {
+    "CustomerId": pl.Int32,
+    "FirstName": pl.Utf8,
+    "LastName": pl.Utf8,
+    "Company": pl.Utf8,
+    "Address": pl.Utf8,
+    "City": pl.Utf8,
+    "State": pl.Utf8,
+    "Country": pl.Utf8,
+    "PostalCode": pl.Utf8,
+    "Phone": pl.Utf8,
+    "Fax": pl.Utf8,
+    "Email": pl.Utf8,
+    "SupportRepId": pl.Int32,
+}
+
+# Invoice table schema
+pl_schema_invoice = {
+    "InvoiceId": pl.Int32,
+    "CustomerId": pl.Int32,
+    "InvoiceDate": pl.Datetime,
+    "BillingAddress": pl.Utf8,
+    "BillingCity": pl.Utf8,
+    "BillingState": pl.Utf8,
+    "BillingCountry": pl.Utf8,
+    "BillingPostalCode": pl.Utf8,
+    "Total": pl.Decimal(precision=10, scale=2),
+}
+
+# InvoiceLine table schema
+pl_schema_invoiceline = {
+    "InvoiceLineId": pl.Int32,
+    "InvoiceId": pl.Int32,
+    "TrackId": pl.Int32,
+    "UnitPrice": pl.Decimal(precision=10, scale=2),
+    "Quantity": pl.Int32,
+}
+
+polars_schemas = {
+    ChinookTableNameEnum.Artist.value: pl_schema_artist,
+    ChinookTableNameEnum.Album.value: pl_schema_album,
+    ChinookTableNameEnum.Genre.value: pl_schema_genre,
+    ChinookTableNameEnum.MediaType.value: pl_schema_mediatype,
+    ChinookTableNameEnum.Track.value: pl_schema_track,
+    ChinookTableNameEnum.Playlist.value: pl_schema_playlist,
+    ChinookTableNameEnum.PlaylistTrack.value: pl_schema_playlisttrack,
+    ChinookTableNameEnum.Employee.value: pl_schema_employee,
+    ChinookTableNameEnum.Customer.value: pl_schema_customer,
+    ChinookTableNameEnum.Invoice.value: pl_schema_invoice,
+    ChinookTableNameEnum.InvoiceLine.value: pl_schema_invoiceline,
+    ChinookViewNameEnum.AlbumSalesStats.value: sql_create_view_albumsalesstats,
 }

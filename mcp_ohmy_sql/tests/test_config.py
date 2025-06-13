@@ -70,7 +70,7 @@ class DatabaseEnum:
                 is_serverless=True,
                 serverless_work_group=workgroup_name,
                 profile=aws_profile,
-                timeout=5,
+                timeout=10,
             ),
         ),
         schemas=[

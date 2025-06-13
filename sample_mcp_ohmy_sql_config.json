@@ -70,7 +70,7 @@
                     "is_serverless": true,
                     "serverless_work_group": "mcp-ohmy-sql-dev",
                     "profile": "esc_app_dev_us_east_1",
-                    "timeout": 5
+                    "timeout": 10
                 }
             },
             "schemas": [

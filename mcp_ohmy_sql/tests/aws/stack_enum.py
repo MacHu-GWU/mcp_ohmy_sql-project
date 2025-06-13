@@ -10,7 +10,8 @@ from functools import cached_property
 import aws_cdk as cdk
 
 from .constants import (
-    security_group_name,
+    redshift_security_group_name,
+    redshift_iam_role_name,
     namespace_name,
     workgroup_name,
     database_name,
@@ -33,7 +34,8 @@ class StackEnum:
             scope=self.app,
             **stack_ctx_enum.my_ohmy_sql_dev.to_stack_kwargs(),
             vpc_id="vpc-0d87d639dc2503350",
-            security_group_name=security_group_name,
+            security_group_name=redshift_security_group_name,
+            iam_role_name=redshift_iam_role_name,
             namespace_name=namespace_name,
             db_name=database_name,
             workgroup_name=workgroup_name,

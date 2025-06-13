@@ -2,6 +2,7 @@
 
 import aws_cdk as cdk
 import aws_cdk.aws_ec2 as ec2
+import aws_cdk.aws_iam as iam
 import aws_cdk.aws_redshiftserverless as redshiftserverless
 from constructs import Construct
 
@@ -24,6 +25,7 @@ class Stack(
         env: cdk.Environment,
         vpc_id: str,
         security_group_name: str,
+        iam_role_name: str,
         namespace_name: str,
         db_name: str,
         workgroup_name: str,
@@ -36,11 +38,13 @@ class Stack(
         )
         self.vpc_id = vpc_id
         self.security_group_name = security_group_name
+        self.iam_role_name = iam_role_name
         self.namespace_name = namespace_name
         self.db_name = db_name
         self.workgroup_name = workgroup_name
 
         self.create_security_group()
+        self.create_iam_role()
         self.create_namespace()
         self.create_workgroup()
 
@@ -62,6 +66,17 @@ class Stack(
             connection=ec2.Port.tcp(5439),
         )
 
+    def create_iam_role(self):
+        self.iam_role = iam.Role(
+            scope=self,
+            id="RedshiftServerlessRole",
+            assumed_by=iam.ServicePrincipal("redshift.amazonaws.com"),
+            role_name=self.iam_role_name,
+            managed_policies=[
+                iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3ReadOnlyAccess")
+            ],
+        )
+
     def create_namespace(self):
         """
         Ref: https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_redshiftserverless/CfnNamespace.html
@@ -71,6 +86,9 @@ class Stack(
             id="MyOhMySqlDevNamespace",
             namespace_name=self.namespace_name,
             db_name=self.db_name,
+            iam_roles=[
+                self.iam_role.role_arn,
+            ],
         )
         self.namespace.apply_removal_policy(
             cdk.RemovalPolicy.DESTROY,

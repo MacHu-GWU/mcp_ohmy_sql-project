@@ -55,6 +55,12 @@ class ChinookDataLoader:
 
         # process datatime columns
         for col_name, col in table.columns.items():
+            if isinstance(col.type, sa.Integer):
+                df = df.with_columns(
+                    **{
+                        col_name: pl.col(col_name).cast(pl.Int32),
+                    }
+                )
             if isinstance(col.type, sa.DateTime):
                 df = df.with_columns(
                     **{
@@ -63,7 +69,14 @@ class ChinookDataLoader:
                         ),
                     }
                 )
-
+            if isinstance(col.type, sa.DECIMAL):
+                df = df.with_columns(
+                    **{
+                        col_name: pl.col(col_name).cast(
+                            pl.Decimal(precision=10, scale=2)
+                        ),
+                    }
+                )
         return df
 
 
