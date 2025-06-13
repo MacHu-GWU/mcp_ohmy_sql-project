@@ -158,10 +158,6 @@ class InvoiceLine(Base):
 # fmt: on
 
 
-class ViewNameEnum(str, enum.Enum):
-    AlbumSalesStats = "AlbumSalesStats"
-
-
 album_sales_stats_view_select_stmt = (
     sa.select(
         Album.AlbumId,
