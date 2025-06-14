@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.db.relational import (
+from mcp_ohmy_sql.db.relational.schema_model import (
     ForeignKeyInfo,
     ColumnInfo,
     TableInfo,
@@ -22,6 +22,6 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.db.relational",
+        "mcp_ohmy_sql.db.relational.schema_model",
         preview=False,
     )

@@ -4,7 +4,7 @@ import typing as T
 
 from pydantic import Field
 
-from .metadata import (
+from ..metadata import (
     ObjectTypeEnum,
     BaseInfo,
     BaseColumnInfo,
