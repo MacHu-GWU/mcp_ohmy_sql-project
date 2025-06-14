@@ -8,35 +8,61 @@ from pydantic import BaseModel, Field
 
 TAB = " " * 2
 
-PK = "PK"  # Primary Key
-UQ = "UQ"  # Unique Key
-IDX = "IDX"  # Index
-FK = "FK"  # Foreign Key
-NN = "NN"  # Not Null
 
-STR = "STR"  # String/text data of any length
-INT = "INT"  # Whole numbers without decimal points
-FLOAT = "FLOAT"  # Approximate decimal numbers (IEEE floating point)
-DEC = "DEC"  # Exact decimal numbers for currency/financial data
-DT = "DT"  # Date and time combined (local timezone)
-TS = "TS"  # Timestamp with timezone information (UTC)
-DATE = "DATE"  # Date only without time component
-TIME = "TIME"  # Time only without date component
-BLOB = "BLOB"  # Large binary files (images, documents)
-BIN = "BIN"  # Small fixed-length binary data (hashes, UUIDs)
-BOOL = "BOOL"  # True/false boolean values
-NULL = "NULL"  # Null Type, represents no value
+class LLMColumnConstraintEnum(BetterStrEnum):
+    """
+    Enum representing simplified LLM-friendly constraints for database columns.
+    These constraints are designed to be concise while retaining essential information.
+    """
+
+    PK = "PK"  # Primary Key
+    UQ = "UQ"  # Unique Key
+    IDX = "IDX"  # Index
+    FK = "FK"  # Foreign Key
+    NN = "NN"  # Not Null
 
 
-TABLE_TYPE_TABLE: T.Final = "table"
-TABLE_TYPE_VIEW: T.Final = "view"
-TABLE_TYPE_MATERIALIZED_VIEW: T.Final = "materialized_view"
+class LLMTypeEnum(BetterStrEnum):
+    """
+    Enum representing simplified LLM-friendly types for database columns.
+    These types are designed to be concise while retaining essential information.
+    """
+
+    STR = "str"  # String/text data of any length
+    INT = "int"  # Whole numbers without decimal points
+    FLOAT = "float"  # Approximate decimal numbers (IEEE floating point)
+    DEC = "dec"  # Exact decimal numbers for currency/financial data
+    DT = "dt"  # Date and time combined (local timezone)
+    TS = "ts"  # Timestamp with timezone information (UTC)
+    DATE = "date"  # Date only without time component
+    TIME = "time"  # Time only without date component
+    BLOB = "blob"  # Large binary files (images, documents)
+    BIN = "bin"  # Small fixed-length binary data (hashes, UUIDs)
+    BOOL = "bool"  # True/false boolean values
+    NULL = "null"  # Null Type, represents no value
 
 
-class TableTypeEnum(BetterStrEnum):
+class ObjectTypeEnum(BetterStrEnum):
+    FOREIGN_KEY = "foreign key"
+    COLUMN = "column"
     TABLE = "table"
     VIEW = "view"
-    MATERIALIZED_VIEW = "materialized_view"
+    MATERIALIZED_VIEW = "materialized view"
+    SCHEMA = "schema"
+    DATABASE = "database"
+
+
+class DbTypeEnum(BetterStrEnum):
+    SQLITE = "sqlite"
+    POSTGRESQL = "postgresql"
+    MYSQL = "mysql"
+    MSSQL = "mssql"
+    ORACLE = "oracle"
+    AWS_REDSHIFT = "aws_redshift"
+    ELASTICSEARCH = "elasticsearch"
+    OPENSEARCH = "opensearch"
+    SNOWFLAKE = "snowflake"
+    MONGODB = "mongodb"
 
 
 class EnvVar(BaseModel):
