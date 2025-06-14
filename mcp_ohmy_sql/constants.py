@@ -65,6 +65,12 @@ class DbTypeEnum(BetterStrEnum):
     MONGODB = "mongodb"
 
 
+class TableTypeEnum(BetterStrEnum):
+    TABLE = "Table"
+    VIEW = "View"
+    MATERIALIZED_VIEW = "MaterializedView"
+
+
 class EnvVar(BaseModel):
     name: str = Field()
     default: str = Field(default="")
