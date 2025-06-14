@@ -2,11 +2,14 @@
 
 import sqlalchemy as sa
 
+from ..constants import DbTypeEnum
+
 
 def get_create_view_sql(
     engine: sa.Engine,
     select: sa.Select,
     view_name: str,
+    db_type: DbTypeEnum,
 ) -> str:
     """
     Generate SQL statement to create a view from a given select statement.
@@ -17,10 +20,20 @@ def get_create_view_sql(
 
     :return: SQL statement to create the view.
     """
-
     select_sql = select.compile(
         engine,
         compile_kwargs={"literal_binds": True},
     )
-    create_view_sql = f'CREATE VIEW "{view_name}" AS {select_sql}'
+    if db_type is DbTypeEnum.SQLITE:
+        create_view_sql = f'CREATE VIEW IF NOT EXISTS "{view_name}" AS {select_sql}'
+    elif db_type is DbTypeEnum.POSTGRESQL:
+        create_view_sql = f'CREATE OR REPLACE VIEW "{view_name}" AS {select_sql}'
+    elif db_type is DbTypeEnum.MYSQL:  # pragma: no cover
+        create_view_sql = f'CREATE OR REPLACE VIEW "{view_name}" AS {select_sql}'
+    elif db_type is DbTypeEnum.MSSQL:  # pragma: no cover
+        create_view_sql = f'CREATE OR ALTER VIEW "{view_name}" AS {select_sql}'
+    elif db_type is DbTypeEnum.ORACLE:  # pragma: no cover
+        create_view_sql = f'CREATE OR REPLACE VIEW "{view_name}" AS {select_sql}'
+    else:  # pragma: no cover
+        raise NotImplementedError(f"Unsupported database type: {db_type}")
     return create_view_sql

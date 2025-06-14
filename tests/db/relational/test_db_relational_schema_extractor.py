@@ -154,23 +154,15 @@ def test_new_table_info():
     assert len(t_album_info.columns) == 3
 
 
-def test_new_schema_info_and_new_database_info():
-    engine = sa.create_engine("sqlite:///:memory:")
-    Base.metadata.create_all(engine)
-
-    with engine.connect() as conn:
-        create_view_sql = get_create_view_sql(
-            engine=engine,
-            select=album_sales_stats_view_select_stmt,
-            view_name=ChinookViewNameEnum.AlbumSalesStats.value,
-        )
-        conn.execute(sa.text(create_view_sql))
-        conn.commit()
-    Base.metadata.reflect(engine, views=True)
+def _test_new_schema_info_and_new_database_info(
+    engine: sa.engine.Engine,
+):
+    metadata = sa.MetaData()
+    metadata.reflect(engine, views=True)
 
     schema_info = new_schema_info(
         engine=engine,
-        metadata=Base.metadata,
+        metadata=metadata,
         schema_name=None,
         exclude=["PlaylistTrack", "Playlist"],
     )
@@ -185,6 +177,14 @@ def test_new_schema_info_and_new_database_info():
         schemas=[schema_info],
     )
     assert database_info.object_type is ObjectTypeEnum.DATABASE
+
+
+def test_new_schema_info_and_new_database_info_1st(in_memory_sqlite_engine):
+    _test_new_schema_info_and_new_database_info(in_memory_sqlite_engine)
+
+
+def test_new_schema_info_and_new_database_info_2nd(in_memory_sqlite_engine):
+    _test_new_schema_info_and_new_database_info(in_memory_sqlite_engine)
 
 
 if __name__ == "__main__":
