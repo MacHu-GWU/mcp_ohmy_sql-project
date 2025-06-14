@@ -2,7 +2,12 @@
 
 import typing as T
 
+import sqlalchemy as sa
 from pydantic import Field
+
+from ...constants import LLMTypeEnum
+
+_ = sa
 
 from ..metadata import (
     ObjectTypeEnum,
@@ -13,8 +18,14 @@ from ..metadata import (
     BaseDatabaseInfo,
 )
 
+_ = sa.ForeignKey
+
 
 class ForeignKeyInfo(BaseInfo):
+    """
+    Ref: https://docs.sqlalchemy.org/en/20/core/constraints.html#sqlalchemy.schema.ForeignKey
+    """
+
     object_type: ObjectTypeEnum = Field(default=ObjectTypeEnum.FOREIGN_KEY)
     onupdate: T.Optional[str] = Field(default=None)
     ondelete: T.Optional[str] = Field(default=None)
@@ -22,10 +33,18 @@ class ForeignKeyInfo(BaseInfo):
     initially: T.Optional[str] = Field(default=None)
 
 
+_ = sa.Column
+
+
 class ColumnInfo(BaseColumnInfo):
+    """
+    Ref: https://docs.sqlalchemy.org/en/20/core/metadata.html#sqlalchemy.schema.Column
+    """
+
     fullname: str = Field()
     type: str = Field()
-    llm_type: T.Optional[str] = Field(default=None)
+    llm_type: T.Optional[LLMTypeEnum] = Field(default=None)
+    primary_key: bool = Field(default=False)
     nullable: bool = Field(default=False)
     index: T.Optional[bool] = Field(default=None)
     unique: T.Optional[bool] = Field(default=None)
@@ -38,7 +57,14 @@ class ColumnInfo(BaseColumnInfo):
     identity: bool = Field(default=False)
 
 
+_ = sa.Table
+
+
 class TableInfo(BaseTableInfo):
+    """
+    Ref: https://docs.sqlalchemy.org/en/20/core/metadata.html#sqlalchemy.schema.Table
+    """
+
     fullname: str = Field()
     primary_key: list[str] = Field(default_factory=list)
     foreign_keys: list[ForeignKeyInfo] = Field(default_factory=list)

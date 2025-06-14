@@ -5,12 +5,13 @@ chinook database ORM Model definition.
 """
 
 import typing as T
-import enum
 from decimal import Decimal
 from datetime import datetime
 
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
+
+from enum_mate.api import BetterStrEnum
 
 
 class Base(orm.DeclarativeBase):
@@ -19,7 +20,7 @@ class Base(orm.DeclarativeBase):
     """
 
 
-class ChinookTableNameEnum(str, enum.Enum):
+class ChinookTableNameEnum(BetterStrEnum):
     Artist = "Artist"
     Album = "Album"
     Genre = "Genre"
@@ -33,7 +34,7 @@ class ChinookTableNameEnum(str, enum.Enum):
     InvoiceLine = "InvoiceLine"
 
 
-class ChinookViewNameEnum(str, enum.Enum):
+class ChinookViewNameEnum(BetterStrEnum):
     AlbumSalesStats = "AlbumSalesStats"
 
 
@@ -49,7 +50,7 @@ class Album(Base):
     __tablename__ = ChinookTableNameEnum.Album.value
 
     AlbumId: orm.Mapped[int] = sa.Column(sa.Integer, primary_key=True)
-    Title: orm.Mapped[str] = sa.Column(sa.String, nullable=False)
+    Title: orm.Mapped[str] = sa.Column(sa.String, nullable=True)
     ArtistId: orm.Mapped[int] = sa.Column(sa.Integer, sa.ForeignKey(f"{ChinookTableNameEnum.Artist.value}.{Artist.ArtistId.name}"), nullable=False)
 
 
