@@ -178,7 +178,6 @@ def _test_new_schema_info_and_new_database_info(
         exclude=["PlaylistTrack", "Playlist"],
     )
     assert schema_info.object_type is ObjectTypeEnum.SCHEMA
-
     view = schema_info.tables_mapping[ChinookViewNameEnum.AlbumSalesStats.value]
     assert view.object_type is ObjectTypeEnum.VIEW
 

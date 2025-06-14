@@ -37,3 +37,29 @@ def get_create_view_sql(
     else:  # pragma: no cover
         raise NotImplementedError(f"Unsupported database type: {db_type}")
     return create_view_sql
+
+
+def get_drop_view_sql(
+    view_name: str,
+    db_type: DbTypeEnum,
+) -> str:
+    """
+    Generate SQL statement to drop a view.
+
+    :param view_name: Name of the view to be dropped.
+    :param db_type: Type of the database (e.g., SQLite, PostgreSQL).
+
+    :return: SQL statement to drop the view.
+    """
+    if db_type is DbTypeEnum.SQLITE:
+        return f'DROP VIEW IF EXISTS "{view_name}"'
+    elif db_type is DbTypeEnum.POSTGRESQL:
+        return f'DROP VIEW IF EXISTS "{view_name}"'
+    elif db_type is DbTypeEnum.MYSQL:  # pragma: no cover
+        return f'DROP VIEW IF EXISTS "{view_name}"'
+    elif db_type is DbTypeEnum.MSSQL:  # pragma: no cover
+        raise NotImplementedError(f"Unsupported database type: {db_type}")
+    elif db_type is DbTypeEnum.ORACLE:  # pragma: no cover
+        raise NotImplementedError(f"Unsupported database type: {db_type}")
+    else:  # pragma: no cover
+        raise NotImplementedError(f"Unsupported database type: {db_type}")

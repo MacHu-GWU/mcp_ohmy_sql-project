@@ -24,12 +24,14 @@ from mcp_ohmy_sql.db.relational.schema_extractor import (
 )
 from mcp_ohmy_sql.tests.chinook.chinook_data_model import (
     Base,
-    VIEW_NAME_AND_SELECT_STMT_MAP,
     ChinookTableNameEnum,
     ChinookViewNameEnum,
-    Artist,
+    VIEW_NAME_AND_SELECT_STMT_MAP,
     Album,
-    album_sales_stats_view_select_stmt,
+)
+from mcp_ohmy_sql.tests.setup_relational_database import (
+    drop_all_views,
+    create_all_views,
 )
 
 
@@ -53,16 +55,7 @@ def in_memory_sqlite_engine_objs() -> T.Generator[SaEngineObjs, None, None]:
     Base.metadata.create_all(engine)
 
     # create views
-    with engine.connect() as conn:
-        for view_name, select_stmt in VIEW_NAME_AND_SELECT_STMT_MAP.items():
-            create_view_sql = get_create_view_sql(
-                engine=engine,
-                view_name=view_name,
-                select=select_stmt,
-                db_type=DbTypeEnum.SQLITE,
-            )
-            conn.execute(sa.text(create_view_sql))
-        conn.commit()
+    create_all_views(engine=engine, db_type=DbTypeEnum.SQLITE)
 
     # get the latest metadata with views
     metadata = sa.MetaData()
@@ -74,14 +67,7 @@ def in_memory_sqlite_engine_objs() -> T.Generator[SaEngineObjs, None, None]:
     )
 
     # drop views
-    with engine.connect() as conn:
-        view_name_list = list(VIEW_NAME_AND_SELECT_STMT_MAP)
-        view_name_list = view_name_list[::-1]  # reverse order to drop views first
-        for view_name in view_name_list:
-            sql = f'DROP VIEW IF EXISTS "{view_name}"'
-            stmt = sa.text(sql)
-            conn.execute(stmt)
-        conn.commit()
+    drop_all_views(engine=engine, db_type=DbTypeEnum.SQLITE)
 
     # drop tables
     Base.metadata.drop_all(engine)  # this method doesn't drop views

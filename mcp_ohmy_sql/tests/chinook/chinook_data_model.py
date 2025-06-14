@@ -21,6 +21,10 @@ class Base(orm.DeclarativeBase):
 
 
 class ChinookTableNameEnum(BetterStrEnum):
+    """
+    Note: The order of the enum members should match the order of table creation.
+    """
+
     Artist = "Artist"
     Album = "Album"
     Genre = "Genre"
@@ -35,9 +39,14 @@ class ChinookTableNameEnum(BetterStrEnum):
 
 
 class ChinookViewNameEnum(BetterStrEnum):
+    """
+    Note: The order of the enum members should match the order of view creation.
+    """
+
     AlbumSalesStats = "AlbumSalesStats"
 
 
+# Note: The order of the enum members should match the order of table creation
 # fmt: off
 class Artist(Base):
     __tablename__ = ChinookTableNameEnum.Artist.value
