@@ -50,7 +50,7 @@ class Album(Base):
     __tablename__ = ChinookTableNameEnum.Album.value
 
     AlbumId: orm.Mapped[int] = sa.Column(sa.Integer, primary_key=True)
-    Title: orm.Mapped[str] = sa.Column(sa.String, nullable=True)
+    Title: orm.Mapped[str] = sa.Column(sa.String, nullable=False)
     ArtistId: orm.Mapped[int] = sa.Column(sa.Integer, sa.ForeignKey(f"{ChinookTableNameEnum.Artist.value}.{Artist.ArtistId.name}"), nullable=False)
 
 
@@ -196,3 +196,7 @@ album_sales_stats_view_select_stmt = (
         ).desc()
     )
 )
+
+VIEW_NAME_AND_SELECT_STMT_MAP: T.Dict[str, sa.Select] = {
+    ChinookViewNameEnum.AlbumSalesStats.value: album_sales_stats_view_select_stmt,
+}
