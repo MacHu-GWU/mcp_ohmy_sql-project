@@ -10,7 +10,10 @@ from mcp_ohmy_sql.config.config_define import (
 )
 from mcp_ohmy_sql.paths import path_sample_config
 
-from rich import print as rprint
+try:
+    from rich import print as rprint
+except ImportError:  # pragma: no cover
+    pass
 
 
 class TestConfig:
