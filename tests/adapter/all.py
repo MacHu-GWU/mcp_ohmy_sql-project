@@ -5,7 +5,7 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.hub",
+        "mcp_ohmy_sql.adapter",
         is_folder=True,
         preview=False,
     )
