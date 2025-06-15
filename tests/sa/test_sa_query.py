@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_ohmy_sql.tests.test_config_1_define import DatabaseEnum
+from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 from mcp_ohmy_sql.sa.query import (
     ensure_valid_select_query,
     execute_count_query,
@@ -41,7 +41,7 @@ class TestSqlalchemyQuery:
             engine=database.sa_engine,
             query="SELECT * FROM Album LIMIT 3",
         )
-        print(result)  # for debug only
+        # print(result)  # for debug only
 
         result = execute_select_query(
             engine=database.sa_engine,

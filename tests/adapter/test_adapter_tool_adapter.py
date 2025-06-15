@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.tests.test_config_1_define import DatabaseEnum
+from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 
 
 class TestToolAdapterMixin:

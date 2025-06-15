@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.tests.test_config_1_define import setup_test_config
+from mcp_ohmy_sql.tests.test_config import setup_test_config
 
 setup_test_config()
 

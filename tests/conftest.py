@@ -34,7 +34,7 @@ from mcp_ohmy_sql.config.config_define import Config
 from mcp_ohmy_sql.adapter.adapter import Adapter
 
 # ===== Test modules
-from mcp_ohmy_sql.tests.test_config_1_define import setup_test_config
+from mcp_ohmy_sql.tests.test_config import setup_test_config
 
 # --- Chinook modules
 from mcp_ohmy_sql.tests.chinook.chinook_data_model import (
@@ -51,7 +51,7 @@ from mcp_ohmy_sql.tests.setup_relational_database import (
     drop_all_views,
     create_all_views,
 )
-from mcp_ohmy_sql.tests.test_config_1_define import DatabaseEnum
+from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 
 
 @dataclasses.dataclass

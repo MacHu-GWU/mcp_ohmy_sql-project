@@ -24,14 +24,14 @@ class TestSqlalchemyUtils:
             view_name=ChinookViewNameEnum.AlbumSalesStats.name,
             db_type=DbTypeEnum.SQLITE,
         )
-        print(sql)  # for debug only
+        # print(sql)  # for debug only
 
     def test_get_drop_view_sql(self):
         sql = get_drop_view_sql(
             view_name=ChinookViewNameEnum.AlbumSalesStats.name,
             db_type=DbTypeEnum.SQLITE,
         )
-        print(sql)  # for debug only
+        # print(sql)  # for debug only
 
 
 if __name__ == "__main__":
