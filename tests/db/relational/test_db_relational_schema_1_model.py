@@ -22,6 +22,6 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.db.relational.schema_model",
+        "mcp_ohmy_sql.db.relational.schema_1_model.py",
         preview=False,
     )

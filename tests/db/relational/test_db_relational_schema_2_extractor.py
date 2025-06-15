@@ -17,10 +17,7 @@ from mcp_ohmy_sql.db.relational.schema_2_extractor import (
 from mcp_ohmy_sql.tests.chinook.chinook_data_model import (
     ChinookTableNameEnum,
     ChinookViewNameEnum,
-    Base,
     Artist,
-    Album,
-    album_sales_stats_view_select_stmt,
 )
 
 
@@ -212,6 +209,6 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.db.relational.schema_extractor",
+        "mcp_ohmy_sql.db.relational.schema_2_extractor.py",
         preview=False,
     )
