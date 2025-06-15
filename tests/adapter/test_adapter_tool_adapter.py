@@ -1,0 +1,75 @@
+# -*- coding: utf-8 -*-
+
+from mcp_ohmy_sql.tests.test_config_1_define import DatabaseEnum
+
+
+class TestToolAdapterMixin:
+    def test_tool_list_databases(
+        self,
+        mcp_ohmy_sql_adapter,
+    ):
+        s = mcp_ohmy_sql_adapter.tool_list_databases()
+        # print(s) # for debug only
+
+    def test_tool_list_tables(
+        self,
+        mcp_ohmy_sql_adapter,
+        sqlite_sa_engine_objs,
+    ):
+        s = mcp_ohmy_sql_adapter.tool_list_tables(
+            database_identifier=DatabaseEnum.chinook_sqlite.identifier
+        )
+        # print(s) # for debug only
+
+        s = mcp_ohmy_sql_adapter.tool_list_tables(database_identifier="invalid database")
+        assert "Database 'invalid database' not found in configuration" in s
+
+    def test_tool_get_database_details(
+        self,
+        mcp_ohmy_sql_adapter,
+        sqlite_sa_engine_objs,
+    ):
+        s = mcp_ohmy_sql_adapter.tool_get_database_details()
+        # print(s)  # for debug only
+
+    def test_get_schema_details(
+        self,
+        mcp_ohmy_sql_adapter,
+        sqlite_sa_engine_objs,
+    ):
+        s = mcp_ohmy_sql_adapter.tool_get_schema_details(
+            database_identifier=DatabaseEnum.chinook_sqlite.identifier,
+        )
+        # print(s)  # for debug only
+
+        s = mcp_ohmy_sql_adapter.tool_get_schema_details(
+            database_identifier="invalid database",
+        )
+        assert "Database 'invalid database' not found in configuration" in s
+
+    def test_tool_execute_select_statement(
+        self,
+        mcp_ohmy_sql_adapter,
+        sqlite_sa_engine_objs,
+    ):
+        s = mcp_ohmy_sql_adapter.tool_execute_select_statement(
+            database_identifier=DatabaseEnum.chinook_sqlite.identifier,
+            sql="SELECT 1",
+        )
+        # print(s)  # for debug only
+
+        s = mcp_ohmy_sql_adapter.tool_execute_select_statement(
+            database_identifier="invalid database",
+            sql="SELECT 1",
+        )
+        assert "Database 'invalid database' not found in configuration" in s
+
+
+if __name__ == "__main__":
+    from mcp_ohmy_sql.tests import run_cov_test
+
+    run_cov_test(
+        __file__,
+        "mcp_ohmy_sql.adapter.tool_adapter.py",
+        preview=False,
+    )

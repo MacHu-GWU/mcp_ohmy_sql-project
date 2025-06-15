@@ -212,7 +212,7 @@ def mcp_ohmy_sql_config() -> Config:
 
 
 @pytest.fixture(scope="class")
-def adapter(mcp_ohmy_sql_config) -> Adapter:
+def mcp_ohmy_sql_adapter(mcp_ohmy_sql_config) -> Adapter:
     adapter = Adapter(
         config=mcp_ohmy_sql_config,
     )

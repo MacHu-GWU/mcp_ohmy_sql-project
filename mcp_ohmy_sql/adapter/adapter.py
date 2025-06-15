@@ -11,14 +11,13 @@ from pydantic import BaseModel, Field
 from ..config.api import Database, Schema, Config
 
 from .relational_adapter import RelationalAdapterMixin
-
-# from .tool_hub import ToolHubMixin
+from .tool_adapter import ToolAdapterMixin
 
 
 class Adapter(
     BaseModel,
     RelationalAdapterMixin,
-    # ToolHubMixin,
+    ToolAdapterMixin,
 ):
     config: Config = Field()
 

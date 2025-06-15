@@ -11,17 +11,17 @@ except ImportError:
 class TestAdapter:
     def test_get_database_and_schema_object(
         self,
-        adapter,
+        mcp_ohmy_sql_adapter,
     ):
         # invalid database
-        flag, msg, database, schema = adapter.get_database_and_schema_object(
+        flag, msg, database, schema = mcp_ohmy_sql_adapter.get_database_and_schema_object(
             database_identifier="invalid database",
         )
         assert flag is False
         assert "Error: Database" in msg
 
         # invalid schema
-        flag, msg, database, schema = adapter.get_database_and_schema_object(
+        flag, msg, database, schema = mcp_ohmy_sql_adapter.get_database_and_schema_object(
             database_identifier=DatabaseEnum.chinook_sqlite.identifier,
             schema_name="invalid schema",
         )
@@ -29,7 +29,7 @@ class TestAdapter:
         assert "Error: Schema" in msg
 
         # valid database and schema
-        flag, msg, database, schema = adapter.get_database_and_schema_object(
+        flag, msg, database, schema = mcp_ohmy_sql_adapter.get_database_and_schema_object(
             database_identifier=DatabaseEnum.chinook_sqlite.identifier,
         )
         assert flag is True

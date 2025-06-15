@@ -28,49 +28,11 @@
         {
             "identifier": "chinook postgres",
             "description": "Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
-            "db_type": "postgres",
+            "db_type": "postgresql",
             "connection": {
                 "type": "sqlalchemy",
                 "create_engine_kwargs": {
                     "url": "postgresql+psycopg2://postgres:password@localhost:40311/postgres"
-                }
-            },
-            "schemas": [
-                {
-                    "name": null,
-                    "table_filter": {
-                        "include": [],
-                        "exclude": [
-                            "Playlist",
-                            "PlaylistTrack"
-                        ]
-                    }
-                }
-            ]
-        },
-        {
-            "identifier": "chinook redshift",
-            "description": "Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
-            "db_type": "postgres",
-            "connection": {
-                "type": "aws_redshift",
-                "boto_session_kwargs": {
-                    "aws_access_key_id": null,
-                    "aws_secret_access_key": null,
-                    "aws_session_token": null,
-                    "region_name": null,
-                    "profile_name": "esc_app_dev_us_east_1",
-                    "role_arn": null,
-                    "duration_seconds": 3600,
-                    "auto_refresh": false
-                },
-                "redshift_connector_kwargs": {
-                    "iam": true,
-                    "database": "dev",
-                    "is_serverless": true,
-                    "serverless_work_group": "mcp-ohmy-sql-dev",
-                    "profile": "esc_app_dev_us_east_1",
-                    "timeout": 10
                 }
             },
             "schemas": [

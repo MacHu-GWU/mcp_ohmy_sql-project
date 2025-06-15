@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+Singleton instance of Config for MCP OhMySQL.
+"""
+
 import os
 from pathlib import Path
 

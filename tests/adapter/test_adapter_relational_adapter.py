@@ -11,23 +11,23 @@ except ImportError:  # pragma: no cover
 class TestRelationalAdapterMixin:
     def test_get_relational_schema_info(
         self,
-        adapter,
+        mcp_ohmy_sql_adapter,
     ):
-        flag, msg, database, schema = adapter.get_database_and_schema_object(
+        flag, msg, database, schema = mcp_ohmy_sql_adapter.get_database_and_schema_object(
             DatabaseEnum.chinook_sqlite.identifier,
         )
-        schema_info = adapter.get_relational_schema_info(database, schema)
+        schema_info = mcp_ohmy_sql_adapter.get_relational_schema_info(database, schema)
         # print(schema_info)  # for debug only
 
     def test_get_relational_database_info(
         self,
         mcp_ohmy_sql_config,
-        adapter,
+        mcp_ohmy_sql_adapter,
     ):
-        flag, msg, database, schema = adapter.get_database_and_schema_object(
+        flag, msg, database, schema = mcp_ohmy_sql_adapter.get_database_and_schema_object(
             DatabaseEnum.chinook_sqlite.identifier,
         )
-        database_info = adapter.get_relational_database_info(database)
+        database_info = mcp_ohmy_sql_adapter.get_relational_database_info(database)
         # print(database_info)  # for debug only
 
 

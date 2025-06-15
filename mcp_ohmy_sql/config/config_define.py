@@ -5,7 +5,9 @@ import json
 from pathlib import Path
 from functools import cached_property
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from ..constants import DbTypeEnum
 
 try:
     import sqlalchemy as sa
@@ -98,29 +100,20 @@ T_CONNECTION = T.Union[
     AWSRedshiftConnection,
 ]
 
-T_DB_TYPE = T.Literal[
-    "sqlite",
-    "postgres",
-    "mysql",
-    "mssql",
-    "oracle",
-    "aws_redshift",
-    "aws_redshift_data_api",
-    "aws_athena",
-    "aws_opensearch",
-    "aws_s3_data_file",
-    "elasticsearch",
-    "opensearch",
-    "duckdb",
-]
-
 
 class Database(BaseModel):
     identifier: str = Field()
     description: str = Field(default="")
-    db_type: T_DB_TYPE = Field()
+    db_type: str = Field()
     connection: T_CONNECTION = Field(discriminator="type")
     schemas: list[Schema] = Field()
+
+    @field_validator("db_type", mode="after")
+    @classmethod
+    def check_name(cls, value: str) -> str:  # pragma: no cover
+        if DbTypeEnum.is_valid_value(value) is False:
+            raise ValueError(f"{value} is not a valid value of {DbTypeEnum}")
+        return value
 
     @cached_property
     def schemas_mapping(self) -> dict[str, Schema]:

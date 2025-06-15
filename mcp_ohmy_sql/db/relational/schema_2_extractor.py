@@ -220,7 +220,8 @@ def new_schema_info(
         exclude = []
 
     tables = list()
-    for table_name, table in metadata.tables.items():
+    for table in metadata.sorted_tables:
+        table_name = table.name
         # don't include tables from other schemas
         if table.schema != schema_name:  # pragma: no cover
             continue
