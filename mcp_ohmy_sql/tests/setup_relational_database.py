@@ -107,3 +107,15 @@ def insert_all_data(
             rows = df.to_dicts()
             conn.execute(stmt, rows)
         conn.commit()
+
+
+def setup_relational_database(
+    engine: sa.Engine,
+    metadata: sa.MetaData,
+    db_type: DbTypeEnum,
+):
+    # create tables and views
+    create_all_tables(engine=engine, metadata=metadata, drop_first=True)
+    create_all_views(engine=engine, db_type=db_type)
+    # insert all data
+    insert_all_data(engine=engine, metadata=metadata)

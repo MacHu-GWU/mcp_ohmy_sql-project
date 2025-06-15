@@ -115,6 +115,13 @@ class Database(BaseModel):
             raise ValueError(f"{value} is not a valid value of {DbTypeEnum}")
         return value
 
+    @property
+    def db_type_enum(self) -> DbTypeEnum:
+        """
+        Get the database type as an enum.
+        """
+        return DbTypeEnum.get_by_value(self.db_type)
+
     @cached_property
     def schemas_mapping(self) -> dict[str, Schema]:
         """
