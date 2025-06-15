@@ -101,7 +101,7 @@ def execute_select_query(
             result = connection.execute(stmt, params)
         except sa_exc.OperationalError as e:  # pragma: no cover
             return f"Error executing query: {e._message()}"
-        except Exception as e: # pragma: no cover
+        except Exception as e:  # pragma: no cover
             return f"Error executing query: {e}"
 
         try:

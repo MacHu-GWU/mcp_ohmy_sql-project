@@ -5,16 +5,8 @@ from mcp_ohmy_sql.sa import api
 
 def test():
     _ = api
-    _ = api.SQLALCHEMY_TYPE_MAPPING
-    _ = api.ColumnType
-    _ = api.ForeignKeyInfo
-    _ = api.ColumnInfo
-    _ = api.TableInfo
-    _ = api.SchemaInfo
-    _ = api.encode_column_info
-    _ = api.TABLE_TYPE_NAME_MAPPING
-    _ = api.encode_table_info
-    _ = api.encode_schema_info
+    _ = api.get_create_view_sql
+    _ = api.get_drop_view_sql
     _ = api.execute_count_query
     _ = api.execute_select_query
 

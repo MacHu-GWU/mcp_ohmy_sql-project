@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import typing as T
+import os
 import dataclasses
 
 import pytest
 import sqlalchemy as sa
 
-from mcp_ohmy_sql.constants import ObjectTypeEnum, DbTypeEnum
+# ===== Top-level modules
+from mcp_ohmy_sql.constants import ObjectTypeEnum, DbTypeEnum, EnvVarEnum
+from mcp_ohmy_sql.paths import path_sample_config
+
+# ===== DB modules
 from mcp_ohmy_sql.db.relational.schema_1_model import (
     ForeignKeyInfo,
     ColumnInfo,
@@ -21,7 +26,17 @@ from mcp_ohmy_sql.db.relational.schema_2_extractor import (
     new_schema_info,
     new_database_info,
 )
-from mcp_ohmy_sql.config.config_define import Database, SqlalchemyConnection
+
+# ===== Config modules
+from mcp_ohmy_sql.config.config_define import Config
+
+# ===== Hub modules
+from mcp_ohmy_sql.adapter.adapter import Adapter
+
+# ===== Test modules
+from mcp_ohmy_sql.tests.test_config_1_define import setup_test_config
+
+# --- Chinook modules
 from mcp_ohmy_sql.tests.chinook.chinook_data_model import (
     Base,
     ChinookTableNameEnum,
@@ -186,8 +201,24 @@ def in_memory_sqlite_sa_schema_info_objects(
 
 
 # ------------------------------------------------------------------------------
-#
+# Config and Adapter
 # ------------------------------------------------------------------------------
+@pytest.fixture(scope="class")
+def mcp_ohmy_sql_config() -> Config:
+    os.environ[EnvVarEnum.MCP_OHMY_SQL_CONFIG.name] = str(path_sample_config)
+    setup_test_config()
+    config = Config.load(path=path_sample_config)
+    return config
+
+
+@pytest.fixture(scope="class")
+def adapter(mcp_ohmy_sql_config) -> Adapter:
+    adapter = Adapter(
+        config=mcp_ohmy_sql_config,
+    )
+    return adapter
+
+
 @pytest.fixture(scope="class")
 def sa_engine_factory():
     """ """
@@ -228,6 +259,26 @@ def sa_engine_factory():
 
         # clear metadata
         metadata.clear()
+
+
+@pytest.fixture(scope="class")
+def sqlite_sa_engine_objs(
+    sa_engine_factory,
+) -> SaEngineObjs:
+    return sa_engine_factory(
+        engine=DatabaseEnum.chinook_sqlite.sa_engine,
+        db_type=DbTypeEnum.SQLITE,
+    )
+
+
+@pytest.fixture(scope="class")
+def postgres_sa_engine_objs(
+    sa_engine_factory,
+) -> SaEngineObjs:
+    return sa_engine_factory(
+        engine=DatabaseEnum.chinook_postgres.sa_engine,
+        db_type=DbTypeEnum.POSTGRESQL,
+    )
 
 
 # @pytest.fixture(scope="class")
