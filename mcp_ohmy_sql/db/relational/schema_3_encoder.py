@@ -10,8 +10,7 @@ import textwrap
 
 from ...constants import TAB, ObjectTypeEnum, TableTypeEnum, LLMColumnConstraintEnum
 
-from .schema_model import (
-    ForeignKeyInfo,
+from .schema_1_model import (
     ColumnInfo,
     TableInfo,
     SchemaInfo,

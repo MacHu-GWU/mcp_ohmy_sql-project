@@ -7,7 +7,7 @@ from sqlalchemy.types import TypeEngine
 from ...constants import ObjectTypeEnum, DbTypeEnum, LLMTypeEnum
 from ...utils import match
 
-from .schema_model import (
+from .schema_1_model import (
     ForeignKeyInfo,
     ColumnInfo,
     TableInfo,

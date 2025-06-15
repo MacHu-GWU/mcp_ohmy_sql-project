@@ -5,7 +5,7 @@ from sqlalchemy.types import TypeEngine
 
 from mcp_ohmy_sql.constants import ObjectTypeEnum, LLMTypeEnum, DbTypeEnum
 
-from mcp_ohmy_sql.db.relational.schema_extractor import (
+from mcp_ohmy_sql.db.relational.schema_2_extractor import (
     sqlalchemy_type_to_llm_type,
     new_foreign_key_info,
     new_column_info,

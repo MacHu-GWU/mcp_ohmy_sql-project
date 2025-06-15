@@ -6,7 +6,7 @@ from mcp_ohmy_sql.constants import (
     LLMColumnConstraintEnum,
     LLMTypeEnum,
 )
-from mcp_ohmy_sql.db.relational.schema_encoder import (
+from mcp_ohmy_sql.db.relational.schema_3_encoder import (
     encode_column_info,
     encode_table_info,
     encode_schema_info,

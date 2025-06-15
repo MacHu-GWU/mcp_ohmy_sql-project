@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.db.relational.schema_model import (
+from mcp_ohmy_sql.db.relational.schema_1_model import (
     ForeignKeyInfo,
     ColumnInfo,
     TableInfo,
