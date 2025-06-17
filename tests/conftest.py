@@ -235,12 +235,10 @@ def sa_engine_factory():
         db_type: DbTypeEnum,
     ) -> SaEngineObjs:
         # create tables and views
-        create_all_redshift_tables(
-            engine=engine, metadata=Base.metadata, drop_first=True
-        )
+        create_all_tables(engine=engine, metadata=Base.metadata, drop_first=True)
         create_all_views(engine=engine, db_type=db_type)
         # insert all data
-        insert_all_data_to_redshift(engine=engine, metadata=Base.metadata)
+        insert_all_data(engine=engine, metadata=Base.metadata)
 
         # get the latest metadata with views
         metadata = sa.MetaData()

@@ -8,6 +8,7 @@ Reference:
 """
 
 import typing as T
+from pydantic import BaseModel, Field
 
 import redshift_connector
 from enum_mate.api import BetterStrEnum
@@ -124,10 +125,10 @@ def redshift_type_to_llm_type(rs_type: str) -> LLMTypeEnum:
     return llm_type_name
 
 
-class SchemaTableFilter(T.TypedDict):
-    schema: str
-    include: list[str]
-    exclude: list[str]
+class SchemaTableFilter(BaseModel):
+    schema_name: str = Field()
+    include: list[str] = Field()
+    exclude: list[str] = Field()
 
 
 def new_database_info(
@@ -138,7 +139,7 @@ def new_database_info(
     if schema_table_filter_list is None:
         schema_table_filter_list = list()
     schema_table_filter_mapping: dict[str, SchemaTableFilter] = {
-        schema_table_filter["schema"]: schema_table_filter
+        schema_table_filter.schema_name: schema_table_filter
         for schema_table_filter in schema_table_filter_list
     }
 
@@ -174,8 +175,8 @@ def new_database_info(
         schema_name, schema_description = row[0], row[1]
         if schema_name in schema_table_filter_mapping:
             schema_table_filter = schema_table_filter_mapping[schema_name]
-            include = schema_table_filter.get("include", [])
-            exclude = schema_table_filter.get("exclude", [])
+            include = schema_table_filter.include
+            exclude = schema_table_filter.exclude
         else:
             include = []
             exclude = []

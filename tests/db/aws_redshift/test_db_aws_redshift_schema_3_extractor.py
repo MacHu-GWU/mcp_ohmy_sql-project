@@ -3,6 +3,7 @@
 import pytest
 from which_runtime.api import runtime
 from mcp_ohmy_sql.db.aws_redshift.schema_3_extractor import (
+    SchemaTableFilter,
     new_database_info,
 )
 from mcp_ohmy_sql.tests.test_config import DatabaseEnum
@@ -16,9 +17,18 @@ from rich import print as rprint
 def test_new_column_info(
     rs_conn,
 ):
+    database = DatabaseEnum.chinook_redshift
+    schema = database.schemas[0]
     database_info = new_database_info(
         conn=rs_conn,
-        db_name=DatabaseEnum.chinook_redshift.identifier,
+        db_name=database.identifier,
+        schema_table_filter_list=[
+            SchemaTableFilter(
+                schema_name=schema.name,
+                include=schema.table_filter.include,
+                exclude=schema.table_filter.exclude,
+            )
+        ]
     )
     # rprint(database_info)  # pragma: no cover
 
