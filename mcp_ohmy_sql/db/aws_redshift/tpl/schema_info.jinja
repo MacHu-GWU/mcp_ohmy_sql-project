@@ -1,0 +1,5 @@
+Schema {{ schema_name }} {{ schema_description }}(
+    {%- for table in tables %}
+{{ table|indent(4, True) }},
+    {%- endfor %}
+)

@@ -1,0 +1,5 @@
+{{ database_type }} Database {{ database_name }} {{ database_description }}(
+    {%- for schema in schemas %}
+{{ schema|indent(4, True) }},
+    {%- endfor %}
+)
