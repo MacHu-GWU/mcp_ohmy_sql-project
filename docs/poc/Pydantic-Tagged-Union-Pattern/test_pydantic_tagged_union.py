@@ -8,7 +8,7 @@ Pydantic 建议也推荐使用这种方式来定义 union 类型 。
 """
 
 import typing as T
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
 
 class BaseConnection(BaseModel):
@@ -31,8 +31,11 @@ class Config(BaseModel):
     )
 
 
-dct_sql = {"connection": {"type": "sqlalchemy", "create_engine_kwargs": {}}}
-dct_aws = {"connection": {"type": "aws", "boto_session_kwargs": {}}}
-config = Config(**dct_sql)
-# config = Config(**dct_aws)
-print(config)
+if __name__ == "__main__":
+    dct_sql = {"connection": {"type": "sqlalchemy", "create_engine_kwargs": {}}}
+    dct_aws = {"connection": {"type": "aws", "boto_session_kwargs": {}}}
+
+    config = Config(**dct_sql)
+    # config = Config(**dct_aws)
+
+    print(config)
