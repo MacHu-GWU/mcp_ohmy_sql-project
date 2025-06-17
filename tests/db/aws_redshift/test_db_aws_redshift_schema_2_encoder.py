@@ -3,8 +3,6 @@
 from mcp_ohmy_sql.utils import dedent
 from mcp_ohmy_sql.constants import (
     DbTypeEnum,
-    TableTypeEnum,
-    LLMColumnConstraintEnum,
     LLMTypeEnum,
     ObjectTypeEnum,
 )
@@ -14,7 +12,7 @@ from mcp_ohmy_sql.db.aws_redshift.schema_1_model import (
     SchemaInfo,
     DatabaseInfo,
 )
-from mcp_ohmy_sql.db.aws_redshift.schema_3_encoder import (
+from mcp_ohmy_sql.db.aws_redshift.schema_2_encoder import (
     encode_column_info,
     encode_table_info,
     encode_schema_info,
