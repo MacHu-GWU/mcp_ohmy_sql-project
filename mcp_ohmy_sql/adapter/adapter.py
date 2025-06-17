@@ -11,12 +11,14 @@ from pydantic import BaseModel, Field
 from ..config.api import Database, Schema, Config
 
 from .relational_adapter import RelationalAdapterMixin
+from .aws_redshift_adapter import AwsRedshiftAdapterMixin
 from .tool_adapter import ToolAdapterMixin
 
 
 class Adapter(
     BaseModel,
     RelationalAdapterMixin,
+    AwsRedshiftAdapterMixin,
     ToolAdapterMixin,
 ):
     config: Config = Field()
