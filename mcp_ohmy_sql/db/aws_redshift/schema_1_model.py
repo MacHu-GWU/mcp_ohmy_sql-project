@@ -4,7 +4,7 @@ import typing as T
 
 from pydantic import Field
 
-from ...constants import LLMTypeEnum
+from ...constants import DbTypeEnum, LLMTypeEnum
 
 from ..metadata import (
     BaseColumnInfo,
@@ -15,20 +15,19 @@ from ..metadata import (
 
 
 class ColumnInfo(BaseColumnInfo):
-
-    fullname: str = Field()
+    name: str = Field()
     type: str = Field()
     llm_type: T.Optional[LLMTypeEnum] = Field(default=None)
     dist_key: bool = Field(default=False)
-    sort_key: bool = Field(default=False)
-    sort_key_order: int = Field(default=0)
-    unique: T.Optional[bool] = Field(default=None)
-    foreign_keys: T.Optional[str] = Field(default=None)
+    sort_key_position: int = Field()
+    encoding: str = Field()
+    notnull: T.Optional[bool] = Field(default=None)
 
 
 class TableInfo(BaseTableInfo):
-    fullname: str = Field()
-    dist_key_type: str = Field()
+    name: str = Field()
+    dist_style: str = Field()
+    owner: str = Field()
     columns: list[ColumnInfo] = Field(default_factory=list)
 
 
@@ -37,4 +36,5 @@ class SchemaInfo(BaseSchemaInfo):
 
 
 class DatabaseInfo(BaseDatabaseInfo):
+    db_type: DbTypeEnum = Field(default=DbTypeEnum.AWS_REDSHIFT)
     schemas: list[SchemaInfo] = Field(default_factory=list)
