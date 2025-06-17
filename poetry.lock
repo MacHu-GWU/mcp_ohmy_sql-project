@@ -3423,18 +3423,19 @@ files = [
 
 [[package]]
 name = "simple-aws-redshift"
-version = "0.2.1"
+version = "0.3.1"
 description = "Objective Oriented Python SDK for AWS Redshift"
 optional = true
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 markers = "extra == \"aws-redshift\""
 files = [
-    {file = "simple_aws_redshift-0.2.1-py3-none-any.whl", hash = "sha256:1df869519edf32692ba30af25570e217d8834d2441acf36b7e9dc9559beb608b"},
-    {file = "simple_aws_redshift-0.2.1.tar.gz", hash = "sha256:a3c38c80b9517f0091faffc5caf29b5a0c96cf8af4408bd7ca6a587c6b4d78d2"},
+    {file = "simple_aws_redshift-0.3.1-py3-none-any.whl", hash = "sha256:d3e4626d2e854cd900c041e7286b86c7fa40cbe4167898453ef5cfa1145961b3"},
+    {file = "simple_aws_redshift-0.3.1.tar.gz", hash = "sha256:7faba66d29af379a46a3184209d11a347bbd0fc7890d38e98a65633684a3b80b"},
 ]
 
 [package.dependencies]
+enum_mate = ">=0.1.1,<1.0.0"
 func_args = ">=1.0.1,<2.0.0"
 iterproxy = ">=0.3.1,<1.0.0"
 python-dateutil = {version = ">=2.9.0,<3.0.0", markers = "python_version < \"3.11\""}
@@ -3443,7 +3444,7 @@ python-dateutil = {version = ">=2.9.0,<3.0.0", markers = "python_version < \"3.1
 connnect = ["redshift-connector (>=2.1.0,<3.0.0)"]
 dev = ["boto3-stubs[redshift,redshift-data,redshift-serverless] (>=1.37.38,<2.0.0)", "build (>=1.2.1,<2.0.0)", "rich (>=13.8.1,<14.0.0)", "twine (>=6.0.0,<7.0.0)", "wheel (>=0.45.0,<1.0.0)"]
 doc = ["Sphinx (>=7.4.7,<8.0.0)", "docfly (==3.0.0)", "furo (==2024.8.6)", "ipython (>=8.18.1,<8.19.0)", "nbsphinx (>=0.8.12,<1.0.0)", "pygments (>=2.18.0,<3.0.0)", "rstobj (==1.2.1)", "sphinx-copybutton (>=0.5.2,<1.0.0)", "sphinx-design (>=0.6.1,<1.0.0)", "sphinx-jinja (>=2.0.2,<3.0.0)"]
-test = ["aws-cdk-lib (>=2.179.0,<2.180.0)", "boto3 (>=1.37.38,<2.0.0)", "boto_session_manager (>=1.8.1,<2.0.0)", "cdk_mate (>=0.1.6,<0.2.0)", "cdkit (>=0.1.3,<0.2.0)", "moto (>=5.1.5,<6.0.0)", "pytest (>=8.2.2,<9.0.0)", "pytest-cov (>=6.0.0,<7.0.0)", "redshift-connector (>=2.1.0,<3.0.0)", "rich (>=13.8.1,<14.0.0)"]
+test = ["aws-cdk-lib (>=2.179.0,<2.180.0)", "boto3 (>=1.37.38,<2.0.0)", "boto_session_manager (>=1.8.1,<2.0.0)", "cdk_mate (>=0.1.6,<0.2.0)", "cdkit (>=0.1.3,<0.2.0)", "home_secret (>=0.1.1,<1.0.0)", "moto (>=5.1.5,<6.0.0)", "pandas (>=2.0.0,<3.0.0)", "polars (>=1.0.0,<2.0.0)", "psycopg2-binary (>=2.9.10,<3.0.0)", "pytest (>=8.2.2,<9.0.0)", "pytest-cov (>=6.0.0,<7.0.0)", "redshift-connector (>=2.1.0,<3.0.0)", "rich (>=13.8.1,<14.0.0)", "sqlalchemy (>=2.0.33,<3.0.0)"]
 
 [[package]]
 name = "six"
@@ -4174,6 +4175,23 @@ typing-extensions = {version = ">=4.0", markers = "python_version < \"3.11\""}
 standard = ["colorama (>=0.4) ; sys_platform == \"win32\"", "httptools (>=0.6.3)", "python-dotenv (>=0.13)", "pyyaml (>=5.1)", "uvloop (>=0.15.1) ; sys_platform != \"win32\" and sys_platform != \"cygwin\" and platform_python_implementation != \"PyPy\"", "watchfiles (>=0.13)", "websockets (>=10.4)"]
 
 [[package]]
+name = "vislog"
+version = "0.1.2"
+description = "Bring visual effect to your logging message."
+optional = true
+python-versions = ">=3.7"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "vislog-0.1.2-py3-none-any.whl", hash = "sha256:21311339dda1e7ba7164a7e2ee0c3806a2578e9ded94b93cf6cb13bc19c405a0"},
+    {file = "vislog-0.1.2.tar.gz", hash = "sha256:25a2f1f4285a9cfb113a5e55401845d3562f949492bec329daeb23d7b144bb70"},
+]
+
+[package.extras]
+docs = ["Sphinx (==5.3.0)", "docfly (==2.0.3)", "furo (==2023.03.27)", "ipython (==8.10.0)", "nbsphinx (==0.8.12)", "pygments (==2.15.1)", "rstobj (==1.2.1)", "sphinx-copybutton (==0.5.1)", "sphinx-design (==0.5.0)", "sphinx-jinja (==2.0.2)"]
+tests = ["pytest", "pytest-cov"]
+
+[[package]]
 name = "wcwidth"
 version = "0.2.13"
 description = "Measures the displayed width of unicode strings in a terminal"
@@ -4347,7 +4365,7 @@ type = ["pytest-mypy"]
 auto = []
 aws = ["boto3", "boto_session_manager"]
 aws-redshift = ["aws_sdk_polars", "redshift_connector", "s3pathlib", "simple_aws_redshift"]
-dev = ["aws-cdk-lib", "boto3", "boto_session_manager", "build", "cdk_mate", "claude-desktop-config", "polars", "rich", "sqlalchemy_mate", "twine", "wheel"]
+dev = ["aws-cdk-lib", "boto3", "boto_session_manager", "build", "cdk_mate", "claude-desktop-config", "polars", "rich", "sqlalchemy_mate", "twine", "vislog", "wheel"]
 doc = ["Sphinx", "docfly", "furo", "ipython", "nbsphinx", "pygments", "rstobj", "sphinx-copybutton", "sphinx-design", "sphinx-jinja"]
 mssql = ["pymssql"]
 mysql = ["PyMySQL"]
@@ -4359,4 +4377,4 @@ test = ["pytest", "pytest-asyncio", "pytest-cov", "requests"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "4d69329df761878b2f55939d4bbc2fa2169324c6e52bec573a2601d1ce5ad121"
+content-hash = "83e7fd6e7bc14dc6568882ff1638880ee9058d97775b56a85a8c00c19980a3f3"
