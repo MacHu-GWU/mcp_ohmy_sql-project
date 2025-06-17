@@ -53,7 +53,7 @@ def encode_column_info(
         else ""
     )
     nn = f"*{LLMColumnConstraintEnum.NN.value}" if column_info.notnull else ""
-    encoding = f"*{column_info.encoding}"
+    encoding = f"*{column_info.encoding}" if column_info.encoding else ""
     text = f"{col_name}:{col_type}{dk}{sk}{nn}{encoding}"
     return text
 
@@ -156,7 +156,7 @@ def encode_schema_info(
         tables.append(table)
     text = TemplateEnum.schema_info.render(
         schema_name=schema_info.name,
-        schema_description=schema_info.comment if schema_info.comment else "",
+        schema_description=f":'{schema_info.comment}'" if schema_info.comment else "",
         tables=tables,
     )
     return text
@@ -215,7 +215,7 @@ def encode_database_info(
     text = TemplateEnum.database_info.render(
         database_type=database_info.db_type.value,
         database_name=database_info.name,
-        database_description=database_info.comment if database_info.comment else "",
+        database_description=f":'{database_info.comment}'" if database_info.comment else "",
         schemas=schemas,
     )
     return text

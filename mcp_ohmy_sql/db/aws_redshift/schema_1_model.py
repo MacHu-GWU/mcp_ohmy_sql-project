@@ -20,7 +20,7 @@ class ColumnInfo(BaseColumnInfo):
     llm_type: T.Optional[LLMTypeEnum] = Field(default=None)
     dist_key: bool = Field(default=False)
     sort_key_position: int = Field()
-    encoding: str = Field()
+    encoding: T.Optional[str] = Field(default=None)
     notnull: T.Optional[bool] = Field(default=None)
 
 

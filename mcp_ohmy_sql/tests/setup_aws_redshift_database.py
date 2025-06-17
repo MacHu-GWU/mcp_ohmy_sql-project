@@ -162,5 +162,5 @@ def insert_all_data_to_redshift(
                     table=table,
                 )
             conn.commit()
-            break
+            # break
     logger.info("Done")

@@ -43,7 +43,7 @@ column_info_3 = ColumnInfo(
     llm_type=LLMTypeEnum.STR,
     dist_key=False,
     sort_key_position=0,
-    encoding="lzo",
+    encoding=None,
     notnull=False,
 )
 
@@ -83,7 +83,7 @@ def test_encode_column_info():
     assert s == expected
 
     s = encode_column_info(column_info_3)
-    expected = "description:str*lzo"
+    expected = "description:str"
     assert s == expected
 
 

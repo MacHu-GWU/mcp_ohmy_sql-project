@@ -16,6 +16,7 @@ from rich import print as rprint
 )
 def test_new_column_info(
     rs_conn,
+    rs_data,
 ):
     database = DatabaseEnum.chinook_redshift
     schema = database.schemas[0]

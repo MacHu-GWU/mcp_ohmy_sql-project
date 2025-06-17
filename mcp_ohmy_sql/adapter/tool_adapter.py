@@ -7,12 +7,28 @@ import textwrap
 from ..constants import DbTypeEnum
 
 from ..db.relational import api as relational
+from ..db.aws_redshift import api as aws_redshift
 from ..sa.api import (
     execute_select_query,
 )
+from ..aws.aws_redshift.api import execute_select_query_on_aws_redshift
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .adapter import Adapter
+
+
+def format_query_result(
+    duration: float,
+    query_result_text: str,
+):
+    lines = [
+        "# Execution Time",
+        f"{duration:.3f} seconds",
+        "",
+        "# Query Result",
+        query_result_text,
+    ]
+    return "\n".join(lines)
 
 
 class ToolAdapterMixin:
@@ -114,10 +130,17 @@ class ToolAdapterMixin:
                 "Available Tables, Views, and Materialized Views:",
             ]
             for table_info in schema_info.tables:
-                table_type_name = relational.TABLE_TYPE_NAME_MAPPING[
-                    table_info.object_type.value
-                ]
-                line = f"- {table_type_name} {table_info.name!r}: {len(table_info.columns)} columns, {table_info.comment or 'No comment'}"
+                line = f"- {table_info.object_type.table_type.value} {table_info.name!r}: {len(table_info.columns)} columns, {table_info.comment or 'No comment'}"
+                lines.append(line)
+            return "\n".join(lines)
+        elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
+            database_info = self.get_aws_redshift_database_info(database)
+            schema_info = database_info.schemas_mapping[schema.name]
+            lines = [
+                "Available Tables, Views, and Materialized Views:",
+            ]
+            for table_info in schema_info.tables:
+                line = f"- {table_info.object_type.table_type.value} {table_info.name!r}: {len(table_info.columns)} columns, {table_info.comment or 'No comment'}"
                 lines.append(line)
             return "\n".join(lines)
         else:
@@ -182,6 +205,10 @@ class ToolAdapterMixin:
             ]:
                 database_info = self.get_relational_database_info(database)
                 s = relational.encode_database_info(database_info)
+                database_lines.append(s)
+            elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
+                database_info = self.get_aws_redshift_database_info(database)
+                s = aws_redshift.encode_database_info(database_info)
                 database_lines.append(s)
             else:
                 raise NotImplementedError(
@@ -261,6 +288,11 @@ class ToolAdapterMixin:
             schema_info = self.get_relational_schema_info(database, schema)
             s = relational.encode_schema_info(schema_info)
             return s
+        elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
+            database_info = self.get_aws_redshift_database_info(database)
+            schema_info = database_info.schemas_mapping[schema.name]
+            s = aws_redshift.encode_schema_info(schema_info)
+            return s
         else:
             raise NotImplementedError(
                 f"Database type {database.db_type} is not supported."
@@ -331,14 +363,23 @@ class ToolAdapterMixin:
                 params=params,
             )
             duration = time.time() - start_time
-            lines = [
-                "# Execution Time",
-                f"{duration:.3f} seconds",
-                "",
-                "# Query Result",
-                query_result_text,
-            ]
-            return "\n".join(lines)
+            s = format_query_result(
+                duration=duration,
+                query_result_text=query_result_text,
+            )
+            return s
+        elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
+            rs_conn = database.connection.rs_conn
+            query_result_text = execute_select_query_on_aws_redshift(
+                conn=rs_conn,
+                query=sql,
+                params=params,
+            )
+            duration = time.time() - start_time
+            s = format_query_result(
+                duration=duration, query_result_text=query_result_text
+            )
+            return s
         else:
             raise NotImplementedError(
                 f"Database type {database.db_type} is not supported."

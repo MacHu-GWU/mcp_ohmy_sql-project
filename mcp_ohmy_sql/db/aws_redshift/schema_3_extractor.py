@@ -163,12 +163,15 @@ def new_database_info(
             column_tuple_mapping[schema_name][table_name] = [row]
 
     table_tuple_mapping: dict[str, list[tuple]] = {}
+    table_name_set: set[str] = set()
     for row in table_rows:
         schema_name = row[0]
+        table_name = row[1]
         try:
             table_tuple_mapping[schema_name].append(row)
         except KeyError:
             table_tuple_mapping[schema_name] = [row]
+        table_name_set.add(table_name)
 
     schemas = list()
     for row in schema_rows:
@@ -186,6 +189,10 @@ def new_database_info(
             table_name = table_row[1]
             if not match(table_name, include, exclude):
                 continue
+            if table_name.endswith("_pkey"):
+                if table_name[:-5] in table_name_set:
+                    # Skip primary key tables
+                    continue
 
             columns = list()
             for column_row in column_tuple_mapping.get(schema_name, {}).get(

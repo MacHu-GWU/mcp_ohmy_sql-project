@@ -261,7 +261,7 @@ def sa_engine_factory():
 
         # drop views
         drop_all_views(engine=engine, db_type=db_type)
-        drop_all_redshift_tables(engine=engine, metadata=Base.metadata)
+        drop_all_tables(engine=engine, metadata=Base.metadata)
 
         # clear metadata
         metadata.clear()
