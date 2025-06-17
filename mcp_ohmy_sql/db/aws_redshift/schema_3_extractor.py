@@ -1,10 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import typing as T
-import sqlalchemy as sa
-from sqlalchemy.types import TypeEngine
+"""
+Reference:
 
-from ...constants import ObjectTypeEnum, DbTypeEnum, LLMTypeEnum
+- https://docs.aws.amazon.com/redshift/latest/dg/c_Supported_data_types.html
+- https://docs.aws.amazon.com/redshift/latest/dg/r_PG_TABLE_DEF.html
+"""
+
+import typing as T
+
+import redshift_connector
+from enum_mate.api import BetterStrEnum
+
+from ...constants import ObjectTypeEnum, LLMTypeEnum
 from ...utils import match
 
 from .sql import SqlEnum
@@ -21,157 +29,196 @@ except ImportError:  # pragma: no cover
     pass
 
 
-def sqlalchemy_type_to_llm_type(type_: TypeEngine) -> LLMTypeEnum:
+class RedshiftDataTypeEnum(BetterStrEnum):
+    """ """
+
+    # Numeric Types
+    smallint = "smallint"
+    integer = "integer"
+    bigint = "bigint"
+    real = "real"
+    double_precision = "double precision"
+    numeric = "numeric"
+    decimal = "decimal"
+    # Character Types
+    character = "character"
+    character_varying = "character varying"
+    char = "char"
+    varchar = "varchar"
+    text = "text"
+    # Date/Time Types
+    date = "date"
+    time_without_time_zone = "time without time zone"
+    time_with_time_zone = "time with time zone"
+    timestamp_without_time_zone = "timestamp without time zone"
+    timestamp_with_time_zone = "timestamp with time zone"
+    interval_year_to_month = "interval year to month"
+    interval_day_to_second = "interval day to second"
+    # Boolean Type
+    boolean = "boolean"
+    # Advanced/Special Types
+    super = "super"
+    hllsketch = "hllsketch"
+    varbyte = "varbyte"
+    geometry = "geometry"
+    geography = "geography"
+
+
+REDSHIFT_TYPE_TO_LLM_TYPE_MAPPING = {
+    # Numeric Types
+    RedshiftDataTypeEnum.smallint.value: LLMTypeEnum.INT,
+    RedshiftDataTypeEnum.integer.value: LLMTypeEnum.INT,
+    RedshiftDataTypeEnum.bigint.value: LLMTypeEnum.INT,
+    RedshiftDataTypeEnum.real.value: LLMTypeEnum.FLOAT,
+    RedshiftDataTypeEnum.double_precision.value: LLMTypeEnum.FLOAT,
+    RedshiftDataTypeEnum.numeric.value: LLMTypeEnum.FLOAT,
+    RedshiftDataTypeEnum.decimal.value: LLMTypeEnum.FLOAT,
+    # Character Types
+    RedshiftDataTypeEnum.character.value: LLMTypeEnum.STR,
+    RedshiftDataTypeEnum.character_varying.value: LLMTypeEnum.STR,
+    RedshiftDataTypeEnum.char.value: LLMTypeEnum.STR,
+    RedshiftDataTypeEnum.varchar.value: LLMTypeEnum.STR,
+    RedshiftDataTypeEnum.text.value: LLMTypeEnum.STR,
+    # Date/Time Types
+    RedshiftDataTypeEnum.date.value: LLMTypeEnum.DATE,
+    RedshiftDataTypeEnum.time_without_time_zone.value: LLMTypeEnum.TIME,
+    RedshiftDataTypeEnum.time_with_time_zone.value: LLMTypeEnum.TIME,
+    RedshiftDataTypeEnum.timestamp_without_time_zone.value: LLMTypeEnum.TS,
+    RedshiftDataTypeEnum.timestamp_with_time_zone.value: LLMTypeEnum.TS,
+    RedshiftDataTypeEnum.interval_year_to_month.value: LLMTypeEnum.DT,
+    RedshiftDataTypeEnum.interval_day_to_second.value: LLMTypeEnum.DT,
+    # Boolean Type
+    RedshiftDataTypeEnum.boolean.value: LLMTypeEnum.BOOL,
+    # Advanced/Special Types
+    RedshiftDataTypeEnum.super.value: LLMTypeEnum.STR,
+    RedshiftDataTypeEnum.hllsketch.value: LLMTypeEnum.STR,
+    RedshiftDataTypeEnum.varbyte.value: LLMTypeEnum.BLOB,
+    RedshiftDataTypeEnum.geometry.value: LLMTypeEnum.STR,
+    RedshiftDataTypeEnum.geography.value: LLMTypeEnum.STR,
+}
+
+
+def redshift_type_to_llm_type(rs_type: str) -> LLMTypeEnum:
     """
-    Convert SQLAlchemy type objects to simplified type representations suitable
-    for LLM consumption. It handles both generic SQLAlchemy types
-    (e.g., String, Integer) and SQL standard types (e.g., VARCHAR, BIGINT).
+    Convert redshift type simplified type representations suitable
+    for LLM consumption.
 
-    :param type_: A SQLAlchemy TypeEngine instance representing a column type
+    :param rs_type: A redshift type
 
-    :returns: A new ColumnType instance with mapped type information
-
-    Example:
-        >>> from sqlalchemy import String, Integer, DECIMAL
-        >>> sqlalchemy_type_to_llm_type(String(50))
-        'STR'
-        >>> sqlalchemy_type_to_llm_type(Integer())
-        'INT'
-        >>> sqlalchemy_type_to_llm_type(DECIMAL(10, 2))
-        'DEC'
+    :returns: A new llm type name
     """
-    # Get the string representation of the type (includes parameters like VARCHAR(50))
-    type_name = str(type_)
-    # Try to get the visit name for type mapping
-    visit_name = getattr(type_, "__visit_name__", None)
-    # Map to simplified LLM type, fallback to full name if not in mapping
-    llm_type_name = (
-        SQLALCHEMY_TYPE_MAPPING.get(visit_name, type_name) if visit_name else type_name
-    )
+    if RedshiftDataTypeEnum.is_valid_value(rs_type):
+        llm_type_name = REDSHIFT_TYPE_TO_LLM_TYPE_MAPPING[
+            RedshiftDataTypeEnum.get_by_value(rs_type)
+        ]
+    else:
+        llm_type_name = None
+        for redshift_data_type in RedshiftDataTypeEnum:
+            if rs_type.startswith(redshift_data_type.value):
+                llm_type_name = REDSHIFT_TYPE_TO_LLM_TYPE_MAPPING[
+                    redshift_data_type.value
+                ]
+                break
+        if llm_type_name is None:
+            raise ValueError(f"Unsupported Redshift type: {rs_type}")
     return llm_type_name
 
 
-def new_column_info(
-    table: sa.Table,
-    column: sa.Column,
-) -> ColumnInfo:
-    foreign_keys = list()
-    for foreign_key in column.foreign_keys:
-        foreign_key_info = new_foreign_key_info(foreign_key)
-        # rprint(foreign_key_info.model_dump())  # for debug only
-        foreign_keys.append(foreign_key_info)
-    column_info = ColumnInfo(
-        name=column.name,
-        fullname=f"{table.name}.{column.name}",
-        type=str(column.type),
-        llm_type=sqlalchemy_type_to_llm_type(column.type),
-        primary_key=column.primary_key,
-        nullable=column.nullable,
-        index=column.index,
-        unique=column.unique,
-        system=column.system,
-        doc=column.doc,
-        comment=column.comment,
-        autoincrement=str(column.autoincrement),
-        constraints=[str(c) for c in column.constraints],
-        foreign_keys=foreign_keys,
-        computed=bool(column.computed),
-        identity=bool(column.identity),
-    )
-    # rprint(column_info.model_dump())  # for debug only
-    return column_info
-
-
-def new_table_info(
-    table: sa.Table,
-    object_type: ObjectTypeEnum,
-) -> TableInfo:
-    foreign_keys = list()
-    for foreign_key in table.foreign_keys:
-        foreign_key_info = new_foreign_key_info(foreign_key)
-        # rprint(foreign_key_info.model_dump())  # for debug only
-        foreign_keys.append(foreign_key_info)
-
-    columns = list()
-    for _, column in table.columns.items():
-        column_info = new_column_info(table=table, column=column)
-        # rprint(column_info.model_dump())  # for debug only
-        columns.append(column_info)
-
-    table_info = TableInfo(
-        object_type=object_type,
-        name=table.name,
-        comment=table.comment,
-        fullname=table.fullname,
-        primary_key=[col.name for col in table.primary_key.columns],
-        foreign_keys=foreign_keys,
-        columns=columns,
-    )
-    # rprint(table_info.model_dump())  # for debug only
-    return table_info
-
-
-def new_schema_info(
-    engine: sa.engine.Engine,
-    metadata: sa.MetaData,
-    schema_name: T.Optional[str] = None,
-    include: T.Optional[list[str]] = None,
-    exclude: T.Optional[list[str]] = None,
-) -> SchemaInfo:
-    insp = sa.inspect(engine)
-    try:
-        view_names = set(insp.get_view_names(schema=schema_name))
-    except NotImplementedError:  # pragma: no cover
-        view_names = set()
-    try:
-        materialized_view_names = set(insp.get_materialized_view_names())
-    except NotImplementedError:  # pragma: no cover
-        materialized_view_names = set()
-
-    if include is None:  # pragma: no cover
-        include = []
-    if exclude is None:  # pragma: no cover
-        exclude = []
-
-    tables = list()
-    for table in metadata.sorted_tables:
-        table_name = table.name
-        # don't include tables from other schemas
-        if table.schema != schema_name:  # pragma: no cover
-            continue
-        # don't include tables that don't match the criteria
-        if match(table_name, include, exclude) is False:
-            continue
-
-        if table_name in view_names:  # pragma: no cover
-            object_type = ObjectTypeEnum.VIEW
-        elif table_name in materialized_view_names:  # pragma: no cover
-            object_type = ObjectTypeEnum.MATERIALIZED_VIEW
-        else:
-            object_type = ObjectTypeEnum.TABLE
-        table_info = new_table_info(table=table, object_type=object_type)
-        # rprint(table_info.model_dump()) # for debug only
-        tables.append(table_info)
-
-    schema_info = SchemaInfo(
-        name=metadata.schema or "",
-        tables=tables,
-    )
-    # rprint(schema_info.model_dump()) # for debug only
-    return schema_info
+class SchemaTableFilter(T.TypedDict):
+    schema: str
+    include: list[str]
+    exclude: list[str]
 
 
 def new_database_info(
-    name: str,
-    db_type: DbTypeEnum,
-    schemas: list[SchemaInfo],
-    comment: T.Optional[str] = None,
+    conn: redshift_connector.Connection,
+    db_name: str,
+    schema_table_filter_list: T.Optional[list[SchemaTableFilter]] = None,
 ) -> DatabaseInfo:
+    if schema_table_filter_list is None:
+        schema_table_filter_list = list()
+    schema_table_filter_mapping: dict[str, SchemaTableFilter] = {
+        schema_table_filter["schema"]: schema_table_filter
+        for schema_table_filter in schema_table_filter_list
+    }
+
+    cursor = conn.cursor()
+    try:
+        column_rows = cursor.execute(SqlEnum.column_info_sql).fetchall()
+        table_rows = cursor.execute(SqlEnum.table_info_sql).fetchall()
+        schema_rows = cursor.execute(SqlEnum.schema_info_sql).fetchall()
+        cursor.close()
+    finally:
+        cursor.close()
+
+    column_tuple_mapping: dict[str, dict[str, list[tuple]]] = {}
+    for row in column_rows:
+        schema_name = row[0]
+        column_tuple_mapping.setdefault(schema_name, {})
+        table_name = row[1]
+        try:
+            column_tuple_mapping[schema_name][table_name].append(row)
+        except KeyError:
+            column_tuple_mapping[schema_name][table_name] = [row]
+
+    table_tuple_mapping: dict[str, list[tuple]] = {}
+    for row in table_rows:
+        schema_name = row[0]
+        try:
+            table_tuple_mapping[schema_name].append(row)
+        except KeyError:
+            table_tuple_mapping[schema_name] = [row]
+
+    schemas = list()
+    for row in schema_rows:
+        schema_name, schema_description = row[0], row[1]
+        if schema_name in schema_table_filter_mapping:
+            schema_table_filter = schema_table_filter_mapping[schema_name]
+            include = schema_table_filter.get("include", [])
+            exclude = schema_table_filter.get("exclude", [])
+        else:
+            include = []
+            exclude = []
+
+        tables = list()
+        for table_row in table_tuple_mapping.get(schema_name, []):
+            table_name = table_row[1]
+            if not match(table_name, include, exclude):
+                continue
+
+            columns = list()
+            for column_row in column_tuple_mapping.get(schema_name, {}).get(
+                table_name, []
+            ):
+                column_info = ColumnInfo(
+                    name=column_row[2],
+                    type=column_row[3],
+                    llm_type=redshift_type_to_llm_type(column_row[3]),
+                    dist_key=column_row[5],
+                    sort_key_position=column_row[6],
+                    encoding=column_row[4],
+                    notnull=column_row[7],
+                )
+                columns.append(column_info)
+            table_info = TableInfo(
+                object_type=ObjectTypeEnum.TABLE,
+                name=table_name,
+                dist_style=table_row[2],
+                owner=table_row[3],
+                columns=columns,
+            )
+            tables.append(table_info)
+
+        schema_info = SchemaInfo(
+            name=schema_name,
+            comment=schema_description,
+            tables=tables,
+        )
+        schemas.append(schema_info)
+
     database_info = DatabaseInfo(
-        name=name,
-        comment=comment,
-        db_type=db_type,
+        name=db_name,
         schemas=schemas,
     )
-    # rprint(database_info.model_dump()) # for debug only
+
     return database_info

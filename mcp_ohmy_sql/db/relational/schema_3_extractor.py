@@ -100,7 +100,7 @@ def sqlalchemy_type_to_llm_type(type_: TypeEngine) -> LLMTypeEnum:
 
     :param type_: A SQLAlchemy TypeEngine instance representing a column type
 
-    :returns: A new ColumnType instance with mapped type information
+    :returns: A new llm type name
 
     Example:
         >>> from sqlalchemy import String, Integer, DECIMAL

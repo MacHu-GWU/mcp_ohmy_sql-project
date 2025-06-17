@@ -19,6 +19,7 @@ except ImportError:  # pragma: no cover
     pass
 try:
     import redshift_connector
+    import simple_aws_redshift.api as aws_rs
 except ImportError:  # pragma: no cover
     pass
 
@@ -89,7 +90,7 @@ class AWSRedshiftConnection(BaseConnection):
         return self.boto_session_kwargs.get_bsm()
 
     @cached_property
-    def conn(self) -> "redshift_connector.Connection":
+    def rs_conn(self) -> "redshift_connector.Connection":
         return redshift_connector.connect(
             **self.redshift_connector_kwargs,
         )

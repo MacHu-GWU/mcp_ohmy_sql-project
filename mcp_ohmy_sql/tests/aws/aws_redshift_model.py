@@ -21,6 +21,9 @@ from ..chinook.chinook_data_model import (
 )
 
 
+# ------------------------------------------------------------------------------
+# Create Table / View SQL Statements
+# ------------------------------------------------------------------------------
 # Artist table - Small lookup table, use DISTSTYLE ALL for better joins
 sql_create_table_artist = textwrap.dedent(
     f"""
@@ -239,79 +242,8 @@ ORDER BY COALESCE(SUM(il.{InvoiceLine.UnitPrice.name} * il.{InvoiceLine.Quantity
 """
 ).strip()
 
-# Complete DDL script that creates all tables in dependency order
-sql_create_all_tables = textwrap.dedent(
-    f"""
--- Create tables in dependency order to handle foreign key constraints
-
--- 1. Create lookup tables first (no dependencies)
-{sql_create_table_artist}
-
-{sql_create_table_genre}
-
-{sql_create_table_mediatype}
-
-{sql_create_table_employee}
-
--- 2. Create tables with single dependencies
-{sql_create_table_album}
-
-{sql_create_table_playlist}
-
-{sql_create_table_customer}
-
--- 3. Create tables with multiple dependencies
-{sql_create_table_track}
-
-{sql_create_table_playlisttrack}
-
-{sql_create_table_invoice}
-
--- 4. Create main fact table last
-{sql_create_table_invoiceline}
-
--- 5. Create views
-{sql_create_view_albumsalesstats}
-"""
-).strip()
-
-# Individual drop statements using enum values
-# fmt: off
-sql_drop_view_albumsalesstats = f"DROP VIEW IF EXISTS {ChinookViewNameEnum.AlbumSalesStats.value};"
-sql_drop_table_invoiceline = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.InvoiceLine.value};"
-sql_drop_table_invoice = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Invoice.value};"
-sql_drop_table_playlisttrack = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.PlaylistTrack.value};"
-sql_drop_table_track = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Track.value};"
-sql_drop_table_customer = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Customer.value};"
-sql_drop_table_playlist = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Playlist.value};"
-sql_drop_table_album = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Album.value};"
-sql_drop_table_employee = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Employee.value};"
-sql_drop_table_mediatype = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.MediaType.value};"
-sql_drop_table_genre = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Genre.value};"
-sql_drop_table_artist = f"DROP TABLE IF EXISTS {ChinookTableNameEnum.Artist.value};"
-# fmt: on
-
-# Drop all tables and views script using f-string composition
-sql_drop_all_tables = f"""
--- Drop views first
-{sql_drop_view_albumsalesstats}
-
--- Drop tables in reverse dependency order (fact tables first, then dimension tables)
-{sql_drop_table_invoiceline}
-{sql_drop_table_invoice}
-{sql_drop_table_playlisttrack}
-{sql_drop_table_track}
-{sql_drop_table_customer}
-{sql_drop_table_playlist}
-{sql_drop_table_album}
-{sql_drop_table_employee}
-{sql_drop_table_mediatype}
-{sql_drop_table_genre}
-{sql_drop_table_artist}
-"""
-
 # Dictionary for easy access to individual table scripts
-table_creation_scripts = {
+sql_create_table_mappings_tmp = {
     ChinookTableNameEnum.Artist.value: sql_create_table_artist,
     ChinookTableNameEnum.Album.value: sql_create_table_album,
     ChinookTableNameEnum.Genre.value: sql_create_table_genre,
@@ -325,28 +257,41 @@ table_creation_scripts = {
     ChinookTableNameEnum.InvoiceLine.value: sql_create_table_invoiceline,
     ChinookViewNameEnum.AlbumSalesStats.value: sql_create_view_albumsalesstats,
 }
+# reorder the mappings to ensure the right creation order
+sql_create_table_mappings = dict()
+for table_name in ChinookTableNameEnum.get_values():
+    sql_create_table_mappings[table_name] = sql_create_table_mappings_tmp[table_name]
+for view_name in ChinookViewNameEnum.get_values():
+    sql_create_table_mappings[view_name] = sql_create_table_mappings_tmp[view_name]
 
-# Dictionary for easy access to individual drop scripts (reordered: views first, then reverse dependency order)
-table_drop_scripts = {
-    # Views first
-    ChinookViewNameEnum.AlbumSalesStats.value: sql_drop_view_albumsalesstats,
-    # Fact tables (most dependent)
-    ChinookTableNameEnum.InvoiceLine.value: sql_drop_table_invoiceline,
-    ChinookTableNameEnum.Invoice.value: sql_drop_table_invoice,
-    ChinookTableNameEnum.PlaylistTrack.value: sql_drop_table_playlisttrack,
-    ChinookTableNameEnum.Track.value: sql_drop_table_track,
-    # Dimension tables with dependencies
-    ChinookTableNameEnum.Customer.value: sql_drop_table_customer,
-    ChinookTableNameEnum.Album.value: sql_drop_table_album,
-    # Lookup tables (least dependent)
-    ChinookTableNameEnum.Playlist.value: sql_drop_table_playlist,
-    ChinookTableNameEnum.Employee.value: sql_drop_table_employee,
-    ChinookTableNameEnum.MediaType.value: sql_drop_table_mediatype,
-    ChinookTableNameEnum.Genre.value: sql_drop_table_genre,
-    ChinookTableNameEnum.Artist.value: sql_drop_table_artist,
-}
+# Complete DDL script that creates all tables in dependency order
+lines = []
+for table_name in ChinookTableNameEnum.get_values():
+    sql = sql_create_table_mappings[table_name]
+    lines.append(sql)
+for view_name in ChinookViewNameEnum.get_values():
+    sql = sql_create_table_mappings[view_name]
+    lines.append(sql)
+sql_create_all_tables = "\n".join(lines)
 
+# Individual drop statements using enum values
+sql_drop_table_mappings = {}
+for view_name in ChinookViewNameEnum.get_values()[::-1]:
+    sql = f"DROP VIEW IF EXISTS {view_name};"
+    sql_drop_table_mappings[view_name] = sql
+for table_name in ChinookTableNameEnum.get_values()[::-1]:
+    sql = f"DROP TABLE IF EXISTS {table_name};"
+    sql_drop_table_mappings[table_name] = sql
 
+# Drop all tables and views script using f-string composition
+lines = []
+for sql in sql_drop_table_mappings.values():
+    lines.append(sql)
+sql_drop_all_tables = "\n".join(lines)
+
+# ------------------------------------------------------------------------------
+# Polars data schema for all Tables
+# ------------------------------------------------------------------------------
 # Artist table schema
 pl_schema_artist = {"ArtistId": pl.Int32, "Name": pl.Utf8}
 

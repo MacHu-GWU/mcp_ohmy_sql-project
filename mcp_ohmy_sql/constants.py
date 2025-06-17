@@ -15,11 +15,15 @@ class LLMColumnConstraintEnum(BetterStrEnum):
     These constraints are designed to be concise while retaining essential information.
     """
 
+    # relational database
     PK = "PK"  # Primary Key
     UQ = "UQ"  # Unique Key
     IDX = "IDX"  # Index
     FK = "FK"  # Foreign Key
     NN = "NN"  # Not Null
+    # aws redshift
+    DK = "DK"  # Distribution Key
+    SK = "SK"  # Sort Key
 
 
 class LLMTypeEnum(BetterStrEnum):
@@ -51,6 +55,10 @@ class ObjectTypeEnum(BetterStrEnum):
     SCHEMA = "schema"
     DATABASE = "database"
 
+    @property
+    def table_type(self) -> "TableTypeEnum":
+        return db_object_type_to_table_type_mapping[self]
+
 
 class DbTypeEnum(BetterStrEnum):
     SQLITE = "sqlite"
@@ -69,6 +77,13 @@ class TableTypeEnum(BetterStrEnum):
     TABLE = "Table"
     VIEW = "View"
     MATERIALIZED_VIEW = "MaterializedView"
+
+
+db_object_type_to_table_type_mapping = {
+    ObjectTypeEnum.TABLE: TableTypeEnum.TABLE,
+    ObjectTypeEnum.VIEW: TableTypeEnum.VIEW,
+    ObjectTypeEnum.MATERIALIZED_VIEW: TableTypeEnum.MATERIALIZED_VIEW,
+}
 
 
 class EnvVar(BaseModel):

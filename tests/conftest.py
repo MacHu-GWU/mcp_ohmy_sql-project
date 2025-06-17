@@ -6,6 +6,7 @@ import dataclasses
 
 import pytest
 import sqlalchemy as sa
+import redshift_connector
 
 # ===== Top-level modules
 from mcp_ohmy_sql.constants import ObjectTypeEnum, DbTypeEnum, EnvVarEnum
@@ -19,7 +20,7 @@ from mcp_ohmy_sql.db.relational.schema_1_model import (
     SchemaInfo,
     DatabaseInfo,
 )
-from mcp_ohmy_sql.db.relational.schema_2_extractor import (
+from mcp_ohmy_sql.db.relational.schema_3_extractor import (
     new_foreign_key_info,
     new_column_info,
     new_table_info,
@@ -50,6 +51,11 @@ from mcp_ohmy_sql.tests.setup_relational_database import (
     insert_all_data,
     drop_all_views,
     create_all_views,
+)
+from mcp_ohmy_sql.tests.setup_aws_redshift_database import (
+    drop_all_redshift_tables,
+    create_all_redshift_tables,
+    insert_all_data_to_redshift,
 )
 from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 
@@ -229,10 +235,12 @@ def sa_engine_factory():
         db_type: DbTypeEnum,
     ) -> SaEngineObjs:
         # create tables and views
-        create_all_tables(engine=engine, metadata=Base.metadata, drop_first=True)
+        create_all_redshift_tables(
+            engine=engine, metadata=Base.metadata, drop_first=True
+        )
         create_all_views(engine=engine, db_type=db_type)
         # insert all data
-        insert_all_data(engine=engine, metadata=Base.metadata)
+        insert_all_data_to_redshift(engine=engine, metadata=Base.metadata)
 
         # get the latest metadata with views
         metadata = sa.MetaData()
@@ -255,7 +263,7 @@ def sa_engine_factory():
 
         # drop views
         drop_all_views(engine=engine, db_type=db_type)
-        drop_all_tables(engine=engine, metadata=Base.metadata)
+        drop_all_redshift_tables(engine=engine, metadata=Base.metadata)
 
         # clear metadata
         metadata.clear()
@@ -281,15 +289,25 @@ def postgres_sa_engine_objs(
     )
 
 
-# @pytest.fixture(scope="class")
-# def sa_data_factory(
-#     sa_engine_factory,
-# ):
-#     def _create_sa(
-#         engine: sa.Engine,
-#         db_type: DbTypeEnum,
-#     ):
-#         sa_engine_objs = sa_engine_factory(engine=engine, db_type=db_type)
-#
-#
-#     return _create_sa
+# ------------------------------------------------------------------------------
+# AWS Redshift fixtures
+# ------------------------------------------------------------------------------
+@pytest.fixture(scope="class")
+def rs_conn() -> redshift_connector.Connection:
+    """
+    Create Redshift Connection and prepare the database with all tables, views,
+    and data for testing.
+    """
+    conn = DatabaseEnum.chinook_redshift.connection.rs_conn
+    # drop_all_redshift_tables(conn)
+    # create_all_redshift_tables(conn)
+    return conn
+
+
+@pytest.fixture(scope="class")
+def rs_data(rs_conn) -> None:
+    """
+    Insert all data into the Redshift database.
+    This fixture is used to prepare the database with data for testing.
+    """
+    insert_all_data_to_redshift(rs_conn)

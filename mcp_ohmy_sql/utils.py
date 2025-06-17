@@ -2,7 +2,7 @@
 
 import typing as T
 import re
-from typing import Pattern
+import textwrap
 
 
 def match(
@@ -73,7 +73,7 @@ def match(
     """
 
     # Convert wildcard patterns to regex patterns
-    def pattern_to_regex(pattern: str) -> Pattern:
+    def pattern_to_regex(pattern: str) -> T.Pattern:
         # Check if pattern contains regex metacharacters (excluding *)
         # If it does, treat it as a regex pattern, otherwise treat * as wildcard
         regex_chars = r"[.+?^${}()|[\]\\]"
@@ -111,3 +111,16 @@ def match(
             return True
 
     return False
+
+
+def dedent(text: str) -> str:
+    """
+    Dedent a string by removing common leading whitespace.
+
+    This is useful for cleaning up multi-line strings that may have inconsistent
+    indentation levels.
+
+    :param text: The input string to dedent.
+    :return: A dedented version of the input string.
+    """
+    return textwrap.dedent(text).strip()
