@@ -9,7 +9,7 @@ from pathlib import Path
 
 from ..constants import EnvVarEnum
 
-from .config_define import Config
+from .define import Config
 
 if "READTHEDOCS" in os.environ:  # pragma: no cover
     from ..paths import path_sample_config

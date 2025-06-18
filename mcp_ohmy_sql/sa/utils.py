@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import sqlalchemy as sa
+from ..lazy_import import sa
 
 from ..constants import DbTypeEnum
 
 
 def get_create_view_sql(
-    engine: sa.Engine,
-    select: sa.Select,
+    engine: "sa.Engine",
+    select: "sa.Select",
     view_name: str,
     db_type: DbTypeEnum,
 ) -> str:
@@ -63,3 +63,10 @@ def get_drop_view_sql(
         raise NotImplementedError(f"Unsupported database type: {db_type}")
     else:  # pragma: no cover
         raise NotImplementedError(f"Unsupported database type: {db_type}")
+
+
+def check_connection(engine: "sa.Engine") -> dict[str, int]:
+    sql = "SELECT 1 as value;"
+    with engine.connect() as conn:
+        rows = conn.execute(sa.text(sql)).mappings().fetchall()
+        return rows[0]

@@ -38,63 +38,8 @@ class Schema(BaseModel):
     table_filter: TableFilter = Field(default_factory=TableFilter)
 
 
-class BaseConnection(BaseModel):
-    type: str = Field()
-
-
-class SqlalchemyConnection(BaseConnection):
-    type: T.Literal["sqlalchemy"] = Field(default="sqlalchemy")
-    create_engine_kwargs: dict[str, T.Any] = Field(default_factory=dict)
-
-    @cached_property
-    def sa_engine(self) -> "sa.Engine":
-        return sa.create_engine(**self.create_engine_kwargs)
-
-
-class BotoSessionKwargs(BaseModel):
-    aws_access_key_id: T.Optional[str] = Field(default=None)
-    aws_secret_access_key: T.Optional[str] = Field(default=None)
-    aws_session_token: T.Optional[str] = Field(default=None)
-    region_name: T.Optional[str] = Field(default=None)
-    profile_name: T.Optional[str] = Field(default=None)
-    role_arn: T.Optional[str] = Field(default=None)
-    duration_seconds: int = Field(default=3600)
-    auto_refresh: bool = Field(default=False)
-
-    def get_bsm(self) -> "BotoSesManager":
-        kwargs = dict(
-            aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key,
-            aws_session_token=self.aws_session_token,
-            region_name=self.region_name,
-            profile_name=self.profile_name,
-        )
-        kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        bsm = BotoSesManager(**kwargs)
-        if isinstance(self.role_arn, str):
-            bsm = bsm.assume_role(
-                role_arn=self.role_arn,
-                duration_seconds=self.duration_seconds,
-                auto_refresh=self.auto_refresh,
-            )
-        return bsm
-
-
-class AWSRedshiftConnection(BaseConnection):
-    type: T.Literal["aws_redshift"] = Field(default="aws_redshift")
-    boto_session_kwargs: BotoSessionKwargs = Field(default_factory=BotoSessionKwargs)
-    redshift_connector_kwargs: dict[str, T.Any] = Field(default_factory=dict)
-
-    @cached_property
-    def bsm(self) -> "BotoSesManager":
-        return self.boto_session_kwargs.get_bsm()
-
-    @cached_property
-    def rs_conn(self) -> "redshift_connector.Connection":
-        return redshift_connector.connect(
-            **self.redshift_connector_kwargs,
-        )
-
+from .sqlalchemy import SqlalchemyConnection
+from .aws_redshift import AWSRedshiftConnection
 
 T_CONNECTION = T.Union[
     SqlalchemyConnection,

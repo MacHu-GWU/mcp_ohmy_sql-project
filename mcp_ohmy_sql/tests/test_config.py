@@ -14,19 +14,20 @@ from which_runtime.api import runtime
 
 from ..paths import path_sample_config
 from ..constants import DbTypeEnum, EnvVarEnum
-from ..config.config_define import (
+from ..config.api import (
     Settings,
     TableFilter,
     Schema,
-    SqlalchemyConnection,
     BotoSessionKwargs,
+    SqlalchemyConnection,
+    AwsRedshiftConnectionMethodEnum,
     AWSRedshiftConnection,
     Database,
     Config,
 )
 
 from .chinook.chinook_data_file import path_Chinook_Sqlite_sqlite
-from .aws.constants import aws_profile, database_name, workgroup_name
+from .aws.constants import aws_profile, database_name, namespace_name, workgroup_name
 
 
 class DatabaseEnum:
@@ -39,7 +40,7 @@ class DatabaseEnum:
         description="Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
         db_type=DbTypeEnum.SQLITE.value,
         connection=SqlalchemyConnection(
-            create_engine_kwargs={"url": f"sqlite:///{path_Chinook_Sqlite_sqlite}"},
+            url=f"sqlite:///{path_Chinook_Sqlite_sqlite}",
         ),
         schemas=[
             Schema(
@@ -55,9 +56,12 @@ class DatabaseEnum:
         description="Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
         db_type=DbTypeEnum.POSTGRESQL.value,
         connection=SqlalchemyConnection(
-            create_engine_kwargs={
-                "url": "postgresql+psycopg2://postgres:password@localhost:40311/postgres",
-            }
+            drivername="postgresql+psycopg2",
+            username="postgres",
+            password="password",
+            host="localhost",
+            port=40311,
+            database="postgres",
         ),
         schemas=[
             Schema(
@@ -68,30 +72,34 @@ class DatabaseEnum:
             )
         ],
     )
-    # chinook_redshift = Database(
-    #     identifier="chinook redshift",
-    #     description="Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
-    #     db_type=DbTypeEnum.AWS_REDSHIFT.value,
-    #     connection=AWSRedshiftConnection(
-    #         boto_session_kwargs=BotoSessionKwargs(profile_name=aws_profile),
-    #         redshift_connector_kwargs=dict(
-    #             iam=True,
-    #             database=database_name,
-    #             is_serverless=True,
-    #             serverless_work_group=workgroup_name,
-    #             profile=aws_profile,
-    #             timeout=10,
-    #         ),
-    #     ),
-    #     schemas=[
-    #         Schema(
-    #             table_filter=TableFilter(
-    #                 include=[],
-    #                 exclude=["Playlist", "PlaylistTrack"],
-    #             )
-    #         )
-    #     ],
-    # )
+    chinook_redshift = Database(
+        identifier="chinook redshift",
+        description="Chinook is a sample database available for SQL Server, Oracle, MySQL, etc. It can be created by running a single SQL script. Chinook database is an alternative to the Northwind database, being ideal for demos and testing ORM tools targeting single and multiple database servers.",
+        db_type=DbTypeEnum.AWS_REDSHIFT.value,
+        connection=AWSRedshiftConnection(
+            method=AwsRedshiftConnectionMethodEnum.sqlalchemy.value,
+            boto_session_kwargs=BotoSessionKwargs(profile_name=aws_profile),
+            namespace_name=namespace_name,
+            workgroup_name=workgroup_name,
+            # redshift_connector_kwargs=dict(
+            #     iam=True,
+            #     database=database_name,
+            #     is_serverless=True,
+            #     serverless_work_group=workgroup_name,
+            #     profile=aws_profile,
+            #     timeout=10,
+            # ),
+        ),
+        schemas=[
+            Schema(
+                name="public",
+                table_filter=TableFilter(
+                    include=[],
+                    exclude=["Playlist", "PlaylistTrack"],
+                ),
+            )
+        ],
+    )
 
 
 databases = [
@@ -101,7 +109,7 @@ databases = [
 # we only use sqlite in CI test runtime
 if runtime.is_local_runtime_group:
     databases.append(DatabaseEnum.chinook_postgres)
-    # databases.append(DatabaseEnum.chinook_redshift)
+    databases.append(DatabaseEnum.chinook_redshift)
 
 test_config = Config(
     version="0.1.1",

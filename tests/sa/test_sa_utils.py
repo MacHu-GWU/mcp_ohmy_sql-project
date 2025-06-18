@@ -4,6 +4,7 @@ from mcp_ohmy_sql.constants import DbTypeEnum
 from mcp_ohmy_sql.sa.utils import (
     get_create_view_sql,
     get_drop_view_sql,
+    check_connection,
 )
 from mcp_ohmy_sql.tests.chinook.chinook_data_model import (
     ChinookViewNameEnum,
@@ -32,6 +33,11 @@ class TestSqlalchemyUtils:
             db_type=DbTypeEnum.SQLITE,
         )
         # print(sql)  # for debug only
+
+    def test_check_connection(self, sqlite_sa_engine_objs):
+        engine = sqlite_sa_engine_objs.engine
+        row = check_connection(engine)
+        assert row == {"value": 1}
 
 
 if __name__ == "__main__":

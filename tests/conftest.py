@@ -29,7 +29,7 @@ from mcp_ohmy_sql.db.relational.schema_3_extractor import (
 )
 
 # ===== Config modules
-from mcp_ohmy_sql.config.config_define import Config
+from mcp_ohmy_sql.config.define import Config
 
 # ===== Hub modules
 from mcp_ohmy_sql.adapter.adapter import Adapter
