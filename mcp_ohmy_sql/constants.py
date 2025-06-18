@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+Constant variables used in this project.
+"""
+
 import typing as T
 import os
 
@@ -11,8 +15,8 @@ TAB = " " * 2
 
 class LLMColumnConstraintEnum(BetterStrEnum):
     """
-    Enum representing simplified LLM-friendly constraints for database columns.
-    These constraints are designed to be concise while retaining essential information.
+    Simplified database column constraints optimized for LLM token efficiency.
+    Used in schema encoding to reduce token usage while preserving essential constraint information.
     """
 
     # relational database
@@ -28,8 +32,8 @@ class LLMColumnConstraintEnum(BetterStrEnum):
 
 class LLMTypeEnum(BetterStrEnum):
     """
-    Enum representing simplified LLM-friendly types for database columns.
-    These types are designed to be concise while retaining essential information.
+    Simplified database column data types optimized for LLM token efficiency.
+    Used in schema encoding to represent SQL data types with minimal tokens while preserving semantic meaning.
     """
 
     STR = "str"  # String/text data of any length
@@ -47,6 +51,11 @@ class LLMTypeEnum(BetterStrEnum):
 
 
 class ObjectTypeEnum(BetterStrEnum):
+    """
+    Database object types for categorizing different database entities.
+    Used in schema introspection and metadata processing to identify object types.
+    """
+
     FOREIGN_KEY = "foreign key"
     COLUMN = "column"
     TABLE = "table"
@@ -60,20 +69,34 @@ class ObjectTypeEnum(BetterStrEnum):
         return db_object_type_to_table_type_mapping[self]
 
 
+# [startdbtypeenum]
 class DbTypeEnum(BetterStrEnum):
-    SQLITE = "sqlite"
-    POSTGRESQL = "postgresql"
-    MYSQL = "mysql"
-    MSSQL = "mssql"
-    ORACLE = "oracle"
-    AWS_REDSHIFT = "aws_redshift"
-    ELASTICSEARCH = "elasticsearch"
-    OPENSEARCH = "opensearch"
-    SNOWFLAKE = "snowflake"
-    MONGODB = "mongodb"
+    """
+    Supported database system types for connection configuration.
+    Used in configuration validation and connection factory selection.
+    """
+
+    SQLITE = "sqlite"  # SQLite local databases
+    POSTGRESQL = "postgresql"  # PostgreSQL databases
+    MYSQL = "mysql"  # MySQL/MariaDB databases
+    MSSQL = "mssql"  # Microsoft SQL Server
+    ORACLE = "oracle"  # Oracle databases
+    AWS_REDSHIFT = "aws_redshift"  # Amazon Redshift data warehouses
+    SNOWFLAKE = "snowflake"  # Snowflake cloud databases
+    MONGODB = "mongodb"  # MongoDB with SQL interface
+    ELASTICSEARCH = "elasticsearch"  # Elasticsearch with SQL
+    OPENSEARCH = "opensearch"  # OpenSearch with SQL
+
+
+# [enddbtypeenum]
 
 
 class TableTypeEnum(BetterStrEnum):
+    """
+    Database table types for distinguishing between tables, views, and materialized views.
+    Used in schema introspection and metadata categorization for proper object identification.
+    """
+
     TABLE = "Table"
     VIEW = "View"
     MATERIALIZED_VIEW = "MaterializedView"
@@ -87,6 +110,11 @@ db_object_type_to_table_type_mapping = {
 
 
 class EnvVar(BaseModel):
+    """
+    Environment variable wrapper with default value support.
+    Used for accessing environment variables throughout the application with fallback defaults.
+    """
+
     name: str = Field()
     default: str = Field(default="")
 
@@ -96,4 +124,9 @@ class EnvVar(BaseModel):
 
 
 class EnvVarEnum:
+    """
+    Collection of predefined environment variables used throughout the application.
+    Used for centralized environment variable management and configuration loading.
+    """
+
     MCP_OHMY_SQL_CONFIG = EnvVar(name="MCP_OHMY_SQL_CONFIG")

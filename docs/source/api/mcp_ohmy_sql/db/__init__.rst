@@ -1,7 +1,7 @@
-aws
-===
+db
+==
 
-.. automodule:: mcp_ohmy_sql.aws
+.. automodule:: mcp_ohmy_sql.db
     :members:
 
 sub packages and modules
@@ -11,5 +11,6 @@ sub packages and modules
     :maxdepth: 1
 
     aws_redshift <aws_redshift/__init__>
-    api <api>
+    relational <relational/__init__>
+    metadata <metadata>
     

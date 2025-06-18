@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.config.config_define import (
+from mcp_ohmy_sql.config.define import (
     Settings,
     TableFilter,
     Schema,

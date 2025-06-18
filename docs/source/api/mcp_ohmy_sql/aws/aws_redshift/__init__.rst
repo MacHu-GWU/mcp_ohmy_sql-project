@@ -1,7 +1,7 @@
-hub
-===
+aws_redshift
+============
 
-.. automodule:: mcp_ohmy_sql.hub
+.. automodule:: mcp_ohmy_sql.aws.aws_redshift
     :members:
 
 sub packages and modules
@@ -11,7 +11,6 @@ sub packages and modules
     :maxdepth: 1
 
     api <api>
-    hub <hub>
-    sa_hub <sa_hub>
-    tool_hub <tool_hub>
+    query <query>
+    utils <utils>
     

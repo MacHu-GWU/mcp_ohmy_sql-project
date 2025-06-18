@@ -11,8 +11,6 @@ sub packages and modules
     :maxdepth: 1
 
     api <api>
-    metadata <metadata>
     query <query>
-    schema_encoder <schema_encoder>
-    types <types>
+    utils <utils>
     

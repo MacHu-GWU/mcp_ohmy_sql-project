@@ -251,4 +251,6 @@ docfly.ApiDocGenerator(
 ).fly()
 
 # run the script to create the sample configuration file for doc build
-import mcp_ohmy_sql.tests.test_config_setup as _
+from mcp_ohmy_sql.tests.test_config import setup_test_config
+
+setup_test_config()

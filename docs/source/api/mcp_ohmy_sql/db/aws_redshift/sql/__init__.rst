@@ -1,7 +1,7 @@
-aws
+sql
 ===
 
-.. automodule:: mcp_ohmy_sql.aws
+.. automodule:: mcp_ohmy_sql.db.aws_redshift.sql
     :members:
 
 sub packages and modules
@@ -10,6 +10,4 @@ sub packages and modules
 .. toctree::
     :maxdepth: 1
 
-    aws_redshift <aws_redshift/__init__>
-    api <api>
     
