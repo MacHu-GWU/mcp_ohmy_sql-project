@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+AWS Redshift connection configuration.
+"""
+
 import typing as T
 from functools import cached_property
 
@@ -14,11 +18,46 @@ from .boto_session import BotoSessionKwargs
 
 
 class AwsRedshiftConnectionMethodEnum(BetterStrEnum):
+    """
+    Supported connection methods for AWS Redshift.
+    """
     redshift_connector = "redshift_connector"
     sqlalchemy = "sqlalchemy"
 
 
 class AWSRedshiftConnection(BaseConnection):
+    """
+    Configures AWS Redshift connections for data warehouse access.
+    
+    Provides multiple connection methods for different Redshift deployment types:
+    
+    :param type: DO NOT set this field manually, it is automatically set to "aws_redshift".
+    :param method: Connection library to use - "redshift_connector" or "sqlalchemy"
+    
+    **Direct Connection Parameters (username/password authentication):**
+    
+    :param host: Redshift cluster endpoint hostname
+    :param port: Redshift cluster port (usually 5439)
+    :param database: Target database name
+    :param username: Database username
+    :param password: Database password
+    
+    **IAM-based Authentication for Redshift Cluster:**
+    
+    :param cluster_identifier: Redshift cluster identifier for IAM authentication
+    :param database: Target database name
+    :param boto_session_kwargs: AWS credentials and session configuration
+    
+    **IAM-based Authentication for Redshift Serverless:**
+    
+    :param namespace_name: Redshift Serverless namespace name
+    :param workgroup_name: Redshift Serverless workgroup name
+    :param boto_session_kwargs: AWS credentials and session configuration
+    
+    **Additional Configuration:**
+    
+    :param redshift_connector_kwargs: Additional parameters for the redshift-connector library
+    """
     # fmt: off
     type: T.Literal["aws_redshift"] = Field(default=ConnectionTypeEnum.AWS_REDSHIFT.value)
     method: str = Field()
@@ -52,15 +91,24 @@ class AWSRedshiftConnection(BaseConnection):
         raise NotImplementedError
 
     def get_rs_conn(self) -> "redshift_connector.Connection":
+        """
+        Returns a Redshift connection object using the redshift_connector library.
+        """
         return redshift_connector.connect(
             **self.redshift_connector_kwargs,
         )
 
     @cached_property
     def rs_conn(self) -> "redshift_connector.Connection":
+        """
+        Returns a cached Redshift connection object using the redshift_connector library.
+        """
         return self.get_rs_conn()
 
     def get_sa_engine(self) -> "sa.Engine":
+        """
+        Returns a SQLAlchemy engine for connecting to AWS Redshift.
+        """
         if (
             (self.host is not None)
             and (self.port is not None)
@@ -107,4 +155,7 @@ class AWSRedshiftConnection(BaseConnection):
 
     @cached_property
     def sa_engine(self) -> "sa.Engine":
+        """
+        Returns a cached SQLAlchemy engine for connecting to AWS Redshift.
+        """
         return self.get_sa_engine()
