@@ -8,10 +8,8 @@ from ..constants import DbTypeEnum
 
 from ..db.relational import api as relational
 from ..db.aws_redshift import api as aws_redshift
-from ..sa.api import (
-    execute_select_query,
-)
-from ..aws.aws_redshift.api import execute_select_query_on_aws_redshift
+from ..sa import api as sa
+from ..aws.aws_redshift import api as aws_redshift
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .adapter import Adapter

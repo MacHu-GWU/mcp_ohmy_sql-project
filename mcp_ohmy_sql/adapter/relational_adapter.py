@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+"""
+
+"""
+
 import typing as T
 
 from ..constants import DbTypeEnum
@@ -25,7 +29,7 @@ class RelationalAdapterMixin:
         :returns: A SchemaInfo object containing the schema details.
         """
         schema_info = relational.new_schema_info(
-            engine=database.sa_engine,
+            engine=database.connection.sa_engine,
             metadata=database.sa_metadata,
             schema_name=schema.name,
             include=schema.table_filter.include,

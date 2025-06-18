@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import typing as T
-import redshift_connector
 
 from tabulate import tabulate
 
+from ...lazy_import import redshift_connector
+
 from .utils import Session
+
 
 try:  # pragma: no cover
     from rich import print as rprint
@@ -40,15 +42,19 @@ def ensure_valid_select_query(query: str):
         raise ValueError("Invalid query: must start with 'SELECT '")
 
 
-def execute_select_query_on_aws_redshift(
-    conn: redshift_connector.Connection,
+def execute_select_query(
+    conn: "redshift_connector.Connection",
     query: str,
     params: T.Optional[dict[str, T.Any]] = None,
 ) -> str:
     """
     Executes a SQL SELECT query and returns the result formatted as a Markdown table.
     """
-    ensure_valid_select_query(query)
+    try:
+        ensure_valid_select_query(query)
+    except ValueError as e:  # pragma: no cover
+        return f"Error: {e}"
+
     with Session(conn) as cursor:
         try:
             cursor.execute(query, params)
@@ -57,9 +63,9 @@ def execute_select_query_on_aws_redshift(
         except Exception as e:  # pragma: no cover
             return f"Error executing query: {e}"
 
-        try:
-            text = format_result(columns, rows)
-        except Exception as e:  # pragma: no cover
-            return f"Error formatting result: {e}"
+    try:
+        text = format_result(columns, rows)
+    except Exception as e:  # pragma: no cover
+        return f"Error formatting result: {e}"
 
-        return text
+    return text

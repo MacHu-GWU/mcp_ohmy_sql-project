@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import typing as T
-import sqlalchemy as sa
-import sqlalchemy.exc as sa_exc
+
 from tabulate import tabulate
+
+from ..lazy_import import sa, sa_exc
 
 try:  # pragma: no cover
     from rich import print as rprint
@@ -12,7 +13,7 @@ except ImportError:  # pragma: no cover
 
 
 def format_result(
-    result: T.Union[sa.CursorResult, sa.Result],
+    result: T.Union["sa.CursorResult", "sa.Result"],
 ) -> str:
     """
     Format SQL query result into a Markdown table.
@@ -29,16 +30,15 @@ def format_result(
         - Balanced Readability: Maintains both machine parsability and human readability
             for seamless debugging and maintenance
     """
-    rows = list()
-    try:
-        first_item: sa.Row = next(result)
-        keys, values = list(first_item._fields), list(first_item)
-        rows.append(keys)
-        rows.append(values)
-    except StopIteration:
+    records = result.fetchall()
+    if len(records) == 0:
         return "No result"
-    for row in result:
-        rows.append(list(row))
+
+    rows = list()
+    columns = result.keys()
+    rows.append(columns)
+    for record in records:
+        rows.append(list(record))
 
     text = tabulate(
         rows,
@@ -58,12 +58,14 @@ def ensure_valid_select_query(query: str):
 
 
 def execute_count_query(
-    engine: sa.Engine,
+    engine: "sa.Engine",
     query: str,
     params: T.Optional[dict[str, T.Any]] = None,
 ) -> int:
     """
     Executes a SQL SELECT query and returns the count of rows.
+
+    TODO: this function is used in query optimizer, we are not using it yet.
     """
     ensure_valid_select_query(query)
     query = query.strip()
@@ -93,7 +95,10 @@ def execute_select_query(
     """
     Executes a SQL SELECT query and returns the result formatted as a Markdown table.
     """
-    ensure_valid_select_query(query)
+    try:
+        ensure_valid_select_query(query)
+    except ValueError as e:  # pragma: no cover
+        return f"Error: {e}"
 
     stmt = sa.text(query)
     with engine.connect() as connection:

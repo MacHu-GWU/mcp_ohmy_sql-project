@@ -3,10 +3,11 @@
 import typing as T
 import itertools
 
+import sqlalchemy as sa
+import redshift_connector
 from s3pathlib import S3Path
 import polars_writer.api as pw
 import aws_sdk_polars.api as aws_pl
-import redshift_connector
 
 from ..logger import logger
 from ..aws.aws_redshift.api import Session
@@ -24,7 +25,6 @@ from .aws.aws_redshift_model import (
 
 if T.TYPE_CHECKING:  # pragma: no cover
     import polars as pl
-    import sqlalchemy as sa
 
 try:
     from rich import print as rprint
@@ -37,12 +37,23 @@ except ImportError:  # pragma: no cover
     emoji="🗑",
 )
 def drop_all_redshift_tables(
-    conn: redshift_connector.Connection,
+    conn_or_engine: T.Union[
+        redshift_connector.Connection,
+        sa.Engine,
+    ],
 ):
-    with Session(conn) as cursor:
-        for sql in sql_drop_table_mappings.values():
-            cursor.execute(sql)
-        conn.commit()
+    if isinstance(conn_or_engine, redshift_connector.Connection):
+        with Session(conn_or_engine) as cursor:
+            for sql in sql_drop_table_mappings.values():
+                cursor.execute(sql)
+            conn_or_engine.commit()
+    elif isinstance(conn_or_engine, sa.Engine):
+        with conn_or_engine.connect() as conn:
+            for sql in sql_drop_table_mappings.values():
+                conn.execute(sa.text(sql))
+            conn.commit()
+    else:  # pragma: no cover
+        raise TypeError
     logger.info("Done")
 
 
@@ -51,12 +62,23 @@ def drop_all_redshift_tables(
     emoji="🆕",
 )
 def create_all_redshift_tables(
-    conn: redshift_connector.Connection,
+    conn_or_engine: T.Union[
+        redshift_connector.Connection,
+        sa.Engine,
+    ],
 ):
-    with Session(conn) as cursor:
-        for sql in sql_create_table_mappings.values():
-            cursor.execute(sql)
-        conn.commit()
+    if isinstance(conn_or_engine, redshift_connector.Connection):
+        with Session(conn_or_engine) as cursor:
+            for sql in sql_create_table_mappings.values():
+                cursor.execute(sql)
+            conn_or_engine.commit()
+    elif isinstance(conn_or_engine, sa.Engine):
+        with conn_or_engine.connect() as conn:
+            for sql in sql_create_table_mappings.values():
+                conn.execute(sa.text(sql))
+            conn.commit()
+    else:  # pragma: no cover
+        raise TypeError
     logger.info("Done")
 
 

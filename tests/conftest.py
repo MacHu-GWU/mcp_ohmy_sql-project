@@ -291,7 +291,7 @@ def postgres_sa_engine_objs(
 # AWS Redshift fixtures
 # ------------------------------------------------------------------------------
 @pytest.fixture(scope="class")
-def rs_conn() -> redshift_connector.Connection:
+def rs_conn() -> "redshift_connector.Connection":
     """
     Create Redshift Connection and prepare the database with all tables, views,
     and data for testing.
@@ -300,6 +300,18 @@ def rs_conn() -> redshift_connector.Connection:
     # drop_all_redshift_tables(conn)
     # create_all_redshift_tables(conn)
     return conn
+
+
+@pytest.fixture(scope="class")
+def rs_engine() -> "sa.Engine":
+    """
+    Create Redshift Connection and prepare the database with all tables, views,
+    and data for testing.
+    """
+    engine = DatabaseEnum.chinook_redshift.connection.sa_engine
+    # drop_all_redshift_tables(conn)
+    # create_all_redshift_tables(conn)
+    return engine
 
 
 @pytest.fixture(scope="class")

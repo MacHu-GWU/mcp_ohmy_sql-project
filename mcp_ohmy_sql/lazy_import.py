@@ -33,8 +33,10 @@ class Library:
 
 try:
     import sqlalchemy as sa
+    import sqlalchemy.exc as sa_exc
 except ImportError:  # pragma: no cover
     sa = Library("sqlalchemy")
+    sa_exc = Library("sqlalchemy")
 
 try:
     import boto3
