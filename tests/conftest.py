@@ -272,7 +272,7 @@ def sqlite_sa_engine_objs(
     sa_engine_factory,
 ) -> SaEngineObjs:
     return sa_engine_factory(
-        engine=DatabaseEnum.chinook_sqlite.sa_engine,
+        engine=DatabaseEnum.chinook_sqlite.connection.sa_engine,
         db_type=DbTypeEnum.SQLITE,
     )
 
@@ -282,7 +282,7 @@ def postgres_sa_engine_objs(
     sa_engine_factory,
 ) -> SaEngineObjs:
     return sa_engine_factory(
-        engine=DatabaseEnum.chinook_postgres.sa_engine,
+        engine=DatabaseEnum.chinook_postgres.connection.sa_engine,
         db_type=DbTypeEnum.POSTGRESQL,
     )
 

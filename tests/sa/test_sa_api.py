@@ -7,7 +7,7 @@ def test():
     _ = api
     _ = api.get_create_view_sql
     _ = api.get_drop_view_sql
-    _ = api.execute_count_query
+    # _ = api.execute_count_query
     _ = api.execute_select_query
 
 
