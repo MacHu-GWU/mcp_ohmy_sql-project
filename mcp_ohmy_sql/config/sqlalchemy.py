@@ -6,11 +6,13 @@ from functools import cached_property
 from pydantic import Field
 
 from ..lazy_import import sa
+from ..constants import ConnectionTypeEnum
+
 from .conn import BaseConnection
 
 
 class SqlalchemyConnection(BaseConnection):
-    type: T.Literal["sqlalchemy"] = Field(default="sqlalchemy")
+    type: T.Literal["sqlalchemy"] = Field(default=ConnectionTypeEnum.SQLALCHEMY.value)
     url: T.Optional[str] = Field(default=None)
     drivername: T.Optional[str] = Field(default=None)
     username: T.Optional[str] = Field(default=None)

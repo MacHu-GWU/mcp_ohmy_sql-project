@@ -109,6 +109,21 @@ db_object_type_to_table_type_mapping = {
 }
 
 
+# [startconnectiontypeenum]
+class ConnectionTypeEnum(BetterStrEnum):
+    """
+    Connection types for database connections.
+    Used in database :class:`~mcp_ohmy_sql.config.conn.BaseConnection`
+    management to differentiate between different connection methods.
+    """
+
+    SQLALCHEMY = "sqlalchemy"  # SQLAlchemy connections
+    AWS_REDSHIFT = "aws_redshift"  # AWS Redshift
+
+
+# [endconnectiontypeenum]
+
+
 class EnvVar(BaseModel):
     """
     Environment variable wrapper with default value support.

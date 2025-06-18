@@ -7,8 +7,10 @@ from enum_mate.api import BetterStrEnum
 from pydantic import Field, field_validator
 
 from ..lazy_import import sa, BotoSesManager, redshift_connector, aws_rs
+from ..constants import ConnectionTypeEnum
 
-from .conn import BaseConnection, BotoSessionKwargs
+from .conn import BaseConnection
+from .boto_session import BotoSessionKwargs
 
 
 class AwsRedshiftConnectionMethodEnum(BetterStrEnum):
@@ -17,7 +19,8 @@ class AwsRedshiftConnectionMethodEnum(BetterStrEnum):
 
 
 class AWSRedshiftConnection(BaseConnection):
-    type: T.Literal["aws_redshift"] = Field(default="aws_redshift")
+    # fmt: off
+    type: T.Literal["aws_redshift"] = Field(default=ConnectionTypeEnum.AWS_REDSHIFT.value)
     method: str = Field()
     host: T.Optional[str] = Field(default=None)
     port: T.Optional[int] = Field(default=None)
@@ -29,6 +32,7 @@ class AWSRedshiftConnection(BaseConnection):
     workgroup_name: T.Optional[str] = Field(default=None)
     boto_session_kwargs: T.Optional["BotoSessionKwargs"] = Field(default=None)
     redshift_connector_kwargs: T.Optional[dict[str, T.Any]] = Field(default=None)
+    # fmt: on
 
     @field_validator("method", mode="after")
     @classmethod

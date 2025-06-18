@@ -81,14 +81,6 @@ class DatabaseEnum:
             boto_session_kwargs=BotoSessionKwargs(profile_name=aws_profile),
             namespace_name=namespace_name,
             workgroup_name=workgroup_name,
-            # redshift_connector_kwargs=dict(
-            #     iam=True,
-            #     database=database_name,
-            #     is_serverless=True,
-            #     serverless_work_group=workgroup_name,
-            #     profile=aws_profile,
-            #     timeout=10,
-            # ),
         ),
         schemas=[
             Schema(
