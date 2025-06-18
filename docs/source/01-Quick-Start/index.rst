@@ -84,7 +84,7 @@ Open the file and add the following configuration to the ``mcpServers`` section:
 
 .. tip::
 
-    To use specific version of ``mcp_ohmy_sql``, you can specify the claude_desktop_config.json::
+    To use specific version of ``mcp_ohmy_sql``, you can specify the claude_desktop_config.json:
 
     .. code-block:: python
 
@@ -139,9 +139,7 @@ Create a new file named :ref:`mcp_ohmy_sql.json <configuration-guide>` with the 
                 "description": "Chinook music store sample database - contains artists, albums, tracks, customers, and sales data",
                 "connection": {
                     "type": "sqlalchemy",
-                    "create_engine_kwargs": {
-                        "url": "sqlite:////path/to/Chinook_Sqlite.sqlite"
-                    }
+                    "url": "sqlite:////path/to/Chinook_Sqlite.sqlite"
                 },
                 "schemas": [
                     {

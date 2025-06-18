@@ -4,6 +4,9 @@ Configuration Guide
 ==============================================================================
 The ``mcp_ohmy_sql`` MCP server uses a flexible JSON-based configuration system that supports multiple databases and schemas. This guide explains how to configure the server for your specific database setup.
 
+.. autotoctree::
+    :maxdepth: 1
+
 
 Configuration Loading Mechanism
 ------------------------------------------------------------------------------
