@@ -139,6 +139,9 @@ def sqlalchemy_type_to_llm_type(type_: TypeEngine) -> LLMTypeEnum:
 def new_foreign_key_info(
     foreign_key: "sa.ForeignKey",
 ) -> ForeignKeyInfo:
+    """
+    Create a new ForeignKeyInfo object from a SQLAlchemy ForeignKey object.
+    """
     foreign_key_info = ForeignKeyInfo(
         name=str(foreign_key.column),
         comment=foreign_key.comment,
@@ -155,6 +158,9 @@ def new_column_info(
     table: "sa.Table",
     column: "sa.Column",
 ) -> ColumnInfo:
+    """
+    Create a new ColumnInfo object from a SQLAlchemy Column object.
+    """
     foreign_keys = list()
     for foreign_key in column.foreign_keys:
         foreign_key_info = new_foreign_key_info(foreign_key)
@@ -186,6 +192,9 @@ def new_table_info(
     table: "sa.Table",
     object_type: ObjectTypeEnum,
 ) -> TableInfo:
+    """
+    Create a new TableInfo object from a SQLAlchemy Table object.
+    """
     foreign_keys = list()
     for foreign_key in table.foreign_keys:
         foreign_key_info = new_foreign_key_info(foreign_key)
@@ -218,6 +227,9 @@ def new_schema_info(
     include: T.Optional[list[str]] = None,
     exclude: T.Optional[list[str]] = None,
 ) -> SchemaInfo:
+    """
+    Create a new SchemaInfo object from a SQLAlchemy Engine and MetaData.
+    """
     insp = sa.inspect(engine)
     try:
         view_names = set(insp.get_view_names(schema=schema_name))
@@ -267,6 +279,9 @@ def new_database_info(
     schemas: list[SchemaInfo],
     comment: T.Optional[str] = None,
 ) -> DatabaseInfo:
+    """
+    Create a new DatabaseInfo object.
+    """
     database_info = DatabaseInfo(
         name=name,
         comment=comment,
