@@ -90,7 +90,7 @@ Open the file and add the following configuration to the ``mcpServers`` section:
 
         "args": [
             "--with",
-            "mcp-ohmy-sql[sqlite,postgres]==0.1.2",
+            "mcp-ohmy-sql[sqlite,postgres]==X.Y.Z",
             "mcp-ohmy-sql"
         ],
 
