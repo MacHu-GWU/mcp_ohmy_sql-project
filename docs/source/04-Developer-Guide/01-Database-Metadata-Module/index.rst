@@ -1,3 +1,5 @@
+.. _database-metadata-module:
+
 Database Metadata Module (db/)
 ==============================================================================
 *Understanding the core database schema extraction functionality that powers the MCP server*
