@@ -46,17 +46,25 @@ class Adapter(
             - The Schema object if found, otherwise None.
         """
         if database_identifier not in self.config.databases_mapping:
+            all_database = ", ".join(list(self.config.databases_mapping))
             return (
                 False,
-                f"Error: Database '{database_identifier}' not found in configuration.",
+                (
+                    f"Error: Database '{database_identifier}' not found in configuration. "
+                    f"It has the following databases: {all_database}."
+                ),
                 None,
                 None,
             )
         database = self.config.databases_mapping[database_identifier]
         if schema_name not in database.schemas_mapping:
+            all_schema = ", ".join(list(database.schemas_mapping))
             return (
                 False,
-                f"Error: Schema '{schema_name}' not found in '{database_identifier}' database.",
+                (
+                    f"Error: Schema '{schema_name}' not found in '{database_identifier}' database. "
+                    f"It has the following schemas: {all_schema}."
+                ),
                 None,
                 None,
             )

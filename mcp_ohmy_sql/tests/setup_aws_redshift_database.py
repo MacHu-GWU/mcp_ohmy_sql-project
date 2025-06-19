@@ -208,3 +208,12 @@ def insert_all_data_to_redshift(
             )
             # break
     logger.info("Done")
+
+
+def setup_aws_redshift_database(
+    conn_or_engine: T_CONN_OR_ENGINE,
+):
+    # create tables and views
+    create_all_redshift_tables(conn_or_engine=conn_or_engine)
+    # insert all data
+    insert_all_data_to_redshift(conn_or_engine=conn_or_engine)

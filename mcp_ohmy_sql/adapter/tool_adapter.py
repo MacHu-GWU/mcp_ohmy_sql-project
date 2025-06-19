@@ -49,14 +49,15 @@ class ToolAdapterMixin:
             Database(
                 identifier='production_db',
                 db_type=postgres,
-                number_of_schemas=3,
                 description=Production PostgreSQL database,
+                number_of_schemas=3,
+                all_schemas=public,
             )
             Database(
                 identifier='chinook_sqlite',
                 db_type=sqlite,
-                number_of_schemas=1,
                 description=Sample music store database,
+                number_of_schemas=1,
             )
 
         :returns: Formatted list of databases with identifiers, types, schema counts, and descriptions.
@@ -69,8 +70,9 @@ class ToolAdapterMixin:
             Database(
                 identifier={identifier!r},
                 db_type={db_type},
-                number_of_schemas={number_of_schemas},
                 description={description},
+                number_of_schemas={number_of_schemas},
+                all_schemas={all_schemas},
             )
         """
         ).strip()
@@ -80,6 +82,9 @@ class ToolAdapterMixin:
                 db_type=database.db_type,
                 number_of_schemas=len(database.schemas),
                 description=database.description or "No description",
+                all_schemas=", ".join(
+                    [schema.name for schema in database.schemas if schema.name]
+                ),
             )
             lines.append(line)
         return "\n".join(lines)
@@ -288,9 +293,13 @@ class ToolAdapterMixin:
             return s
         elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
             database_info = self.get_aws_redshift_database_info(database)
-            schema_info = database_info.schemas_mapping[schema.name]
-            s = aws_redshift_db.encode_schema_info(schema_info)
-            return s
+            if schema.name in database_info.schemas_mapping:
+                schema_info = database_info.schemas_mapping[schema.name]
+                s = aws_redshift_db.encode_schema_info(schema_info)
+                return s
+            else:
+                all_schema = ", ".join(list(database_info.schemas_mapping))
+                return f"Error: Schema '{schema.name}' not found in database '{database_identifier}', it has the following schemas: {all_schema}"
         else:
             raise NotImplementedError(
                 f"Database type {database.db_type} is not supported."
