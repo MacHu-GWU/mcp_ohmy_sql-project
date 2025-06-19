@@ -151,7 +151,7 @@ class ToolAdapterMixin:
                 f"Database type {database.db_type} is not supported."
             )
 
-    def tool_get_database_details(self: "Adapter") -> str:
+    def tool_get_all_database_details(self: "Adapter") -> str:
         """
         Get complete schema information for all configured databases.
 
@@ -195,28 +195,38 @@ class ToolAdapterMixin:
               )
             )
 
+        .. important::
+
+            It is possible that the database connection is misconfigured or the
+            database user doesn't have enough permission to get database schema,
+            the response will explicitly state the error information.
+
         :returns: Complete schema information for all configured databases.
         """
         database_lines = []
         for database in self.config.databases:
-            if database.db_type in [
-                DbTypeEnum.SQLITE.value,
-                DbTypeEnum.POSTGRESQL.value,
-                DbTypeEnum.MYSQL.value,
-                DbTypeEnum.MSSQL.value,
-                DbTypeEnum.ORACLE.value,
-            ]:
-                database_info = self.get_relational_database_info(database)
-                s = relational_db.encode_database_info(database_info)
+            try:
+                if database.db_type in [
+                    DbTypeEnum.SQLITE.value,
+                    DbTypeEnum.POSTGRESQL.value,
+                    DbTypeEnum.MYSQL.value,
+                    DbTypeEnum.MSSQL.value,
+                    DbTypeEnum.ORACLE.value,
+                ]:
+                    database_info = self.get_relational_database_info(database)
+                    s = relational_db.encode_database_info(database_info)
+                    database_lines.append(s)
+                elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
+                    database_info = self.get_aws_redshift_database_info(database)
+                    s = aws_redshift_db.encode_database_info(database_info)
+                    database_lines.append(s)
+                else:
+                    raise NotImplementedError(
+                        f"Database type {database.db_type} is not supported."
+                    )
+            except Exception as e:
+                s = f"Failed to get schema for database {database.identifier!r}, Error: {e!r}"
                 database_lines.append(s)
-            elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
-                database_info = self.get_aws_redshift_database_info(database)
-                s = aws_redshift_db.encode_database_info(database_info)
-                database_lines.append(s)
-            else:
-                raise NotImplementedError(
-                    f"Database type {database.db_type} is not supported."
-                )
         databases_def = "\n".join(database_lines)
         return databases_def
 

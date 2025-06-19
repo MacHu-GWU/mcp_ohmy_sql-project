@@ -35,10 +35,10 @@ async def list_tables(
 
 
 @mcp.tool(
-    description=get_description(adapter.tool_get_database_details),
+    description=get_description(adapter.tool_get_all_database_details),
 )
-async def get_database_details() -> str:
-    return adapter.tool_get_database_details()
+async def get_all_database_details() -> str:
+    return adapter.tool_get_all_database_details()
 
 
 @mcp.tool(
