@@ -13,14 +13,14 @@ AWS Redshift Connection Type
 ------------------------------------------------------------------------------
 AWS Redshift databases use the ``"aws_redshift"`` connection type:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "db_type": "aws_redshift",
         "connection": {
             "type": "aws_redshift",
             "method": "sqlalchemy",
-            // ... authentication configuration
+            # ... authentication configuration
         }
     }
 
@@ -39,7 +39,7 @@ Method 1: Direct Credentials
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Use this method when you have direct database credentials:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "redshift_direct",
@@ -71,7 +71,7 @@ Use this method for secure, credential-free authentication using AWS IAM:
 
 **For Redshift Clusters:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "redshift_iam_cluster",
@@ -91,7 +91,7 @@ Use this method for secure, credential-free authentication using AWS IAM:
 
 **For Redshift Serverless:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "redshift_serverless",
@@ -114,7 +114,7 @@ AWS Credentials Configuration
 ------------------------------------------------------------------------------
 The ``boto_session_kwargs`` object configures how to authenticate with AWS:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "boto_session_kwargs": {
@@ -168,7 +168,7 @@ Complete Configuration Examples
 ------------------------------------------------------------------------------
 **Development with Direct Credentials:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "redshift_dev",
@@ -195,7 +195,7 @@ Complete Configuration Examples
 
 **Production with IAM Authentication:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "redshift_prod",
@@ -229,7 +229,7 @@ Complete Configuration Examples
 
 **Cross-Account Role Assumption:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "redshift_cross_account",
@@ -251,7 +251,7 @@ Complete Configuration Examples
 
 **Redshift Serverless Configuration:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "redshift_serverless_analytics",
@@ -284,7 +284,7 @@ For IAM authentication to work, your AWS credentials need appropriate permission
 
 **Required IAM Permissions for Redshift Clusters:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "Version": "2012-10-17",
@@ -305,7 +305,7 @@ For IAM authentication to work, your AWS credentials need appropriate permission
 
 **Required IAM Permissions for Redshift Serverless:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "Version": "2012-10-17", 
@@ -331,9 +331,9 @@ Security Best Practices
 
 Prefer IAM authentication over hardcoded credentials:
 
-.. code-block:: json
+.. code-block:: python
 
-    // ✅ Recommended: IAM authentication
+    # ✅ Recommended: IAM authentication
     {
         "boto_session_kwargs": {
             "region_name": "us-east-1",
@@ -341,7 +341,7 @@ Prefer IAM authentication over hardcoded credentials:
         }
     }
 
-    // ❌ Avoid: Hardcoded credentials
+    # ❌ Avoid: Hardcoded credentials
     {
         "username": "user",
         "password": "hardcoded_password"

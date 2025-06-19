@@ -13,7 +13,7 @@ Database Object Structure
 ------------------------------------------------------------------------------
 Each database object has five main fields:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "my_database",
@@ -28,7 +28,7 @@ Identifier Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``identifier`` field is a unique name for your database:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "sales_production"
@@ -51,7 +51,7 @@ Description Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``description`` field provides human-readable context:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "description": "Production sales database containing customer orders and transactions"
@@ -63,7 +63,7 @@ The ``description`` field provides human-readable context:
 
 **Examples:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "description": "Development SQLite database for testing"
@@ -84,7 +84,7 @@ Database Type Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``db_type`` field specifies the type of database:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "db_type": "postgresql"
@@ -109,7 +109,7 @@ Connection Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``connection`` field contains database-specific connection configuration:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
@@ -130,7 +130,7 @@ Schemas Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``schemas`` field defines which schemas and tables are accessible:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "schemas": [
@@ -162,7 +162,7 @@ Complete Database Examples
 ------------------------------------------------------------------------------
 **SQLite Database:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "app_dev",
@@ -187,7 +187,7 @@ Complete Database Examples
 
 **PostgreSQL Database:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "warehouse_prod",

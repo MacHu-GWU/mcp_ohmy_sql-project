@@ -13,7 +13,7 @@ Schema Object Structure
 ------------------------------------------------------------------------------
 Each schema object has two main fields:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "name": "schema_name",
@@ -28,7 +28,7 @@ Schema Name Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``name`` field specifies which database schema to use:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "name": "public"
@@ -40,7 +40,7 @@ The ``name`` field specifies which database schema to use:
 
 **Special Cases:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "name": null
@@ -55,7 +55,7 @@ When ``name`` is ``null`` or omitted, the database's default schema is used:
 
 **Multiple Schemas Example:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "schemas": [
@@ -79,7 +79,7 @@ Table Filter Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``table_filter`` field controls which tables within the schema are accessible by the MCP server:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "table_filter": {
@@ -97,7 +97,7 @@ Include Patterns
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``include`` array specifies which tables to make accessible:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "include": ["users", "orders", "products"]
@@ -109,14 +109,14 @@ The ``include`` array specifies which tables to make accessible:
 
 **Wildcard Examples:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "include": [
-            "sales_*",      // All tables starting with "sales_"
-            "*_summary",    // All tables ending with "_summary"
-            "fact_*",       // All fact tables
-            "dim_*"         // All dimension tables
+            "sales_*",      # All tables starting with "sales_"
+            "*_summary",    # All tables ending with "_summary"
+            "fact_*",       # All fact tables
+            "dim_*"         # All dimension tables
         ]
     }
 
@@ -125,7 +125,7 @@ Exclude Patterns
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``exclude`` array specifies which tables to hide:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "exclude": ["temp_*", "backup_*", "migrations"]
@@ -137,18 +137,18 @@ The ``exclude`` array specifies which tables to hide:
 
 **Common Exclude Patterns:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "exclude": [
-            "temp_*",           // Temporary tables
-            "staging_*",        // Staging tables
-            "_*",               // Tables starting with underscore
-            "*_backup",         // Backup tables
-            "pg_*",             // PostgreSQL system tables
-            "information_schema", // Standard SQL system schema
-            "sys_*",            // System tables
-            "mysql_*"           // MySQL system tables
+            "temp_*",             # Temporary tables
+            "staging_*",          # Staging tables
+            "_*",                 # Tables starting with underscore
+            "*_backup",           # Backup tables
+            "pg_*",               # PostgreSQL system tables
+            "information_schema", # Standard SQL system schema
+            "sys_*",              # System tables
+            "mysql_*"             # MySQL system tables
         ]
     }
 
@@ -163,21 +163,21 @@ The filtering logic works as follows:
 
 **Examples:**
 
-.. code-block:: json
+.. code-block:: python
 
-    // Include everything except temporary tables
+    # Include everything except temporary tables
     {
         "include": [],
         "exclude": ["temp_*", "staging_*"]
     }
 
-    // Only include specific tables
+    # Only include specific tables
     {
         "include": ["users", "orders", "products"],
         "exclude": []
     }
 
-    // Include sales tables but exclude backups
+    # Include sales tables but exclude backups
     {
         "include": ["sales_*"],
         "exclude": ["*_backup", "*_temp"]
@@ -188,7 +188,7 @@ Complete Schema Examples
 ------------------------------------------------------------------------------
 **Default Schema with Basic Filtering:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "schemas": [
@@ -204,7 +204,7 @@ Complete Schema Examples
 
 **Multiple Schemas with Different Rules:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "schemas": [
@@ -234,7 +234,7 @@ Complete Schema Examples
 
 **Data Warehouse Schema Organization:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "schemas": [
@@ -271,7 +271,7 @@ Best Practices
 - Use specific include lists for production environments
 - Exclude system and administrative tables
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "exclude": [
@@ -288,7 +288,7 @@ Best Practices
 - Filter out tables not needed for analysis
 - Consider excluding tables with frequent schema changes
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "exclude": [
@@ -305,7 +305,7 @@ Best Practices
 - Use consistent naming patterns
 - Document your filtering strategy
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "name": "analytics",
@@ -320,7 +320,7 @@ Common Patterns
 ------------------------------------------------------------------------------
 **Development Environment:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "schemas": [
@@ -336,7 +336,7 @@ Common Patterns
 
 **Production Environment:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "schemas": [
@@ -352,7 +352,7 @@ Common Patterns
 
 **Analytics Environment:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "schemas": [

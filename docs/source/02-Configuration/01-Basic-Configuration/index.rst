@@ -19,7 +19,7 @@ Configuration File Structure
 ------------------------------------------------------------------------------
 Every configuration file has three main sections:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "version": "0.1.1",
@@ -32,7 +32,7 @@ Version Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``version`` field specifies the configuration schema version:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "version": "0.1.1"
@@ -49,7 +49,7 @@ Settings Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``settings`` field contains global server configuration:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "settings": {}
@@ -73,7 +73,7 @@ Databases Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The ``databases`` field contains an array of database configurations:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "databases": [
@@ -109,7 +109,7 @@ Complete Basic Example
 ------------------------------------------------------------------------------
 Here's a minimal but complete configuration file:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "version": "0.1.1",

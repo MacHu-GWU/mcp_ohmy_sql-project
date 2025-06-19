@@ -2,19 +2,19 @@
 
 Connection Configuration
 ==============================================================================
-The connection configuration is the most important part of your database setup. It defines how the MCP server connects to your specific database system. Each database type (:ref:`db_type <databases-type-field>`) requires a different connection configuration.
+The connection configuration is the most important part of your database setup. It defines how the MCP server connects to your specific database system. Each database type (:ref:`db_type <database-type-field>`) requires a different connection configuration.
 
 
 Connection Types Overview
 ------------------------------------------------------------------------------
 The ``mcp_ohmy_sql`` server supports different connection types based on your database system:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
             "type": "connection_type_name",
-            // ... type-specific configuration
+            # ... type-specific configuration
         }
     }
 
@@ -33,7 +33,7 @@ Used for traditional relational databases:
 - Microsoft SQL Server
 - Oracle
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "db_type": "postgresql",
@@ -47,7 +47,7 @@ Used for traditional relational databases:
 
 Used for Amazon Redshift data warehouses:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "db_type": "aws_redshift", 
@@ -107,34 +107,34 @@ The connection object always starts with a ``type`` field, followed by type-spec
 
 **SQLAlchemy Connection Structure:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
             "type": "sqlalchemy",
             "url": "database_connection_string",
             "create_engine_kwargs": {
-                // Optional SQLAlchemy engine parameters
+                # Optional SQLAlchemy engine parameters
             }
         }
     }
 
 **AWS Redshift Connection Structure:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
             "type": "aws_redshift",
             "method": "sqlalchemy",
-            // Authentication method 1: Direct credentials
+            # Authentication method 1: Direct credentials
             "host": "cluster.region.redshift.amazonaws.com",
             "port": 5439,
             "database": "warehouse",
             "username": "user",
             "password": "password",
             
-            // OR Authentication method 2: IAM-based
+            # OR Authentication method 2: IAM-based
             "cluster_identifier": "my-cluster",
             "database": "warehouse", 
             "boto_session_kwargs": {
@@ -151,7 +151,7 @@ Common Configuration Patterns
 
 Simple local databases for development:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "dev_db",
@@ -166,7 +166,7 @@ Simple local databases for development:
 
 Production databases with connection pooling and optimization:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "prod_postgres",
@@ -187,7 +187,7 @@ Production databases with connection pooling and optimization:
 
 AWS Redshift with IAM authentication:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "identifier": "analytics_warehouse",
@@ -211,14 +211,14 @@ Security Considerations
 
 Never store passwords directly in configuration files:
 
-.. code-block:: json
+.. code-block:: python
 
-    // ❌ Don't do this
+    # ❌ Don't do this
     {
         "url": "postgresql://user:mypassword123@host:5432/db"
     }
 
-    // ✅ Use environment variables instead
+    # ✅ Use environment variables instead
     {
         "url": "postgresql://user:${DB_PASSWORD}@host:5432/db"
     }
@@ -233,7 +233,7 @@ Never store passwords directly in configuration files:
 
 **AWS Redshift IAM Example:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
@@ -243,8 +243,8 @@ Never store passwords directly in configuration files:
             "database": "warehouse",
             "boto_session_kwargs": {
                 "region_name": "us-east-1",
-                // Uses AWS credentials from environment, IAM roles, or profiles
-                // No hardcoded passwords needed
+                # Uses AWS credentials from environment, IAM roles, or profiles
+                # No hardcoded passwords needed
             }
         }
     }

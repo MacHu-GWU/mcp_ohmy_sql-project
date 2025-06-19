@@ -13,7 +13,7 @@ SQLAlchemy Connection Type
 ------------------------------------------------------------------------------
 Relational databases use the ``"sqlalchemy"`` connection type:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
@@ -56,7 +56,7 @@ Connection URL
 ------------------------------------------------------------------------------
 The most important field is the ``url``, which specifies how to connect to your database:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
@@ -89,7 +89,7 @@ SQLAlchemy Engine Configuration
 ------------------------------------------------------------------------------
 The ``create_engine_kwargs`` field allows you to pass additional parameters to SQLAlchemy's `create_engine() <https://docs.sqlalchemy.org/en/20/core/engines.html>`_ function:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
@@ -111,7 +111,7 @@ The ``create_engine_kwargs`` field allows you to pass additional parameters to S
 
 **Production Configuration Example:**
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
@@ -136,7 +136,7 @@ Alternative Connection Methods
 ------------------------------------------------------------------------------
 Instead of providing a complete URL, you can specify connection components separately:
 
-.. code-block:: json
+.. code-block:: python
 
     {
         "connection": {
@@ -166,7 +166,7 @@ Database Drivers
 ------------------------------------------------------------------------------
 SQLAlchemy requires appropriate database drivers to be installed. If you need to use a specific database driver that's not included by default, you can specify it in the ``drivername`` field. However, make sure to install the required Python package by adding it to your MCP configuration in your AI client using ``uv --with``:
 
-For more information on installing additional Python packages with your MCP server, please refer to :ref:`TODO, I will add later` section.
+For more information on installing additional Python packages with your MCP server, please refer to [TODO, I will add later] section.
 
 
 Troubleshooting

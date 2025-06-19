@@ -12,6 +12,7 @@ sub packages and modules
 
     api <api>
     aws_redshift <aws_redshift>
+    boto_session <boto_session>
     conn <conn>
     define <define>
     init <init>
