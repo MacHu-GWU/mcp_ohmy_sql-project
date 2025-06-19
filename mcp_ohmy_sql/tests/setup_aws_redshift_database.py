@@ -17,7 +17,8 @@ from .chinook.chinook_data_model import (
 )
 from .chinook.chinook_data_loader import chinook_data_loader
 from .aws.constants import redshift_iam_role_name
-from .aws.s3_enum import bsm, s3dir_tests_aws_redshift_staging
+from .aws.bsm_enum import BsmEnum
+from .aws.s3_enum import S3Enum
 from .aws.aws_redshift_model import (
     sql_create_table_mappings,
     sql_drop_table_mappings,
@@ -85,7 +86,7 @@ def _write_to_s3(
 ):
     aws_pl.s3.write(
         df,
-        s3_client=bsm.s3_client,
+        s3_client=BsmEnum.bsm.s3_client,
         s3path=s3path,
         polars_writer=polars_parquet_writer,
     )
@@ -174,9 +175,11 @@ def insert_data_to_one_table(
     logger.info(f"{df.shape = }")  # for debugging only
 
     def copy_from_s3():
-        s3path = s3dir_tests_aws_redshift_staging / f"{table_name}.parquet"
+        s3path = S3Enum.s3dir_tests_aws_redshift_staging / f"{table_name}.parquet"
         # print(s3path.console_url) # for debugging only
-        role_arn = f"arn:aws:iam::{bsm.aws_account_id}:role/{redshift_iam_role_name}"
+        role_arn = (
+            f"arn:aws:iam::{BsmEnum.bsm.aws_account_id}:role/{redshift_iam_role_name}"
+        )
         _copy_from_s3(
             conn_or_engine=conn_or_engine,
             table_name=table_name,

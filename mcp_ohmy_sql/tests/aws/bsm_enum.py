@@ -12,7 +12,7 @@ from which_runtime.api import runtime
 from .constants import aws_region, aws_profile
 
 
-class BsmEnum:
+class _BsmEnum:
     """
     Use lazy loading to create enum values.
     """
@@ -28,4 +28,4 @@ class BsmEnum:
         return self._get_bsm(aws_profile)
 
 
-bsm_enum = BsmEnum()
+BsmEnum = _BsmEnum()
