@@ -89,6 +89,7 @@ aws = [
     "boto_session_manager>=1.8.1,<2.0.0", # Boto3 session manager for AWS
 ]
 aws_redshift = [
+    "jinja2>=3.0.0,<4.0.0", # Jinja2 template engine
     "redshift_connector>=2.1.0,<3.0.0", # Redshift database adapter for Python
     "s3pathlib>=2.3.3,<3.0.0", # S3 path utilities
     "simple_aws_redshift>=0.3.1,<1.0.0", # Simple AWS Redshift utilities
@@ -121,8 +122,11 @@ test = [
     "pytest-cov>=6.0.0,<7.0.0", # Coverage reporting
     "pytest-asyncio>=1.0.0,<2.0.0", # Asyncio support for pytest
     "requests>=2.32.3,<3.0.0", # HTTP library
+    # aws dependencies
     "boto3>=1.37.38,<2.0.0", # Amazon Web Services SDK for Python
     "boto_session_manager>=1.8.1,<2.0.0", # Boto3 session manager for AWS
+    # aws_redshift dependencies
+    "jinja2>=3.0.0,<4.0.0", # Jinja2 template engine
     "redshift_connector>=2.1.0,<3.0.0", # Redshift database adapter for Python
     "s3pathlib>=2.3.3,<3.0.0", # S3 path utilities
     "simple_aws_redshift>=0.3.1,<1.0.0", # Simple AWS Redshift utilities
