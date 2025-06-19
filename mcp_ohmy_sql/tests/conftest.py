@@ -62,6 +62,9 @@ from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 
 @dataclasses.dataclass
 class SaEngineObjs:
+    """
+    Data container for SQLAlchemy engine, metadata, and database type.
+    """
     engine: sa.Engine
     metadata: sa.MetaData
     db_type: DbTypeEnum
@@ -69,6 +72,9 @@ class SaEngineObjs:
 
 @dataclasses.dataclass
 class SaSchemaObjs:
+    """
+    Data container for all sqlalchemy Table, Column, and ForeignKey objects
+    """
     t_album: sa.Table
     c_album_album_id: sa.Column
     c_album_title_id: sa.Column
@@ -79,6 +85,9 @@ class SaSchemaObjs:
 
 @dataclasses.dataclass
 class SaSchemaInfoObjs:
+    """
+    Data container for all sqlalchemy schema information objects.
+    """
     fk_album_artist_id_info: ForeignKeyInfo
     c_album_album_id_info: ColumnInfo
     c_album_title_id_info: ColumnInfo
@@ -127,6 +136,9 @@ def in_memory_sqlite_engine_objs():
 def in_memory_sqlite_sa_objects(
     in_memory_sqlite_engine_objs,
 ) -> SaSchemaObjs:
+    """
+    Fixture to extract SQLAlchemy schema objects from the in-memory SQLite database.
+    """
     metadata = in_memory_sqlite_engine_objs.metadata
 
     t_album = metadata.tables[ChinookTableNameEnum.Album.value]
@@ -154,6 +166,9 @@ def in_memory_sqlite_sa_schema_info_objects(
     in_memory_sqlite_engine_objs,
     in_memory_sqlite_sa_objects,
 ) -> SaSchemaInfoObjs:
+    """
+    Fixture to create schema information objects for the in-memory SQLite database.
+    """
     engine = in_memory_sqlite_engine_objs.engine
     metadata = in_memory_sqlite_engine_objs.metadata
     sa_objs = in_memory_sqlite_sa_objects
@@ -297,8 +312,6 @@ def rs_conn() -> "redshift_connector.Connection":
     and data for testing.
     """
     conn = DatabaseEnum.chinook_redshift.connection.rs_conn
-    # drop_all_redshift_tables(conn)
-    # create_all_redshift_tables(conn)
     return conn
 
 
@@ -309,15 +322,33 @@ def rs_engine() -> "sa.Engine":
     and data for testing.
     """
     engine = DatabaseEnum.chinook_redshift.connection.sa_engine
-    # drop_all_redshift_tables(conn)
-    # create_all_redshift_tables(conn)
     return engine
 
 
 @pytest.fixture(scope="class")
-def rs_data(rs_conn) -> None:
+def rs_tables(
+    rs_conn,
+    rs_engine,
+):
+    """
+    Create all Redshift tables for testing.
+    This fixture is used to prepare the database with tables for testing.
+    """
+    # conn_or_engine = rs_conn
+    conn_or_engine = rs_engine
+    drop_all_redshift_tables(conn_or_engine)
+    create_all_redshift_tables(conn_or_engine)
+
+
+@pytest.fixture(scope="class")
+def rs_data(
+    rs_conn,
+    rs_engine,
+    rs_tables,
+) -> None:
     """
     Insert all data into the Redshift database.
     This fixture is used to prepare the database with data for testing.
     """
-    insert_all_data_to_redshift(rs_conn)
+    # insert_all_data_to_redshift(rs_conn)
+    insert_all_data_to_redshift(rs_engine)
