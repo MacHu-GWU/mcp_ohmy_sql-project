@@ -55,7 +55,7 @@ description = "Fast ASN.1 parser and serializer with definitions for private key
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "asn1crypto-1.5.1-py2.py3-none-any.whl", hash = "sha256:db4e40728b728508912cbb3d44f19ce188f218e9eba635821bb4b68564f8fd67"},
     {file = "asn1crypto-1.5.1.tar.gz", hash = "sha256:13ae38502be632115abf8a24cbe5f4da52e3b5231990aff31123c805306ccb9c"},
@@ -202,7 +202,7 @@ description = "AWS Glue Catalog tools."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "aws_glue_catalog-0.1.1-py3-none-any.whl", hash = "sha256:85dcf6433303555c9906e4241862f04f6c6deeb18c240eb52c02c23becf794a1"},
     {file = "aws_glue_catalog-0.1.1.tar.gz", hash = "sha256:350196ba6c4a840a0a51695c0f99af8111d8f63b52f42739b71a1a3ed4e5bb5f"},
@@ -222,7 +222,7 @@ description = "An open-source Python initiative that harnesses the lightning-fas
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "aws_sdk_polars-0.1.4-py3-none-any.whl", hash = "sha256:3a7fe1e7a1cb701f0cc0381aefa67a4b60eaef3c1bf23f7a238afa2a0e9fee93"},
     {file = "aws_sdk_polars-0.1.4.tar.gz", hash = "sha256:b61fe304de7e7144ef4214f164e0b826cdd1fd934e576f4fea90a1c5d2e54b5c"},
@@ -283,7 +283,7 @@ description = "Screen-scraping library"
 optional = true
 python-versions = ">=3.7.0"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"doc\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"doc\""
 files = [
     {file = "beautifulsoup4-4.13.3-py3-none-any.whl", hash = "sha256:99045d7d3f08f91f0d656bc9b7efbae189426cd913d830294a15eefa0ea4df16"},
     {file = "beautifulsoup4-4.13.3.tar.gz", hash = "sha256:1bd32405dacc920b42b83ba01644747ed77456a65760e285fbc47633ceddaf8b"},
@@ -327,7 +327,7 @@ description = "Provides an alternative, or maybe a more user friendly way to use
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
 files = [
     {file = "boto_session_manager-1.8.1-py3-none-any.whl", hash = "sha256:ca73b7356cc6af626a9794bc36a44d998312cb4686f5c408d45603cce3e47323"},
     {file = "boto_session_manager-1.8.1.tar.gz", hash = "sha256:68f8cd1f60ab7e245875caacbc58416830f0c6dc5562ed9cbea6a55db100382f"},
@@ -347,7 +347,7 @@ description = "The AWS SDK for Python"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
 files = [
     {file = "boto3-1.38.34-py3-none-any.whl", hash = "sha256:7d9409be63a11c1684427a9b06d6820ec72785cb275b56affe437f3709a80eb3"},
     {file = "boto3-1.38.34.tar.gz", hash = "sha256:25e76b9fec8db8e21adaf84df0de5c58fa779be121bc327e07e920c7c0870394"},
@@ -368,7 +368,7 @@ description = "Low-level, data-driven core of boto 3."
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
 files = [
     {file = "botocore-1.38.34-py3-none-any.whl", hash = "sha256:95ff2c4819498e94b321c9b5ac65d02267df93ff7ce7617323b19f19ea7cb545"},
     {file = "botocore-1.38.34.tar.gz", hash = "sha256:a105f4d941f329aa72c43ddf42371ec4bee50ab3619fc1ef35d0005520219612"},
@@ -561,7 +561,7 @@ description = "The Real First Universal Charset Detector. Open, modern and activ
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\" or extra == \"doc\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "charset_normalizer-3.4.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:91b36a978b5ae0ee86c394f5a54d6ef44db1de0815eb43de826d41d21e4af3de"},
     {file = "charset_normalizer-3.4.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7461baadb4dc00fd9e0acbe254e3d7d2112e7f92ced2adc96e54ef6501c5f176"},
@@ -710,7 +710,7 @@ description = "Package short description."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "compress-0.1.1-py3-none-any.whl", hash = "sha256:f5457d46581211c7336f0935d23e0ebc193ccb7e13b769ba646207e5734f5130"},
     {file = "compress-0.1.1.tar.gz", hash = "sha256:2515acb17f3b276eff5be3a168598c1e59292fd546e020abfe7be53071a183d2"},
@@ -1018,7 +1018,7 @@ description = "A lightweight Python library for creating wrapper functions with 
 optional = true
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"dev\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"dev\""
 files = [
     {file = "func_args-1.0.1-py3-none-any.whl", hash = "sha256:4562f4eaa0d68142a6ab5ad1f212959fabc2c4cc029b77446bcc377d737e3db4"},
     {file = "func_args-1.0.1.tar.gz", hash = "sha256:f07c2620fa446da54eb0888d5063167b1068d566e1f9a1879fe912c3d7497821"},
@@ -1341,7 +1341,7 @@ description = "Give any iterable object capability to use .one(), .one_or_none()
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "iterproxy-0.3.1-py2.py3-none-any.whl", hash = "sha256:bf52ad378298db94866631ad78cc3e0332c897ba5f2cd53a02ba5a900a932f70"},
     {file = "iterproxy-0.3.1.tar.gz", hash = "sha256:a832d71822e5f658cb3e9c7624496383b57c43c7f51a3aa4eb1f4b986fdd1317"},
@@ -1479,7 +1479,7 @@ description = "JSON Matching Expressions"
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
 files = [
     {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
     {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
@@ -1643,7 +1643,7 @@ description = "Powerful and Pythonic XML processing library combining libxml2/li
 optional = true
 python-versions = ">=3.6"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "lxml-5.4.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:e7bc6df34d42322c5289e37e9971d6ed114e3776b45fa879f734bded9d1fea9c"},
     {file = "lxml-5.4.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:6854f8bd8a1536f8a1d9a3655e6354faa6406621cf857dc27b681b69860645c7"},
@@ -1964,7 +1964,7 @@ description = "More routines for operating on iterables, beyond itertools"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"dev\" and platform_machine != \"ppc64le\" and platform_machine != \"s390x\" or extra == \"aws-redshift\""
+markers = "extra == \"dev\" and platform_machine != \"ppc64le\" and platform_machine != \"s390x\" or extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "more-itertools-10.6.0.tar.gz", hash = "sha256:2cd7fad1009c31cc9fb6a035108509e6547547a7a738374f10bd49a09eb3ee3b"},
     {file = "more_itertools-10.6.0-py3-none-any.whl", hash = "sha256:6eb054cb4b6db1473f6e15fcc676a08e4732548acd47c708f0e179c2c7c01e89"},
@@ -2158,7 +2158,7 @@ description = "Core utilities for Python packages"
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\" or extra == \"doc\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "packaging-24.2-py3-none-any.whl", hash = "sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759"},
     {file = "packaging-24.2.tar.gz", hash = "sha256:c228a6dc5e932d346bc5739379109d49e8853dd8223571c7c5b55260edc0b97f"},
@@ -2201,7 +2201,7 @@ description = "An extended and more powerful pathlib."
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"doc\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"doc\""
 files = [
     {file = "pathlib_mate-1.3.2-py3-none-any.whl", hash = "sha256:a4b29e0d38abb14e25a8a292856a04c7f48b2eafe9f7ebf36166dec5a13a0b0d"},
     {file = "pathlib_mate-1.3.2.tar.gz", hash = "sha256:8e16efd03016d4dd2ff0dc5dc05db666bebea6c8528aebd471953287644dd3e6"},
@@ -2269,7 +2269,7 @@ description = "Blazingly fast DataFrame library"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"dev\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"dev\""
 files = [
     {file = "polars-1.30.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:4c33bc97c29b7112f0e689a2f8a33143973a3ff466c70b25c7fd1880225de6dd"},
     {file = "polars-1.30.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:e3d05914c364b8e39a5b10dcf97e84d76e516b3b1693880bf189a93aab3ca00d"},
@@ -2314,7 +2314,7 @@ description = "polars_writer is a library that enables JSON-based configuration 
 optional = true
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "polars_writer-0.3.3-py3-none-any.whl", hash = "sha256:a07d8b7dce5dd7452aefa256b3235d6897cbe64f44543d068b9962e59f85b972"},
     {file = "polars_writer-0.3.3.tar.gz", hash = "sha256:8006a9bbcf24f2287d2706b3ed81fbf808bb214c8815651fce6cc1634a3e4307"},
@@ -2837,7 +2837,7 @@ description = "Extensions to the standard Python datetime module"
 optional = true
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"aws\" or extra == \"dev\" or extra == \"doc\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"aws\" or extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
     {file = "python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
@@ -2880,7 +2880,7 @@ description = "World timezone definitions, modern and historical"
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "pytz-2025.2-py2.py3-none-any.whl", hash = "sha256:5ddf76296dd8c44c26eb8f4b6f35488f3ccbf6fbbd7adee0b7262d43f0ec2f00"},
     {file = "pytz-2025.2.tar.gz", hash = "sha256:360b9e3dbb49a209c21ad61809c7fb453643e048b38924c765813546746e81c3"},
@@ -3061,7 +3061,7 @@ description = "Redshift interface library"
 optional = true
 python-versions = ">=3.6"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "redshift_connector-2.1.7-py3-none-any.whl", hash = "sha256:99c0eef62b5c38283275a33056740949ad45a0e1c0d9da7a8f7fe674cf290d8b"},
 ]
@@ -3105,7 +3105,7 @@ description = "Python HTTP for Humans."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\" or extra == \"doc\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6"},
     {file = "requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760"},
@@ -3328,7 +3328,7 @@ description = "s3pathlib is the python package provides the Pythonic objective o
 optional = true
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "s3pathlib-2.3.3-py3-none-any.whl", hash = "sha256:b34487cb05e2b369efbb38a3477cc90eee94aeef597308a42a27d71080cf9e58"},
     {file = "s3pathlib-2.3.3.tar.gz", hash = "sha256:751ffb4d101cbb09d49eed48df636116a3e753ae72002a30d00c45745e889e4a"},
@@ -3354,7 +3354,7 @@ description = "An Amazon S3 Transfer Manager"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
 files = [
     {file = "s3transfer-0.13.0-py3-none-any.whl", hash = "sha256:0148ef34d6dd964d0d8cf4311b2b21c474693e57c2e069ec708ce043d2b527be"},
     {file = "s3transfer-0.13.0.tar.gz", hash = "sha256:f5e6db74eb7776a37208001113ea7aa97695368242b364d73e91c981ac522177"},
@@ -3373,7 +3373,7 @@ description = "An implementation of the SCRAM protocol."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "scramp-1.4.5-py3-none-any.whl", hash = "sha256:50e37c464fc67f37994e35bee4151e3d8f9320e9c204fca83a5d313c121bbbe7"},
     {file = "scramp-1.4.5.tar.gz", hash = "sha256:be3fbe774ca577a7a658117dca014e5d254d158cecae3dd60332dfe33ce6d78e"},
@@ -3406,7 +3406,7 @@ description = "Easily download, build, install, upgrade, and uninstall Python pa
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "setuptools-80.9.0-py3-none-any.whl", hash = "sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922"},
     {file = "setuptools-80.9.0.tar.gz", hash = "sha256:f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c"},
@@ -3440,7 +3440,7 @@ description = "Objective Oriented Python SDK for AWS Redshift"
 optional = true
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "simple_aws_redshift-0.3.1-py3-none-any.whl", hash = "sha256:d3e4626d2e854cd900c041e7286b86c7fa40cbe4167898453ef5cfa1145961b3"},
     {file = "simple_aws_redshift-0.3.1.tar.gz", hash = "sha256:7faba66d29af379a46a3184209d11a347bbd0fc7890d38e98a65633684a3b80b"},
@@ -3465,7 +3465,7 @@ description = "Python 2 and 3 compatibility utilities"
 optional = true
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"aws\" or extra == \"dev\" or extra == \"doc\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"aws\" or extra == \"dev\" or extra == \"doc\""
 files = [
     {file = "six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
     {file = "six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"},
@@ -3478,7 +3478,7 @@ description = "Utils for streaming large files (S3, HDFS, GCS, Azure Blob Storag
 optional = true
 python-versions = "<4.0,>=3.7"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "smart_open-7.1.0-py3-none-any.whl", hash = "sha256:4b8489bb6058196258bafe901730c7db0dcf4f083f316e97269c66f45502055b"},
     {file = "smart_open-7.1.0.tar.gz", hash = "sha256:a4f09f84f0f6d3637c6543aca7b5487438877a21360e7368ccf1f704789752ba"},
@@ -3530,7 +3530,7 @@ description = "A modern CSS selector implementation for Beautiful Soup."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"doc\""
+markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"doc\""
 files = [
     {file = "soupsieve-2.6-py3-none-any.whl", hash = "sha256:e72c4ff06e4fb6e4b5a9f0f55fe6e81514581fca1515028625d0f299c602ccc9"},
     {file = "soupsieve-2.6.tar.gz", hash = "sha256:e2e68417777af359ec65daac1057404a3c8a5455bb8abc36f1a9866ab1a51abb"},
@@ -4153,7 +4153,7 @@ description = "HTTP library with thread-safe connection pooling, file post, and 
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"aws-redshift\" or extra == \"test\" or extra == \"doc\""
+markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\" or extra == \"doc\""
 files = [
     {file = "urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df"},
     {file = "urllib3-2.3.0.tar.gz", hash = "sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d"},
@@ -4269,7 +4269,7 @@ description = "Module for decorators, wrappers and monkey patching."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\""
+markers = "extra == \"aws-redshift\" or extra == \"test\""
 files = [
     {file = "wrapt-1.17.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:3d57c572081fed831ad2d26fd430d565b76aa277ed1d30ff4d40670b1c0dd984"},
     {file = "wrapt-1.17.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:b5e251054542ae57ac7f3fba5d10bfff615b6c2fb09abeb37d2f1463f841ae22"},
@@ -4384,9 +4384,9 @@ mysql = ["PyMySQL"]
 oracle = ["oracledb"]
 postgres = ["psycopg2-binary"]
 sqlite = []
-test = ["pytest", "pytest-asyncio", "pytest-cov", "requests"]
+test = ["aws_sdk_polars", "boto3", "boto_session_manager", "pytest", "pytest-asyncio", "pytest-cov", "redshift_connector", "requests", "s3pathlib", "simple_aws_redshift"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "a3fb83bdc069237dca2575808bf4c6f33e3a024128cdd3fc199e13e3103d634b"
+content-hash = "fe93fbebc2cb6c3f492ca90de9e5f81f3bfaff64db9403efb259b31983de6904"
