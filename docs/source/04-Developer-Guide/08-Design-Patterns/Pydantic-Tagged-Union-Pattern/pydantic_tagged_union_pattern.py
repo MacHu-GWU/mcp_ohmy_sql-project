@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-Tagged Union / Discriminated Union
-
-据中包含一个 “tag” 字段（如你的 type），用来标识这是哪一种子类型；基于该值，选择对应的模型结构解析。
-Pydantic 建议也推荐使用这种方式来定义 union 类型 。
+In Python, we can use Pydantic to define a tagged union
+(also known as a discriminated union) using the `discriminator` field.
+This allows us to create a union type that can be used to represent
+different subtypes of a base type, where each subtype has its own specific fields.
 """
 
 import typing as T
