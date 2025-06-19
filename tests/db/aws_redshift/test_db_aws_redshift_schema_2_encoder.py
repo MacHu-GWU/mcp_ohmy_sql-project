@@ -137,6 +137,6 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.db.aws_redshift.schema_3_encoder",
+        "mcp_ohmy_sql.db.aws_redshift.schema_2_encoder",
         preview=False,
     )

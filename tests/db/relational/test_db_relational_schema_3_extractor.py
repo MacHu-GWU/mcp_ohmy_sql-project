@@ -209,6 +209,6 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.db.relational.schema_2_extractor.py",
+        "mcp_ohmy_sql.db.relational.schema_3_extractor.py",
         preview=False,
     )

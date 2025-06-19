@@ -20,11 +20,11 @@ def Session(
         cursor.close()
 
 
+T_CONN_OR_ENGINE = T.Union["redshift_connector.Connection", "sa.Engine"]
+
+
 def execute_many_sql(
-    conn_or_engine: T.Union[
-        "redshift_connector.Connection",
-        "sa.Engine",
-    ],
+    conn_or_engine: T_CONN_OR_ENGINE,
     sql: T.Union[str, list[str]],
 ):
     """
@@ -37,7 +37,7 @@ def execute_many_sql(
         sql_list = [sql]
     elif isinstance(sql, list):
         sql_list = sql
-    else: # pragma: no cover
+    else:  # pragma: no cover
         raise TypeError("sql must be a str or a list of str")
 
     if isinstance(conn_or_engine, redshift_connector.Connection):

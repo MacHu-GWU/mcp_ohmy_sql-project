@@ -10,11 +10,12 @@ Reference:
 import typing as T
 from pydantic import BaseModel, Field
 
-import redshift_connector
 from enum_mate.api import BetterStrEnum
+from ...lazy_import import sa, redshift_connector
 
 from ...constants import ObjectTypeEnum, LLMTypeEnum
 from ...utils import match
+from ...aws.aws_redshift.api import Session, T_CONN_OR_ENGINE
 
 from .sql import SqlEnum
 from .schema_1_model import (
@@ -131,8 +132,34 @@ class SchemaTableFilter(BaseModel):
     exclude: list[str] = Field()
 
 
+def _fetch_data(
+    conn_or_engine: T_CONN_OR_ENGINE,
+) -> T.Tuple[list[tuple], list[tuple], list[tuple]]:
+    if isinstance(conn_or_engine, redshift_connector.Connection):
+        with Session(conn_or_engine) as cursor:
+            column_rows = cursor.execute(SqlEnum.column_info_sql).fetchall()
+            table_rows = cursor.execute(SqlEnum.table_info_sql).fetchall()
+            schema_rows = cursor.execute(SqlEnum.schema_info_sql).fetchall()
+            return column_rows, table_rows, schema_rows
+    elif isinstance(conn_or_engine, sa.Engine):
+        with conn_or_engine.connect() as conn:
+            column_rows = conn.execute(sa.text(SqlEnum.column_info_sql)).fetchall()
+            column_rows = [tuple(row) for row in column_rows]
+
+            table_rows = conn.execute(sa.text(SqlEnum.table_info_sql)).fetchall()
+            table_rows = [tuple(row) for row in table_rows]
+
+            schema_rows = conn.execute(sa.text(SqlEnum.schema_info_sql)).fetchall()
+            schema_rows = [tuple(row) for row in schema_rows]
+            return column_rows, table_rows, schema_rows
+    else:  # pragma: no cover
+        raise TypeError(
+            "conn_or_engine must be either a redshift_connector.Connection or a sqlalchemy.Engine"
+        )
+
+
 def new_database_info(
-    conn: redshift_connector.Connection,
+    conn_or_engine: T_CONN_OR_ENGINE,
     db_name: str,
     schema_table_filter_list: T.Optional[list[SchemaTableFilter]] = None,
 ) -> DatabaseInfo:
@@ -143,14 +170,7 @@ def new_database_info(
         for schema_table_filter in schema_table_filter_list
     }
 
-    cursor = conn.cursor()
-    try:
-        column_rows = cursor.execute(SqlEnum.column_info_sql).fetchall()
-        table_rows = cursor.execute(SqlEnum.table_info_sql).fetchall()
-        schema_rows = cursor.execute(SqlEnum.schema_info_sql).fetchall()
-        cursor.close()
-    finally:
-        cursor.close()
+    column_rows, table_rows, schema_rows = _fetch_data(conn_or_engine)
 
     column_tuple_mapping: dict[str, dict[str, list[tuple]]] = {}
     for row in column_rows:
