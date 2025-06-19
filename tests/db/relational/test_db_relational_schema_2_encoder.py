@@ -7,6 +7,10 @@ from mcp_ohmy_sql.db.relational.schema_2_encoder import (
     encode_database_info,
 )
 
+import pytest
+import sys
+from mcp_ohmy_sql.vendor.os_platform import IS_WINDOWS
+
 from mcp_ohmy_sql.constants import (
     DbTypeEnum,
     TableTypeEnum,
@@ -50,6 +54,10 @@ def test_encode_column_info(
     assert s == expected
 
 
+@pytest.mark.skipif(
+    condition=(IS_WINDOWS and sys.version_info < (3, 11)),
+    reason="This test won't work only for Windows on Python < 3.11",
+)
 def test_encode_table_info(
     in_memory_sqlite_sa_schema_info_objects,
 ):

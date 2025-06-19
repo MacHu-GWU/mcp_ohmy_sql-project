@@ -9,7 +9,7 @@ name = "mcp_ohmy_sql"
 # Currently, poetry 2.1.X doesn't support dynamic versioning
 # (Read https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#version)
 # So this value has to be aligned with the one in ``mcp_ohmy_sql/_version.py``
-version = "0.1.2"
+version = "0.1.3.dev1"
 description = "A powerful Model Context Protocol (MCP) server that provides universal SQL database connectivity with intelligent query optimization, schema introspection, and built-in safety features for AI assistants."
 # Read https://dev-exp-share.readthedocs.io/en/latest/search.html?q=Pick+An+Open+Source+License+For+Python+Project&check_keywords=yes&area=default
 # To pick a license and update the ``license``, ``classifier`` field in ``pyproject.toml``
