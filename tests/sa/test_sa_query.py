@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import pytest
-
 from mcp_ohmy_sql.sa.query import (
     ensure_valid_select_query,
     execute_count_query,
     execute_select_query,
 )
+
+import pytest
 
 
 def setup_module(module):

@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import pytest
-from which_runtime.api import runtime
 from mcp_ohmy_sql.db.aws_redshift.schema_3_extractor import (
     SchemaTableFilter,
     new_database_info,
 )
+
+import pytest
+from which_runtime.api import runtime
 from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 from rich import print as rprint
 
 
 @pytest.mark.skipif(
-    runtime.is_local_runtime_group is False,
+    condition=runtime.is_local_runtime_group is False,
     reason="only run on local runtime",
 )
 def test_new_column_info(

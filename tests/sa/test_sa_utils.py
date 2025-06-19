@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.constants import DbTypeEnum
 from mcp_ohmy_sql.sa.utils import (
     get_create_view_sql,
     get_drop_view_sql,
     check_connection,
 )
+
+from mcp_ohmy_sql.constants import DbTypeEnum
 from mcp_ohmy_sql.tests.chinook.chinook_data_model import (
     ChinookViewNameEnum,
     album_sales_stats_view_select_stmt,

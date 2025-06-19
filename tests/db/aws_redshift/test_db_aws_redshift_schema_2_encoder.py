@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from mcp_ohmy_sql.db.aws_redshift.schema_2_encoder import (
+    encode_column_info,
+    encode_table_info,
+    encode_schema_info,
+    encode_database_info,
+)
+
 from mcp_ohmy_sql.utils import dedent
 from mcp_ohmy_sql.constants import (
     DbTypeEnum,
@@ -11,12 +18,6 @@ from mcp_ohmy_sql.db.aws_redshift.schema_1_model import (
     TableInfo,
     SchemaInfo,
     DatabaseInfo,
-)
-from mcp_ohmy_sql.db.aws_redshift.schema_2_encoder import (
-    encode_column_info,
-    encode_table_info,
-    encode_schema_info,
-    encode_database_info,
 )
 
 column_info_1 = ColumnInfo(

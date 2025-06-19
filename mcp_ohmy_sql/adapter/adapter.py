@@ -58,7 +58,7 @@ class Adapter(
             )
         database = self.config.databases_mapping[database_identifier]
         if schema_name not in database.schemas_mapping:
-            all_schema = ", ".join(list(database.schemas_mapping))
+            all_schema = ", ".join([name for name in database.schemas_mapping if name])
             return (
                 False,
                 (

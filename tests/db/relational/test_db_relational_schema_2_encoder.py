@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from mcp_ohmy_sql.constants import (
-    DbTypeEnum,
-    TableTypeEnum,
-    LLMColumnConstraintEnum,
-    LLMTypeEnum,
-)
 from mcp_ohmy_sql.db.relational.schema_2_encoder import (
     encode_column_info,
     encode_table_info,
     encode_schema_info,
     encode_database_info,
+)
+
+from mcp_ohmy_sql.constants import (
+    DbTypeEnum,
+    TableTypeEnum,
+    LLMColumnConstraintEnum,
+    LLMTypeEnum,
 )
 from mcp_ohmy_sql.tests.chinook.chinook_data_model import (
     ChinookTableNameEnum,

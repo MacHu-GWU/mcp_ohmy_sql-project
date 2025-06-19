@@ -298,7 +298,9 @@ class ToolAdapterMixin:
                 s = aws_redshift_db.encode_schema_info(schema_info)
                 return s
             else:
-                all_schema = ", ".join(list(database_info.schemas_mapping))
+                all_schema = ", ".join(
+                    [name for name in database_info.schemas_mapping if name]
+                )
                 return f"Error: Schema '{schema.name}' not found in database '{database_identifier}', it has the following schemas: {all_schema}"
         else:
             raise NotImplementedError(

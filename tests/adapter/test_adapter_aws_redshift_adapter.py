@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from which_runtime.api import runtime
+
+import pytest
+
 from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 
 try:
@@ -9,7 +13,11 @@ except ImportError:  # pragma: no cover
 
 
 class TestAwsRedshiftAdapterMixin:
-    def test_get_relational_database_info(
+    @pytest.mark.skipif(
+        condition=runtime.is_local_runtime_group is False,
+        reason="only run on local runtime",
+    )
+    def get_aws_redshift_database_info(
         self,
         mcp_ohmy_sql_config,
         mcp_ohmy_sql_adapter,
@@ -17,8 +25,11 @@ class TestAwsRedshiftAdapterMixin:
         database = mcp_ohmy_sql_config.databases_mapping[
             DatabaseEnum.chinook_redshift.identifier
         ]
-        database_info = mcp_ohmy_sql_adapter.get_aws_redshift_database_info(database)
-        # rprint(database_info)  # for debug only
+        if runtime.is_local_runtime_group:
+            database_info = mcp_ohmy_sql_adapter.get_aws_redshift_database_info(
+                database
+            )
+            # rprint(database_info)  # for debug only
 
 
 if __name__ == "__main__":

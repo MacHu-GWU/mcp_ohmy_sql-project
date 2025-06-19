@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sqlalchemy as sa
-from sqlalchemy.types import TypeEngine
-
-from mcp_ohmy_sql.constants import ObjectTypeEnum, LLMTypeEnum, DbTypeEnum
-
 from mcp_ohmy_sql.db.relational.schema_3_extractor import (
     sqlalchemy_type_to_llm_type,
     new_foreign_key_info,
@@ -14,6 +9,10 @@ from mcp_ohmy_sql.db.relational.schema_3_extractor import (
     new_database_info,
 )
 
+import sqlalchemy as sa
+from sqlalchemy.types import TypeEngine
+
+from mcp_ohmy_sql.constants import ObjectTypeEnum, LLMTypeEnum, DbTypeEnum
 from mcp_ohmy_sql.tests.chinook.chinook_data_model import (
     ChinookTableNameEnum,
     ChinookViewNameEnum,

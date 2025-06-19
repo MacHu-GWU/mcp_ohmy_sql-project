@@ -5,11 +5,17 @@ from mcp_ohmy_sql.aws.aws_redshift.utils import (
     execute_many_sql,
 )
 
+import pytest
+from which_runtime.api import runtime
 from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 
 database = DatabaseEnum.chinook_redshift
 
 
+@pytest.mark.skipif(
+    condition=runtime.is_local_runtime_group is False,
+    reason="only run on local runtime",
+)
 def test_execute_many_sql():
     sql = "SELECT 1 AS value;"
 

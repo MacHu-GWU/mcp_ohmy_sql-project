@@ -80,6 +80,6 @@ if __name__ == "__main__":
 
     run_cov_test(
         __file__,
-        "mcp_ohmy_sql.config.config_define.py",
+        "mcp_ohmy_sql.config.define.py",
         preview=False,
     )
