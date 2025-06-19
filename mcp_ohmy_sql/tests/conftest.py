@@ -53,6 +53,7 @@ from mcp_ohmy_sql.tests.setup_relational_database import (
     drop_all_views,
     create_all_views,
 )
+
 if runtime.is_local_runtime_group:
     from mcp_ohmy_sql.tests.setup_aws_redshift_database import (
         drop_all_redshift_tables,
@@ -67,6 +68,7 @@ class SaEngineObjs:
     """
     Data container for SQLAlchemy engine, metadata, and database type.
     """
+
     engine: sa.Engine
     metadata: sa.MetaData
     db_type: DbTypeEnum
@@ -77,6 +79,7 @@ class SaSchemaObjs:
     """
     Data container for all sqlalchemy Table, Column, and ForeignKey objects
     """
+
     t_album: sa.Table
     c_album_album_id: sa.Column
     c_album_title_id: sa.Column
@@ -90,6 +93,7 @@ class SaSchemaInfoObjs:
     """
     Data container for all sqlalchemy schema information objects.
     """
+
     fk_album_artist_id_info: ForeignKeyInfo
     c_album_album_id_info: ColumnInfo
     c_album_title_id_info: ColumnInfo
@@ -114,7 +118,7 @@ def in_memory_sqlite_engine_objs():
     engine = sa.create_engine("sqlite:///:memory:")
 
     # create tables and views
-    create_all_tables(engine=engine, metadata=Base.metadata, drop_first=False)
+    create_all_tables(engine=engine, metadata=Base.metadata)
     create_all_views(engine=engine, db_type=DbTypeEnum.SQLITE)
 
     # get the latest metadata with views
@@ -251,8 +255,11 @@ def sa_engine_factory():
         engine: sa.Engine,
         db_type: DbTypeEnum,
     ) -> SaEngineObjs:
+        # drop all tables and views
+        drop_all_views(engine=engine, db_type=db_type)
+        drop_all_tables(engine=engine, metadata=Base.metadata)
         # create tables and views
-        create_all_tables(engine=engine, metadata=Base.metadata, drop_first=True)
+        create_all_tables(engine=engine, metadata=Base.metadata)
         create_all_views(engine=engine, db_type=db_type)
         # insert all data
         insert_all_data(engine=engine, metadata=Base.metadata)

@@ -14,7 +14,7 @@ except ImportError:  # pragma: no cover
 
 def test_config_init():
     _ = config
-    rprint(config)  # for debug only
+    # rprint(config)  # for debug only
     pass
 
 

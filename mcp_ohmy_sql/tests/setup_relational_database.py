@@ -19,6 +19,8 @@ Key Features:
 
 
 import sqlalchemy as sa
+
+from ..logger import logger
 from ..constants import DbTypeEnum
 from ..sa.api import get_create_view_sql, get_drop_view_sql
 
@@ -29,6 +31,10 @@ from .chinook.chinook_data_model import (
 from .chinook.chinook_data_loader import chinook_data_loader
 
 
+@logger.emoji_block(
+    msg="Drop all tables",
+    emoji="🗑",
+)
 def drop_all_tables(
     engine: sa.Engine,
     metadata: sa.MetaData,
@@ -37,21 +43,28 @@ def drop_all_tables(
     Drop all tables in the given SQLAlchemy metadata.
     """
     metadata.drop_all(engine, checkfirst=True)
+    logger.info("Done")
 
 
+@logger.emoji_block(
+    msg="Create all tables",
+    emoji="🆕",
+)
 def create_all_tables(
     engine: sa.Engine,
     metadata: sa.MetaData,
-    drop_first: bool = True,
 ):
     """
     Create all tables in the given SQLAlchemy metadata.
     """
-    if drop_first:
-        drop_all_tables(engine=engine, metadata=metadata)
     metadata.create_all(engine, checkfirst=True)
+    logger.info("Done")
 
 
+@logger.emoji_block(
+    msg="Drop all views",
+    emoji="🗑",
+)
 def drop_all_views(
     engine: sa.Engine,
     db_type: DbTypeEnum,
@@ -70,8 +83,13 @@ def drop_all_views(
             stmt = sa.text(drop_view_sql)
             conn.execute(stmt)
         conn.commit()
+    logger.info("Done")
 
 
+@logger.emoji_block(
+    msg="Create all views",
+    emoji="🆕",
+)
 def create_all_views(
     engine: sa.Engine,
     db_type: DbTypeEnum,
@@ -91,8 +109,13 @@ def create_all_views(
             )
             conn.execute(sa.text(create_view_sql))
         conn.commit()
+    logger.info("Done")
 
 
+@logger.emoji_block(
+    msg="Insert all data",
+    emoji="📥",
+)
 def insert_all_data(
     engine: sa.Engine,
     metadata: sa.MetaData,
@@ -107,15 +130,21 @@ def insert_all_data(
             rows = df.to_dicts()
             conn.execute(stmt, rows)
         conn.commit()
+    logger.info("Done")
 
 
 def setup_relational_database(
     engine: sa.Engine,
     metadata: sa.MetaData,
     db_type: DbTypeEnum,
+    drop_first: bool = True,
 ):
+    # drop all tables and views if specified
+    if drop_first:
+        drop_all_views(engine=engine, db_type=db_type)
+        drop_all_tables(engine=engine, metadata=metadata)
     # create tables and views
-    create_all_tables(engine=engine, metadata=metadata, drop_first=True)
+    create_all_tables(engine=engine, metadata=metadata)
     create_all_views(engine=engine, db_type=db_type)
     # insert all data
     insert_all_data(engine=engine, metadata=metadata)
