@@ -38,10 +38,10 @@ def test_new_column_info(
         )
 
     database_info = _new_database_info(rs_conn)
-    rprint(database_info)  # pragma: no cover
+    # rprint(database_info)  # pragma: no cover
 
     database_info = _new_database_info(rs_engine)
-    rprint(database_info)  # pragma: no cover
+    # rprint(database_info)  # pragma: no cover
 
 
 if __name__ == "__main__":
