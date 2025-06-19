@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
 """
-定义了在测试中要使用的 mcp_ohmy_sql Config.
+Defines the mcp_ohmy_sql configuration to be used during testing.
 
-注意! 最终测试的时候的 Config 对象的实例用的不是这个模块中的 config 对象, 而是从
-path_sample_config 中读取而来的. 这个模块中的 config 对象只是我们的 source of truth,
-用于将指定的 Config 写入到 path_sample_config 中, 以便在后续的测试中使用.
+Note: The actual Config instance used in the tests does not come from the
+config object in this module. Instead, it is loaded from path_sample_config.
+The config object defined in this module serves as the source of truth,
+and is used to write the desired configuration to ``path_sample_config``
+for use in subsequence tests.
 """
 
 import json
 import os
-from which_runtime.api import runtime
 
 from ..paths import path_sample_config
 from ..constants import DbTypeEnum, EnvVarEnum
@@ -107,8 +108,6 @@ databases = [
     DatabaseEnum.chinook_sqlite,
 ]
 
-# we only use sqlite in CI test runtime
-# if runtime.is_local_runtime_group:
 databases.append(DatabaseEnum.chinook_postgres)
 databases.append(DatabaseEnum.chinook_redshift)
 
