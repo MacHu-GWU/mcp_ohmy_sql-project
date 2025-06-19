@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-
+AWS Redshift adapter mixin for Redshift-specific database operations.
 """
 
 import typing as T
@@ -14,6 +14,9 @@ if T.TYPE_CHECKING:  # pragma: no cover
 
 
 class AwsRedshiftAdapterMixin:
+    """
+    Adapter mixin for AWS Redshift operations using boto3, redshift-connector, and the db/aws_redshift module.
+    """
     def get_aws_redshift_database_info(
         self: "Adapter",
         database: "Database",

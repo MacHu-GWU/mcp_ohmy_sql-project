@@ -19,6 +19,9 @@ def format_query_result(
     duration: float,
     query_result_text: str,
 ):
+    """
+    Format query execution results with timing information for MCP tool output.
+    """
     lines = [
         "# Execution Time",
         f"{duration:.3f} seconds",

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-
+Adapter integration layer that coordinates configuration, database operations, and MCP tools.
 """
 
 import typing as T
@@ -21,6 +21,9 @@ class Adapter(
     AwsRedshiftAdapterMixin,
     ToolAdapterMixin,
 ):
+    """
+    Master adapter class that integrates configuration with database-specific operations and MCP tool implementations.
+    """
     config: Config = Field()
 
     def get_database_and_schema_object(

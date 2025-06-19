@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-
+Relational database adapter mixin for SQLAlchemy-based database operations.
 """
 
 import typing as T
@@ -15,6 +15,9 @@ if T.TYPE_CHECKING:  # pragma: no cover
 
 
 class RelationalAdapterMixin:
+    """
+    Adapter mixin for relational database operations using SQLAlchemy and the db/relational module.
+    """
     def get_relational_schema_info(
         self: "Adapter",
         database: "Database",
