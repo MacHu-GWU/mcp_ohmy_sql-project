@@ -108,9 +108,9 @@ databases = [
 ]
 
 # we only use sqlite in CI test runtime
-if runtime.is_local_runtime_group:
-    databases.append(DatabaseEnum.chinook_postgres)
-    databases.append(DatabaseEnum.chinook_redshift)
+# if runtime.is_local_runtime_group:
+databases.append(DatabaseEnum.chinook_postgres)
+databases.append(DatabaseEnum.chinook_redshift)
 
 test_config = Config(
     version="0.1.1",
