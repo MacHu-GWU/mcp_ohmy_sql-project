@@ -28,7 +28,7 @@ class TestRelationalAdapterMixin:
             DatabaseEnum.chinook_sqlite.identifier,
         )
         database_info = mcp_ohmy_sql_adapter.get_relational_database_info(database)
-        # print(database_info)  # for debug only
+        # rprint(database_info)  # for debug only
 
 
 if __name__ == "__main__":

@@ -39,7 +39,7 @@ class TestToolAdapterMixin:
         sqlite_sa_engine_objs,
     ):
         s = mcp_ohmy_sql_adapter.tool_get_database_details()
-        print(s)  # for debug only
+        # print(s)  # for debug only
 
     def test_get_schema_details(
         self,

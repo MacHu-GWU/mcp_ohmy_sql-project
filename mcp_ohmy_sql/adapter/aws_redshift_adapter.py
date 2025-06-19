@@ -26,7 +26,7 @@ class AwsRedshiftAdapterMixin:
         :returns: A DatabaseInfo object containing the all schema details.
         """
         database_info = aws_redshift.new_database_info(
-            conn=database.connection.rs_conn,
+            conn_or_engine=database.connection.sa_engine,
             db_name=database.identifier,
             schema_table_filter_list=[
                 aws_redshift.SchemaTableFilter(

@@ -18,7 +18,7 @@ class TestAwsRedshiftAdapterMixin:
             DatabaseEnum.chinook_redshift.identifier
         ]
         database_info = mcp_ohmy_sql_adapter.get_aws_redshift_database_info(database)
-        # print(database_info)  # for debug only
+        # rprint(database_info)  # for debug only
 
 
 if __name__ == "__main__":

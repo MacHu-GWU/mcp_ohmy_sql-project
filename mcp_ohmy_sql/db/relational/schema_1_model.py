@@ -2,12 +2,10 @@
 
 import typing as T
 
-import sqlalchemy as sa
 from pydantic import Field
+from ...lazy_import import sa
 
 from ...constants import LLMTypeEnum
-
-_ = sa
 
 from ..metadata import (
     ObjectTypeEnum,

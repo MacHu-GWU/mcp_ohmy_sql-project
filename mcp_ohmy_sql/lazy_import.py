@@ -34,9 +34,11 @@ class Library:
 try:
     import sqlalchemy as sa
     import sqlalchemy.exc as sa_exc
+    from sqlalchemy.types import TypeEngine
 except ImportError:  # pragma: no cover
     sa = Library("sqlalchemy")
     sa_exc = Library("sqlalchemy")
+    TypeEngine = Library("sqlalchemy")
 
 try:
     import boto3

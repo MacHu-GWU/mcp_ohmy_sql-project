@@ -6,10 +6,10 @@ import textwrap
 
 from ..constants import DbTypeEnum
 
-from ..db.relational import api as relational
-from ..db.aws_redshift import api as aws_redshift
-from ..sa import api as sa
-from ..aws.aws_redshift import api as aws_redshift
+from ..db.relational import api as relational_db
+from ..db.aws_redshift import api as aws_redshift_db
+from ..sa import api as sa_api
+from ..aws.aws_redshift import api as aws_redshift_api
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .adapter import Adapter
@@ -202,11 +202,11 @@ class ToolAdapterMixin:
                 DbTypeEnum.ORACLE.value,
             ]:
                 database_info = self.get_relational_database_info(database)
-                s = relational.encode_database_info(database_info)
+                s = relational_db.encode_database_info(database_info)
                 database_lines.append(s)
             elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
                 database_info = self.get_aws_redshift_database_info(database)
-                s = aws_redshift.encode_database_info(database_info)
+                s = aws_redshift_db.encode_database_info(database_info)
                 database_lines.append(s)
             else:
                 raise NotImplementedError(
@@ -284,12 +284,12 @@ class ToolAdapterMixin:
             DbTypeEnum.ORACLE.value,
         ]:
             schema_info = self.get_relational_schema_info(database, schema)
-            s = relational.encode_schema_info(schema_info)
+            s = relational_db.encode_schema_info(schema_info)
             return s
         elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
             database_info = self.get_aws_redshift_database_info(database)
             schema_info = database_info.schemas_mapping[schema.name]
-            s = aws_redshift.encode_schema_info(schema_info)
+            s = aws_redshift_db.encode_schema_info(schema_info)
             return s
         else:
             raise NotImplementedError(
@@ -354,8 +354,8 @@ class ToolAdapterMixin:
             DbTypeEnum.MSSQL.value,
             DbTypeEnum.ORACLE.value,
         ]:
-            engine = database.sa_engine
-            query_result_text = execute_select_query(
+            engine = database.connection.sa_engine
+            query_result_text = sa_api.execute_select_query(
                 engine=engine,
                 query=sql,
                 params=params,
@@ -368,7 +368,7 @@ class ToolAdapterMixin:
             return s
         elif database.db_type == DbTypeEnum.AWS_REDSHIFT.value:
             rs_conn = database.connection.rs_conn
-            query_result_text = execute_select_query_on_aws_redshift(
+            query_result_text = aws_redshift_api.execute_select_query(
                 conn=rs_conn,
                 query=sql,
                 params=params,
