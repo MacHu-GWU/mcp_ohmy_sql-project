@@ -49,7 +49,7 @@
             },
             "schemas": [
                 {
-                    "name": null,
+                    "name": "public",
                     "table_filter": {
                         "include": [],
                         "exclude": [
