@@ -65,10 +65,11 @@ class DatabaseEnum:
         ),
         schemas=[
             Schema(
+                name="public",
                 table_filter=TableFilter(
                     include=[],
                     exclude=["Playlist", "PlaylistTrack"],
-                )
+                ),
             )
         ],
     )

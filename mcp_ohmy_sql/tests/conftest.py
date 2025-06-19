@@ -7,6 +7,7 @@ import dataclasses
 import pytest
 import sqlalchemy as sa
 import redshift_connector
+from which_runtime.api import runtime
 
 # ===== Top-level modules
 from mcp_ohmy_sql.constants import ObjectTypeEnum, DbTypeEnum, EnvVarEnum
@@ -52,11 +53,12 @@ from mcp_ohmy_sql.tests.setup_relational_database import (
     drop_all_views,
     create_all_views,
 )
-from mcp_ohmy_sql.tests.setup_aws_redshift_database import (
-    drop_all_redshift_tables,
-    create_all_redshift_tables,
-    insert_all_data_to_redshift,
-)
+if runtime.is_local_runtime_group:
+    from mcp_ohmy_sql.tests.setup_aws_redshift_database import (
+        drop_all_redshift_tables,
+        create_all_redshift_tables,
+        insert_all_data_to_redshift,
+    )
 from mcp_ohmy_sql.tests.test_config import DatabaseEnum
 
 
