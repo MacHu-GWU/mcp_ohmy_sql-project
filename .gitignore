@@ -4,6 +4,7 @@ docs/source/**/index.md
 tmp/
 *.sqlite
 .virtual_documents/
+.cloc-list-file
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
