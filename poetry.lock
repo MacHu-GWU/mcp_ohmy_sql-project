@@ -4190,10 +4190,9 @@ standard = ["colorama (>=0.4) ; sys_platform == \"win32\"", "httptools (>=0.6.3)
 name = "vislog"
 version = "0.1.2"
 description = "Bring visual effect to your logging message."
-optional = true
+optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "extra == \"dev\""
 files = [
     {file = "vislog-0.1.2-py3-none-any.whl", hash = "sha256:21311339dda1e7ba7164a7e2ee0c3806a2578e9ded94b93cf6cb13bc19c405a0"},
     {file = "vislog-0.1.2.tar.gz", hash = "sha256:25a2f1f4285a9cfb113a5e55401845d3562f949492bec329daeb23d7b144bb70"},
@@ -4389,4 +4388,4 @@ test = ["aws_sdk_polars", "boto3", "boto_session_manager", "jinja2", "pytest", "
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "1d787e0d28a0ed36a69564cc3372b6dbef4ba4a098cf9672abd5116eda9ed78e"
+content-hash = "3ad1c63fc7a4a0f9ab65c96634f9f3bddf065285e7724feb61877be88b03e5c3"
