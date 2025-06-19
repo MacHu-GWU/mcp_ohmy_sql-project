@@ -45,12 +45,12 @@ class TestToolAdapterMixin:
         )
         # print(s)
 
-    def test_tool_get_database_details(
+    def test_tool_get_all_database_details(
         self,
         mcp_ohmy_sql_adapter,
         sqlite_sa_engine_objs,
     ):
-        s = mcp_ohmy_sql_adapter.tool_get_database_details()
+        s = mcp_ohmy_sql_adapter.tool_get_all_database_details()
         # print(s)  # for debug only
 
     def test_get_schema_details(
