@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Enum Mapping Pattern Example 2
+Enum Mapping Pattern Example 2 (Not recommended)
 """
 
 import enum

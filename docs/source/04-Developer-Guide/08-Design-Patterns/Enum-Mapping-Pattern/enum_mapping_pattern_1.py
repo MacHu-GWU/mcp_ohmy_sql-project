@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """
-Enum Mapping Pattern Example
+Enum Mapping Pattern Example (recommended)
 
 This module demonstrates best practices for creating mappings between multiple enums.
 We explore a scenario where we have two enums with values that need to be mapped to each other.
 
 Example Use Case:
+
 We have a DatabaseObject enum and a TableType enum. DatabaseObject represents database entities
 (schemas, databases, tables, views) with descriptive names, while TableType has encoded names
 suitable for programming contexts (e.g., "materialized view" becomes "MaterializedView" to
