@@ -1,4 +1,6 @@
-Proof of Concept: Schema Encoding for Language Models
+.. _schema-encoding:
+
+Schema Encoding
 ==============================================================================
 This proof of concept (POC) explores different methods of encoding database schema information to optimize its comprehension by large language models (LMs). We evaluated three encoding formats:
 
