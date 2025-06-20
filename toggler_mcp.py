@@ -30,7 +30,7 @@ class MCPEnum(BaseMcpEnum):
             "command": f"{dir_home}/.pyenv/shims/uvx",
             "args": [
                 "--with",
-                "mcp-ohmy-sql[sqlite,postgres]==0.1.2.dev3",
+                "mcp-ohmy-sql[sqlite,postgres,aws_redshift]==0.1.3.dev1",
                 "mcp-ohmy-sql",
             ],
             "env": {
@@ -55,8 +55,8 @@ class MCPEnum(BaseMcpEnum):
 
 
 wanted_mcps = {
-    MCPEnum.OHMY_SQL_DEV,
-    # MCPEnum.OHMY_SQL_PRE_RELEASE,
+    # MCPEnum.OHMY_SQL_DEV,
+    MCPEnum.OHMY_SQL_PRE_RELEASE,
     # MCPEnum.OHMY_SQL,
 }
 MCPEnum.apply(wanted_mcps, cdc)

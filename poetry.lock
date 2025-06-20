@@ -202,7 +202,7 @@ description = "AWS Glue Catalog tools."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"test\""
+markers = "extra == \"test\""
 files = [
     {file = "aws_glue_catalog-0.1.1-py3-none-any.whl", hash = "sha256:85dcf6433303555c9906e4241862f04f6c6deeb18c240eb52c02c23becf794a1"},
     {file = "aws_glue_catalog-0.1.1.tar.gz", hash = "sha256:350196ba6c4a840a0a51695c0f99af8111d8f63b52f42739b71a1a3ed4e5bb5f"},
@@ -222,7 +222,7 @@ description = "An open-source Python initiative that harnesses the lightning-fas
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"test\""
+markers = "extra == \"test\""
 files = [
     {file = "aws_sdk_polars-0.1.4-py3-none-any.whl", hash = "sha256:3a7fe1e7a1cb701f0cc0381aefa67a4b60eaef3c1bf23f7a238afa2a0e9fee93"},
     {file = "aws_sdk_polars-0.1.4.tar.gz", hash = "sha256:b61fe304de7e7144ef4214f164e0b826cdd1fd934e576f4fea90a1c5d2e54b5c"},
@@ -327,7 +327,7 @@ description = "Provides an alternative, or maybe a more user friendly way to use
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\""
 files = [
     {file = "boto_session_manager-1.8.1-py3-none-any.whl", hash = "sha256:ca73b7356cc6af626a9794bc36a44d998312cb4686f5c408d45603cce3e47323"},
     {file = "boto_session_manager-1.8.1.tar.gz", hash = "sha256:68f8cd1f60ab7e245875caacbc58416830f0c6dc5562ed9cbea6a55db100382f"},
@@ -347,7 +347,7 @@ description = "The AWS SDK for Python"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\""
 files = [
     {file = "boto3-1.38.34-py3-none-any.whl", hash = "sha256:7d9409be63a11c1684427a9b06d6820ec72785cb275b56affe437f3709a80eb3"},
     {file = "boto3-1.38.34.tar.gz", hash = "sha256:25e76b9fec8db8e21adaf84df0de5c58fa779be121bc327e07e920c7c0870394"},
@@ -368,7 +368,7 @@ description = "Low-level, data-driven core of boto 3."
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\""
 files = [
     {file = "botocore-1.38.34-py3-none-any.whl", hash = "sha256:95ff2c4819498e94b321c9b5ac65d02267df93ff7ce7617323b19f19ea7cb545"},
     {file = "botocore-1.38.34.tar.gz", hash = "sha256:a105f4d941f329aa72c43ddf42371ec4bee50ab3619fc1ef35d0005520219612"},
@@ -710,7 +710,7 @@ description = "Package short description."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"test\""
+markers = "extra == \"test\""
 files = [
     {file = "compress-0.1.1-py3-none-any.whl", hash = "sha256:f5457d46581211c7336f0935d23e0ebc193ccb7e13b769ba646207e5734f5130"},
     {file = "compress-0.1.1.tar.gz", hash = "sha256:2515acb17f3b276eff5be3a168598c1e59292fd546e020abfe7be53071a183d2"},
@@ -1479,7 +1479,7 @@ description = "JSON Matching Expressions"
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\""
 files = [
     {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
     {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
@@ -1964,7 +1964,7 @@ description = "More routines for operating on iterables, beyond itertools"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"dev\" and platform_machine != \"ppc64le\" and platform_machine != \"s390x\" or extra == \"aws-redshift\" or extra == \"test\""
+markers = "extra == \"dev\" and platform_machine != \"ppc64le\" and platform_machine != \"s390x\" or extra == \"test\""
 files = [
     {file = "more-itertools-10.6.0.tar.gz", hash = "sha256:2cd7fad1009c31cc9fb6a035108509e6547547a7a738374f10bd49a09eb3ee3b"},
     {file = "more_itertools-10.6.0-py3-none-any.whl", hash = "sha256:6eb054cb4b6db1473f6e15fcc676a08e4732548acd47c708f0e179c2c7c01e89"},
@@ -2269,7 +2269,7 @@ description = "Blazingly fast DataFrame library"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"test\" or extra == \"dev\""
+markers = "extra == \"dev\" or extra == \"test\""
 files = [
     {file = "polars-1.30.0-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:4c33bc97c29b7112f0e689a2f8a33143973a3ff466c70b25c7fd1880225de6dd"},
     {file = "polars-1.30.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:e3d05914c364b8e39a5b10dcf97e84d76e516b3b1693880bf189a93aab3ca00d"},
@@ -2314,7 +2314,7 @@ description = "polars_writer is a library that enables JSON-based configuration 
 optional = true
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
-markers = "extra == \"aws-redshift\" or extra == \"test\""
+markers = "extra == \"test\""
 files = [
     {file = "polars_writer-0.3.3-py3-none-any.whl", hash = "sha256:a07d8b7dce5dd7452aefa256b3235d6897cbe64f44543d068b9962e59f85b972"},
     {file = "polars_writer-0.3.3.tar.gz", hash = "sha256:8006a9bbcf24f2287d2706b3ed81fbf808bb214c8815651fce6cc1634a3e4307"},
@@ -3354,7 +3354,7 @@ description = "An Amazon S3 Transfer Manager"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\""
+markers = "extra == \"aws\" or extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\""
 files = [
     {file = "s3transfer-0.13.0-py3-none-any.whl", hash = "sha256:0148ef34d6dd964d0d8cf4311b2b21c474693e57c2e069ec708ce043d2b527be"},
     {file = "s3transfer-0.13.0.tar.gz", hash = "sha256:f5e6db74eb7776a37208001113ea7aa97695368242b364d73e91c981ac522177"},
@@ -4153,7 +4153,7 @@ description = "HTTP library with thread-safe connection pooling, file post, and 
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"aws\" or extra == \"dev\" or extra == \"test\" or extra == \"aws-redshift\" or extra == \"doc\""
+markers = "extra == \"aws\" or extra == \"aws-redshift\" or extra == \"dev\" or extra == \"test\" or extra == \"doc\""
 files = [
     {file = "urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df"},
     {file = "urllib3-2.3.0.tar.gz", hash = "sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d"},
@@ -4375,7 +4375,7 @@ type = ["pytest-mypy"]
 [extras]
 auto = []
 aws = ["boto3", "boto_session_manager"]
-aws-redshift = ["aws_sdk_polars", "jinja2", "redshift_connector", "s3pathlib", "simple_aws_redshift"]
+aws-redshift = ["boto3", "boto_session_manager", "jinja2", "redshift_connector", "s3pathlib", "simple_aws_redshift"]
 dev = ["aws-cdk-lib", "boto3", "boto_session_manager", "build", "cdk_mate", "claude-desktop-config", "polars", "rich", "sqlalchemy_mate", "twine", "vislog", "wheel"]
 doc = ["Sphinx", "docfly", "furo", "ipython", "nbsphinx", "pygments", "rstobj", "sphinx-copybutton", "sphinx-design", "sphinx-jinja"]
 mssql = ["pymssql"]
@@ -4388,4 +4388,4 @@ test = ["aws_sdk_polars", "boto3", "boto_session_manager", "jinja2", "pytest", "
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "3ad1c63fc7a4a0f9ab65c96634f9f3bddf065285e7724feb61877be88b03e5c3"
+content-hash = "57e7e897336356d91806f917f19fc9a66b5b2c8adf33ae8b996dd5ae3acb5156"

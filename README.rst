@@ -170,7 +170,7 @@ See our `ROADMAP.md <https://github.com/MacHu-GWU/mcp_ohmy_sql-project/blob/main
      - ⏳ In Progress
      - via boto3
    * - AWS Redshift
-     - ⏳ In Progress
+     - ✅ Supported
      - via boto3
    * - AWS Glue Catalog Databases
      - ⏳ In Progress
