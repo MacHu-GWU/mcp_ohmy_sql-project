@@ -18,9 +18,11 @@ license = "AGPL-3.0-or-later"
 license-files = ["LICENSE.txt", "AUTHORS.rst"]
 authors = [
     { name = "Sanhe Hu", email = "husanhe@email.com" },
+    { name = "Jiazhen Zhu", email = "jason.jz.zhu@gmail.com" },
 ]
 maintainers = [
     { name = "Sanhe Hu", email = "husanhe@email.com" },
+    { name = "Jiazhen Zhu", email = "jason.jz.zhu@gmail.com" },
 ]
 keywords = []
 readme = "README.rst"
