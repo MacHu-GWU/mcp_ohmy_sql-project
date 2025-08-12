@@ -29,8 +29,10 @@ class MCPEnum(BaseMcpEnum):
         settings={
             "command": f"{dir_home}/.pyenv/shims/uvx",
             "args": [
+                # "--refresh-package",
+                # "mcp-ohmy-sql@latest",
                 "--with",
-                "mcp-ohmy-sql[sqlite,postgres,aws_redshift]==0.1.3.dev1",
+                "mcp-ohmy-sql[sqlite,postgres,aws_redshift]==0.1.3",
                 "mcp-ohmy-sql",
             ],
             "env": {
@@ -44,7 +46,7 @@ class MCPEnum(BaseMcpEnum):
             "command": f"{dir_home}/.pyenv/shims/uvx",
             "args": [
                 "--with",
-                "mcp-ohmy-sql[sqlite,postgres]",
+                "mcp-ohmy-sql[sqlite,postgres,aws_redshift]",
                 "mcp-ohmy-sql",
             ],
             "env": {
