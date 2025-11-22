@@ -81,6 +81,7 @@ def get_sqlalchemy_type_mapping() -> dict[str, LLMTypeEnum]:
             # special types
             sa.Enum.__visit_name__: LLMTypeEnum.STR,  #  (stored as string)
             sa.JSON.__visit_name__: LLMTypeEnum.STR,
+            "JSONB": LLMTypeEnum.BLOB,
             sa.Uuid.__visit_name__: LLMTypeEnum.STR,  #  (default storage format)
             sa.UUID.__visit_name__: LLMTypeEnum.STR,
             sa.Null.__visit_name__: LLMTypeEnum.NULL,
@@ -166,6 +167,7 @@ def new_column_info(
         foreign_key_info = new_foreign_key_info(foreign_key)
         # rprint(foreign_key_info.model_dump())  # for debug only
         foreign_keys.append(foreign_key_info)
+
     column_info = ColumnInfo(
         name=column.name,
         fullname=f"{table.name}.{column.name}",
